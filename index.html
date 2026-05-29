@@ -19,7 +19,7 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="id_ID">
     <meta property="og:site_name" content="Lavelle">
-    <meta property="og:title" content="Lavelle — Jasa Undangan Pernikahan Digital Elegan">
+    <meta property="og:title" content="Lavelle — Jasa Undangan Pernikahan Digital Premium">
     <meta property="og:description"
         content="Undangan pernikahan digital yang elegan & personal — RSVP, buku ucapan, galeri, hingga amplop digital dalam satu link. Konsultasi gratis.">
     <meta property="og:url" content="https://lavelle.my.id/">
@@ -28,7 +28,7 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Lavelle — Jasa Undangan Pernikahan Digital Elegan">
+    <meta name="twitter:title" content="Lavelle — Jasa Undangan Pernikahan Digital Premium">
     <meta name="twitter:description"
         content="Undangan pernikahan digital yang elegan & personal dalam satu link. Konsultasi gratis.">
     <meta name="twitter:image" content="https://lavelle.my.id/img/mentahan/pasangan-bukit-sunset.jpeg">
@@ -40,6 +40,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="preload" as="image" href="./img/mentahan/pasangan-bukit-sunset.jpeg" fetchpriority="high">
     <link rel="icon" type="image/png" href="./img/lavelle-logo.png">
     <link rel="apple-touch-icon" href="./img/lavelle-logo.png">
 
@@ -56,6 +57,7 @@
           "logo": "https://lavelle.my.id/img/lavelle-logo.png",
           "image": "https://lavelle.my.id/img/mentahan/pasangan-bukit-sunset.jpeg",
           "description": "Jasa pembuatan undangan pernikahan digital yang elegan, personal, dan berkelas.",
+          "email": "lavelle.weddingku@gmail.com",
           "sameAs": ["https://instagram.com/lavelle.ld"],
           "contactPoint": {
             "@type": "ContactPoint",
@@ -276,7 +278,7 @@
                         <h3>Tema Klasik</h3>
                         <p>Hangat dan lembut dengan animasi yang halus &mdash; cocok untuk pernikahan adat maupun
                             modern.</p>
-                        <a href="#" class="link" data-demo="classic">Lihat Demo <i
+                        <a href="./demo/klasik/?to=Tamu%20Undangan" class="link" data-demo="classic">Lihat Demo <i
                                 class="fa-solid fa-arrow-right-long"></i></a>
                     </div>
                 </article>
@@ -293,7 +295,43 @@
                     <div class="demo__body">
                         <h3>Tema Modern</h3>
                         <p>Mewah dan minimalis, lengkap dengan RSVP, buku ucapan, dan amplop digital.</p>
-                        <a href="#" class="link" data-demo="modern">Lihat Demo <i
+                        <a href="./demo/modern/?to=Tamu%20Undangan" class="link" data-demo="modern">Lihat Demo <i
+                                class="fa-solid fa-arrow-right-long"></i></a>
+                    </div>
+                </article>
+                <article class="demo reveal">
+                    <div class="demo__thumb demo__thumb--sinema">
+                        <div class="mk mk--frame-d">
+                            <span class="mk__kicker">The Wedding Of</span>
+                            <h4 class="mk__names">Kirana &amp; Arsa</h4>
+                            <span class="mk__date">12 . 06 . 2027</span>
+                            <span class="mk__btn">Buka Undangan</span>
+                        </div>
+                        <span class="demo__tag">Sinema &mdash; Velvet &amp; Gold</span>
+                    </div>
+                    <div class="demo__body">
+                        <h3>Tema Sinema <em class="demo__flag">Eksklusif</em></h3>
+                        <p>Pengalaman sinematik: tirai teater membuka, dedaunan berjatuhan, bingkai berornamen, dan
+                            animasi 3D yang hidup di setiap scroll.</p>
+                        <a href="./demo/sinema/?to=Tamu%20Undangan" class="link" data-demo="sinema">Lihat Demo <i
+                                class="fa-solid fa-arrow-right-long"></i></a>
+                    </div>
+                </article>
+                <article class="demo reveal">
+                    <div class="demo__thumb demo__thumb--3d">
+                        <div class="mk mk--frame-d">
+                            <span class="mk__kicker">The Wedding Of</span>
+                            <h4 class="mk__names">Anindya &amp; Bima</h4>
+                            <span class="mk__date">14 . 02 . 2027</span>
+                            <span class="mk__btn">Jelajahi 3D</span>
+                        </div>
+                        <span class="demo__tag">Modern 3D &mdash; Three.js</span>
+                    </div>
+                    <div class="demo__body">
+                        <h3>Tema Modern 3D</h3>
+                        <p>Undangan 3D berbasis scroll &mdash; kamera menembus konstelasi foto bertabur partikel emas.
+                            Dibangun dengan Three.js (WebGL).</p>
+                        <a href="./demo/modern-3d/?to=Tamu%20Undangan" class="link" data-demo="modern3d">Jelajahi Demo <i
                                 class="fa-solid fa-arrow-right-long"></i></a>
                     </div>
                 </article>
@@ -404,7 +442,7 @@
     </section>
 
     <!-- ===== ABOUT / MAKNA NAMA ===== -->
-    <section class="section about">
+    <section class="section about" id="tentang">
         <div class="container about__inner">
             <div class="about__text reveal">
                 <p class="eyebrow"><span></span> Tentang Lavelle</p>
@@ -498,6 +536,7 @@
                 <a href="#keunggulan">Keunggulan</a>
                 <a href="#paket">Paket &amp; Harga</a>
                 <a href="#demo">Demo</a>
+                <a href="#tentang">Tentang</a>
                 <a href="#faq">FAQ</a>
             </div>
             <div class="footer__col">

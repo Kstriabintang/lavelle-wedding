@@ -215,6 +215,20 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
 .demo__thumb--modern .mk__names { font-family: var(--script-2); background: linear-gradient(135deg, #e9cd8c, #b08f48); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .demo__thumb--modern .mk__date { color: #efe2c4; }
 .demo__thumb--modern .mk__btn { background: linear-gradient(135deg, #e9cd8c, #b08f48); color: #2a210f; }
+/* Sinema (Eksklusif) — beludru & emas di atas foto */
+.demo__thumb--sinema { background: linear-gradient(rgba(33, 7, 16, .5), rgba(11, 6, 8, .82)), url('../img/mentahan/pasangan-pantai-senja.jpeg') center/cover; }
+.demo__thumb--sinema .mk__kicker { color: #d8b98a; }
+.demo__thumb--sinema .mk__names { font-family: var(--script-2); background: linear-gradient(135deg, #f3e2b6, #b08f48); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.demo__thumb--sinema .mk__date { color: #efe2c4; }
+.demo__thumb--sinema .mk__btn { background: linear-gradient(135deg, #f3e2b6, #b08f48); color: #2a210f; }
+/* Modern 3D — navy galaksi di atas foto */
+.demo__thumb--3d { background: linear-gradient(rgba(7, 10, 18, .55), rgba(7, 10, 18, .86)), url('../img/mentahan/pasangan-bukit-sunset.jpeg') center/cover; }
+.demo__thumb--3d .mk__kicker { color: #b9b29f; }
+.demo__thumb--3d .mk__names { font-family: var(--script-2); background: linear-gradient(135deg, #e9cd8c, #b08f48); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.demo__thumb--3d .mk__date { color: #efe2c4; }
+.demo__thumb--3d .mk__btn { background: linear-gradient(135deg, #e9cd8c, #b08f48); color: #2a210f; }
+/* label kecil "Eksklusif" di judul demo */
+.demo__flag { display: inline-block; vertical-align: middle; margin-left: .5em; font-family: var(--sans); font-style: normal; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; padding: .35em .8em; border-radius: 50px; background: var(--grad); color: #fff; }
 .demo__tag { position: absolute; top: 1rem; right: 1rem; background: rgba(255, 250, 240, .92); color: var(--ink); font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; padding: .45em 1em; border-radius: 50px; font-weight: 500; }
 .demo__body { padding: 1.8rem; }
 .demo__body h3 { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; margin-bottom: .5rem; }

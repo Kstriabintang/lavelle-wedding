@@ -6,8 +6,10 @@
 const WHATSAPP_NUMBER = '6285264402640';   // Admin 1 (085264402640) — dipakai tombol paket & tombol melayang
 const WHATSAPP_NUMBER_2 = '6282299913592'; // Admin 2 (082299913592)
 const DEMO_LINKS = {
-    classic: './demo/klasik/?to=Tamu%20Undangan',  // demo undangan klasik
-    modern: './demo/modern/?to=Tamu%20Undangan',   // demo undangan modern
+    classic: './demo/klasik/?to=Tamu%20Undangan',     // demo undangan klasik
+    modern: './demo/modern/?to=Tamu%20Undangan',      // demo undangan modern
+    sinema: './demo/sinema/?to=Tamu%20Undangan',      // demo sinema (Eksklusif)
+    modern3d: './demo/modern-3d/?to=Tamu%20Undangan', // demo modern 3D (Three.js)
 };
 
 // --- Preloader "Love Loading": sembunyikan setelah halaman siap (min. 1.4s) ---
@@ -20,7 +22,7 @@ const HIDE_PRELOADER = () => {
 const _start = Date.now();
 window.addEventListener('load', () => {
     const elapsed = Date.now() - _start;
-    setTimeout(HIDE_PRELOADER, Math.max(0, 1400 - elapsed));
+    setTimeout(HIDE_PRELOADER, Math.max(0, 800 - elapsed));
 });
 // fallback bila event load tidak terpicu
 setTimeout(HIDE_PRELOADER, 4000);
