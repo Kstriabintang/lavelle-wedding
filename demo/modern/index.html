@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anindya &amp; Bima &mdash; Undangan Pernikahan</title>
+    <meta name="description" content="Undangan pernikahan Anindya & Bima. Demo tema Modern (Midnight & Gold) oleh Lavelle.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Pinyon+Script&family=Jost:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="locked">
+
+    <!-- Backsound: Marry You - Bruno Mars (Violin Cover) -->
+    <audio id="bgm" loop preload="auto">
+        <source src="./audio/marry-you-violin.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="dust" id="dust" aria-hidden="true"></div>
+
+    <!-- COVER -->
+    <div class="cover" id="cover">
+        <div class="cover__inner">
+            <div class="cover__ring gold-text">A&amp;B</div>
+            <p class="cover__kicker">The Wedding Of</p>
+            <h1 class="cover__names gold-text">Anindya &amp; Bima</h1>
+            <p class="cover__date">14 Februari 2027</p>
+            <div class="cover__to">Kepada Yth.<b id="guestName">Tamu Undangan</b></div>
+            <button class="btn btn-open" id="openBtn"><i class="fa-regular fa-envelope-open"></i> Buka Undangan</button>
+        </div>
+    </div>
+
+    <a href="../" class="back-demo"><i class="fa-solid fa-arrow-left"></i> Galeri Demo</a>
+    <button class="music" id="musicBtn" aria-label="Putar / jeda musik"><i class="fa-solid fa-music"></i></button>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="wrap">
+            <span class="kicker gold-text" data-aos="fade-down">We Found Love</span>
+            <h1 class="names gold-text" data-aos="zoom-in">Anindya &amp; Bima</h1>
+            <div class="divider" data-aos="zoom-in"><i class="fa-solid fa-heart"></i></div>
+            <p class="phase-before" data-aos="fade-up" style="font-family:var(--serif); font-size:1.3rem; font-style:italic; color:var(--champagne);">
+                Sabtu, 14 Februari 2027</p>
+            <p class="phase-after" data-aos="fade-up" style="font-family:var(--serif); font-size:1.3rem; font-style:italic; color:var(--champagne);">
+                Telah menikah &middot; 14 Februari 2027</p>
+        </div>
+        <div class="scroll-cue">Scroll <i class="fa-solid fa-chevron-down"></i></div>
+    </section>
+
+    <!-- QUOTE -->
+    <section class="quote">
+        <div class="wrap" data-aos="fade-up">
+            <p>"Two souls with but a single thought, two hearts that beat as one."</p>
+            <cite>&mdash; John Keats</cite>
+        </div>
+    </section>
+
+    <!-- MEMPELAI -->
+    <section>
+        <div class="wrap">
+            <span class="kicker gold-text" data-aos="fade-up">Mempelai</span>
+            <h2 class="title-script gold-text" data-aos="fade-up">Anindya &amp; Bima</h2>
+            <div class="divider" data-aos="fade-up"><i class="fa-solid fa-heart"></i></div>
+            <div class="couple">
+                <div class="person glass" data-aos="fade-right">
+                    <div class="person__photo">A</div>
+                    <h3>Anindya Putri</h3>
+                    <p class="par">Putri dari<br>Bapak Arman &amp; Ibu Sari</p>
+                    <a class="ig" href="#"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+                <div class="person glass" data-aos="fade-left">
+                    <div class="person__photo">B</div>
+                    <h3>Bima Saputra</h3>
+                    <p class="par">Putra dari<br>Bapak Dimas &amp; Ibu Ratna</p>
+                    <a class="ig" href="#"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COUNTDOWN / TELAH MENIKAH -->
+    <section>
+        <div class="wrap">
+            <!-- Sebelum hari-H -->
+            <div class="phase-before">
+                <span class="kicker gold-text" data-aos="fade-up">Save The Date</span>
+                <h2 class="title" data-aos="fade-up">Menuju hari bahagia</h2>
+                <div class="divider" data-aos="fade-up"><i class="fa-solid fa-heart"></i></div>
+                <div class="countdown" data-aos="zoom-in">
+                    <div class="cd glass"><b class="gold-text" id="cd-d">0</b><span>Hari</span></div>
+                    <div class="cd glass"><b class="gold-text" id="cd-h">0</b><span>Jam</span></div>
+                    <div class="cd glass"><b class="gold-text" id="cd-m">0</b><span>Menit</span></div>
+                    <div class="cd glass"><b class="gold-text" id="cd-s">0</b><span>Detik</span></div>
+                </div>
+            </div>
+            <!-- Setelah acara -->
+            <div class="phase-after">
+                <span class="kicker gold-text" data-aos="fade-up">Alhamdulillah</span>
+                <h2 class="title-script gold-text" data-aos="fade-up">Telah Menikah</h2>
+                <div class="divider" data-aos="fade-up"><i class="fa-solid fa-heart"></i></div>
+                <p data-aos="fade-up" style="color:var(--ink-soft); max-width:520px; margin:0 auto;">
+                    Dengan penuh syukur, kami telah resmi mengikat janji suci pada
+                    <b style="color:var(--ink);">Sabtu, 14 Februari 2027</b>. Terima kasih atas doa restu &amp;
+                    kehadiran yang menjadi bagian tak terlupakan dari hari bahagia kami.</p>
+                <span class="married-badge" data-aos="zoom-in"><i class="fa-solid fa-ring"></i> Resmi Menjadi Suami &amp; Istri</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- STORY -->
+    <section>
+        <div class="wrap">
+            <span class="kicker gold-text" data-aos="fade-up">Our Story</span>
+            <h2 class="title-script gold-text" data-aos="fade-up">Perjalanan Cinta</h2>
+            <div class="divider" data-aos="fade-up"><i class="fa-solid fa-heart"></i></div>
+            <div class="timeline">
+                <div class="tl-item" data-aos="fade-up"><span class="yr">2021</span><h4>Pertama Bertemu</h4><p>Dipertemukan di sebuah acara, dan obrolan pertama yang tak terlupakan.</p></div>
+                <div class="tl-item" data-aos="fade-up"><span class="yr">2023</span><h4>Menjalin Hubungan</h4><p>Memutuskan untuk saling melengkapi dan menumbuhkan rasa setiap hari.</p></div>
+                <div class="tl-item" data-aos="fade-up"><span class="yr">2026</span><h4>Lamaran</h4><p>Sebuah janji indah diucapkan di hadapan keluarga tercinta.</p></div>
+                <div class="tl-item" data-aos="fade-up"><span class="yr">2027</span><h4>Hari Bahagia</h4><p>Menyatukan dua hati dalam ikatan suci pernikahan.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ACARA (hanya tampil sebelum mode kenangan) -->
+    <section class="phase-before">
+        <div class="wrap">
+            <span class="kicker gold-text" data-aos="fade-up">Waktu &amp; Tempat</span>
+            <h2 class="title" data-aos="fade-up">Rangkaian Acara</h2>
+            <div class="divider" data-aos="fade-up"><i class="fa-solid fa-heart"></i></div>
+            <div class="events">
+                <div class="event-card glass" data-aos="fade-right">
+                    <div class="ic"><i class="fa-solid fa-ring"></i></div>
+                    <h3>Akad Nikah</h3>
+                    <p>Sabtu, 14 Februari 2027<br>09.00 &ndash; 11.00 WIB<br>Grand Ballroom, Bandung</p>
+                    <a class="btn-map" href="#"><i class="fa-solid fa-location-dot"></i> Lokasi</a>
+                </div>
+                <div class="event-card glass" data-aos="fade-left">
+                    <div class="ic"><i class="fa-solid fa-champagne-glasses"></i></div>
+                    <h3>Resepsi</h3>
+                    <p>Sabtu, 14 Februari 2027<br>12.00 &ndash; 15.00 WIB<br>Grand Ballroom, Bandung</p>
+                    <a class="btn-map" href="#"><i class="fa-solid fa-location-dot"></i> Lokasi</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section>
+        <div class="wrap">
+            <span class="kicker gold-text phase-before" data-aos="fade-up">Galeri</span>
+            <span class="kicker gold-text phase-after" data-aos="fade-up">Dokumentasi</span>
+            <h2 class="title-script gold-text phase-before" data-aos="fade-up">Our Moments</h2>
+            <h2 class="title-script gold-text phase-after" data-aos="fade-up">Dokumentasi Pernikahan</h2>
+            <div class="divider" data-aos="fade-up"><i class="fa-solid fa-heart"></i></div>
+            <div class="gallery-grid" data-aos="fade-up">
+                <div class="ph"><img src="../../img/mentahan/pasangan-utama.jpeg" alt="Momen" loading="lazy"></div>
+                <div class="ph"><img src="../../img/mentahan/pernikahan-marissa-derek.jpeg" alt="Momen" loading="lazy"></div>
+                <div class="ph"><img src="../../img/mentahan/pasangan-kaizen-yvaine.jpeg" alt="Momen" loading="lazy"></div>
+                <div class="ph"><img src="../../img/mentahan/pernikahan-bithia-noah.jpeg" alt="Momen" loading="lazy"></div>
+                <div class="ph"><img src="../../img/mentahan/pernikahan-alina-bohdan.jpeg" alt="Momen" loading="lazy"></div>
+                <div class="ph"><img src="../../img/mentahan/pasangan-estetik-instagram.jpeg" alt="Momen" loading="lazy"></div>
+                <!-- foto tambahan: hanya di mode kenangan/dokumentasi -->
+                <div class="ph phase-after"><img src="../../img/mentahan/pasangan-tatapan.jpeg" alt="Dokumentasi" loading="lazy"></div>
+                <div class="ph phase-after"><img src="../../img/mentahan/pasangan-hitam-putih.jpeg" alt="Dokumentasi" loading="lazy"></div>
+                <div class="ph phase-after"><img src="../../img/mentahan/pasangan-pose-romantis.jpeg" alt="Dokumentasi" loading="lazy"></div>
+                <div class="ph phase-after"><img src="../../img/mentahan/momen-bahagia.jpeg" alt="Dokumentasi" loading="lazy"></div>
+                <div class="ph phase-after"><img src="../../img/mentahan/pasangan-candid.jpeg" alt="Dokumentasi" loading="lazy"></div>
+                <div class="ph phase-after"><img src="../../img/mentahan/pasangan-pelukan-2.jpeg" alt="Dokumentasi" loading="lazy"></div>
+            </div>
+            <p class="note phase-before">*Foto akan ditambahkan sesuai dokumentasi pasangan.</p>
+        </div>
+    </section>
+
+    <!-- RSVP / TERIMA KASIH -->
+    <section>
+        <div class="wrap">
+            <!-- Setelah acara: ucapan terima kasih -->
+            <div class="phase-after">
+                <span class="kicker gold-text" data-aos="fade-up">Terima Kasih</span>
+                <h2 class="title" data-aos="fade-up">Atas Kehadiran Anda</h2>
+                <div class="divider" data-aos="fade-up"><i class="fa-solid fa-heart"></i></div>
+                <p data-aos="fade-up" style="color:var(--ink-soft); max-width:520px; margin:0 auto;">
+                    Acara telah usai, namun kebahagiaan dan rasa terima kasih kami abadi. Semoga kebaikan Anda
+                    dibalas dengan keberkahan yang berlipat. 🤍</p>
+            </div>
+            <!-- Sebelum hari-H: form RSVP -->
+            <span class="kicker gold-text phase-before" data-aos="fade-up">RSVP</span>
+            <h2 class="title phase-before" data-aos="fade-up">Konfirmasi Kehadiran</h2>
+            <div class="divider phase-before" data-aos="fade-up"><i class="fa-solid fa-heart"></i></div>
+            <form class="form glass phase-before" id="rsvpForm" data-aos="fade-up">
+                <label for="r-name">Nama</label>
+                <input type="text" id="r-name" placeholder="Nama lengkap" required>
+                <label for="r-att">Kehadiran</label>
+                <select id="r-att" required>
+                    <option value="">Pilih&hellip;</option>
+                    <option value="Hadir">Insya Allah Hadir</option>
+                    <option value="Tidak Hadir">Maaf, Belum Bisa Hadir</option>
+                </select>
+                <label for="r-num">Jumlah Tamu</label>
+                <input type="number" id="r-num" min="1" max="5" value="1">
+                <button type="submit" class="btn"><i class="fa-solid fa-paper-plane"></i> Kirim Konfirmasi</button>
+                <div class="rsvp-ok" id="rsvpOk"><i class="fa-solid fa-circle-check"></i> Terima kasih, konfirmasimu sudah kami terima!</div>
+            </form>
+        </div>
+    </section>
+
+    <!-- UCAPAN -->
+    <section>
+        <div class="wrap">
+            <span class="kicker gold-text" data-aos="fade-up">Ucapan &amp; Doa</span>
+            <h2 class="title phase-before" data-aos="fade-up">Kirim Doa Terbaikmu</h2>
+            <h2 class="title phase-after" data-aos="fade-up">Ucapan &amp; Doa untuk Kami</h2>
+            <div class="divider" data-aos="fade-up"><i class="fa-solid fa-heart"></i></div>
+            <form class="form glass phase-before" id="wishForm" data-aos="fade-up">
+                <label for="w-name">Nama</label>
+                <input type="text" id="w-name" placeholder="Nama kamu" required>
+                <label for="w-msg">Ucapan</label>
+                <textarea id="w-msg" rows="3" placeholder="Tulis doa &amp; ucapanmu&hellip;" required></textarea>
+                <button type="submit" class="btn"><i class="fa-solid fa-heart"></i> Kirim Ucapan</button>
+            </form>
+            <div class="wishes" id="wishes"></div>
+        </div>
+    </section>
+
+    <!-- AMPLOP DIGITAL (hanya tampil sebelum mode kenangan) -->
+    <section class="phase-before">
+        <div class="wrap">
+            <span class="kicker gold-text" data-aos="fade-up">Tanda Kasih</span>
+            <h2 class="title" data-aos="fade-up">Amplop Digital</h2>
+            <div class="divider" data-aos="fade-up"><i class="fa-solid fa-heart"></i></div>
+            <p data-aos="fade-up" style="color:var(--ink-soft);">Doa restu Anda adalah karunia terindah. Namun bila
+                berkenan memberi tanda kasih, dapat melalui:</p>
+            <div class="gifts">
+                <div class="gift glass" data-aos="fade-right">
+                    <div class="bank gold-text">BCA</div>
+                    <div class="no" id="rek1">1234 5678 90</div>
+                    <div class="nm">a.n. Anindya Putri</div>
+                    <button class="btn-copy" data-copy="rek1"><i class="fa-regular fa-copy"></i> Salin Nomor</button>
+                </div>
+                <div class="gift glass" data-aos="fade-left">
+                    <div class="bank gold-text">Mandiri</div>
+                    <div class="no" id="rek2">0987 6543 21</div>
+                    <div class="nm">a.n. Bima Saputra</div>
+                    <button class="btn-copy" data-copy="rek2"><i class="fa-regular fa-copy"></i> Salin Nomor</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLOSING -->
+    <section class="closing">
+        <div class="wrap" data-aos="zoom-in">
+            <span class="kicker gold-text">Terima Kasih</span>
+            <p style="font-family:var(--serif); font-size:1.2rem; font-style:italic; color:var(--ink-soft); margin-bottom:1rem;">
+                Sebuah kehormatan dan kebahagiaan bagi kami atas kehadiran serta doa restu Anda.</p>
+            <h2 class="names gold-text">Anindya &amp; Bima</h2>
+        </div>
+    </section>
+
+    <footer>
+        Undangan digital oleh <a href="../../">Lavelle</a> &middot; Tema Modern &mdash; Midnight &amp; Gold
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+
+</html>
