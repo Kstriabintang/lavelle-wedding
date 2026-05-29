@@ -195,6 +195,8 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
 /* ---------- Demo (preview mockup) ---------- */
 .demo { background: var(--glass); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: 0 16px 36px -28px rgba(74, 60, 25, .4); transition: transform .35s, box-shadow .35s; }
 .demo:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+/* Kartu Klasik (cream) — beri border & shadow agar menonjol dari latar cream */
+.demo--klasik { border: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
 .demo__thumb { height: 330px; position: relative; display: grid; place-items: center; padding: 1.6rem; overflow: hidden; }
 .demo__thumb--klasik { background: radial-gradient(120% 90% at 50% 0%, #faf5ec, #efe7d6 75%); }
 .demo__thumb--modern { background: radial-gradient(120% 90% at 50% 0%, #18223c, #0a0e1a 70%); }
