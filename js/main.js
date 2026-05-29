@@ -47,17 +47,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const nav = document.getElementById('nav');
     const navLinks = document.getElementById('navLinks');
     const navToggle = document.getElementById('navToggle');
+    const navClose = document.getElementById('navClose');
+    const navOverlay = document.getElementById('navOverlay');
 
     // Navbar berubah saat scroll
     const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    // Toggle menu mobile
-    navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
-    navLinks.querySelectorAll('a').forEach((a) =>
-        a.addEventListener('click', () => navLinks.classList.remove('open'))
-    );
+    // Menu mobile: buka / tutup
+    const openMenu = () => { navLinks.classList.add('open'); navOverlay.classList.add('open'); };
+    const closeMenu = () => { navLinks.classList.remove('open'); navOverlay.classList.remove('open'); };
+
+    navToggle.addEventListener('click', openMenu);
+    navClose.addEventListener('click', closeMenu);
+    navOverlay.addEventListener('click', closeMenu); // klik area luar menutup
+    navLinks.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeMenu));
+    // tombol Escape menutup menu
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 
     // Reveal saat masuk viewport
     const io = new IntersectionObserver(
