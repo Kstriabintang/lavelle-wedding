@@ -149,7 +149,7 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
 .hero__title em::after { content: ""; position: absolute; left: 0; right: 0; bottom: .06em; height: 2px; background: #f0cf94; }
 .hero__sub { font-size: 1.12rem; color: rgba(255, 250, 240, .92); max-width: 620px; margin: 0 auto 2.4rem; }
 .hero__cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-.hero .btn--ghost { color: #fff; border-color: rgba(255, 255, 255, .5); }
+.hero .btn--ghost { color: #fff; border: 2px solid #fff; }
 .hero .btn--ghost:hover { background: #fff; color: var(--green-deep); border-color: #fff; }
 .hero__meta { display: flex; justify-content: center; gap: 3.2rem; margin-top: 4rem; flex-wrap: wrap; }
 .hero__meta div { display: flex; flex-direction: column; }

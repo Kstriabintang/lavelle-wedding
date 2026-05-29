@@ -190,3 +190,11 @@ body.is-after .phase-before { display: none; }
     .corner { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .reveal { transition: none; opacity: 1; transform: none; } .music.playing i { animation: none; } .petals { display: none; } }
+
+/* === Cegah overflow horizontal di mobile (nama script panjang) === */
+html, body { overflow-x: hidden; max-width: 100%; }
+.cover__names, .names, .title-script { max-width: 100%; word-break: break-word; overflow-wrap: break-word; }
+@media (max-width: 480px) {
+    .cover__names { font-size: 3.4rem; }
+    .hero .names { font-size: clamp(3rem, 14vw, 4rem); }
+}

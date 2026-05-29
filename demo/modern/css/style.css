@@ -198,3 +198,14 @@ body.is-after .phase-before { display: none; }
     .couple, .events, .gifts { grid-template-columns: 1fr; }
     .gallery-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* === Cegah overflow horizontal di mobile (nama script panjang) === */
+html, body { overflow-x: hidden; max-width: 100%; }
+.cover__names, .names, .title-script, .cover__inner, .wrap { max-width: 100%; }
+.cover__names, .names, .title-script { word-break: break-word; overflow-wrap: break-word; }
+.cover__inner { padding: 0 24px; }
+@media (max-width: 480px) {
+    .cover__names { font-size: 3.2rem; }
+    .hero .names { font-size: 3rem; }
+    .title-script { font-size: clamp(2.4rem, 11vw, 3.2rem); }
+}

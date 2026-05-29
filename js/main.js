@@ -90,9 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const key = a.getAttribute('data-demo');
         const url = DEMO_LINKS[key];
         if (url && url !== '#') {
-            a.setAttribute('href', url);
-            a.setAttribute('target', '_blank');
-            a.setAttribute('rel', 'noopener');
+            a.setAttribute('href', url); // buka di tab yang sama
         } else {
             a.addEventListener('click', (ev) => {
                 ev.preventDefault();
