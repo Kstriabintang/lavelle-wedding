@@ -1,0 +1,28 @@
+/* =========================================================
+   Lavelle — Demo "Sinema"  ·  desktop.css
+   Penyesuaian khusus layar lebar (≥ 561px).
+   Dimuat via media attribute pada <link> — tidak tercampur
+   dengan mobile.
+   ========================================================= */
+
+/* napas vertikal lebih lega antar adegan */
+.sec { padding: clamp(5rem, 13vh, 8.5rem) 0; }
+
+/* rail progress lebih jelas */
+.rail { right: 18px; gap: .9rem; }
+.rail .dot { width: 9px; height: 9px; }
+
+/* hover halus pada kartu (efek tanpa transform agar tak bentrok
+   dengan animasi 3D scroll yang memakai inline-transform) */
+.tl-item, .event-card, .gift { transition: border-color .4s ease, box-shadow .4s ease; }
+.tl-item:hover, .event-card:hover, .gift:hover {
+    border-color: rgba(232, 200, 121, .55);
+    box-shadow: 0 32px 72px -28px rgba(0,0,0,.92), inset 0 0 0 1px rgba(232,200,121,.22);
+}
+
+/* tombol kontrol pojok sedikit lebih besar & nyaman di-klik */
+.back-demo { font-size: .76rem; padding: .6em 1.15em; }
+.music { width: 46px; height: 46px; }
+
+/* judul script sedikit lebih megah di layar besar */
+.title-script { letter-spacing: .01em; }

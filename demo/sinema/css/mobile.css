@@ -1,0 +1,38 @@
+/* =========================================================
+   Lavelle — Demo "Sinema"  ·  mobile.css
+   Penyesuaian khusus layar kecil (≤ 560px).
+   Dimuat via media attribute pada <link> — tidak tercampur
+   dengan desktop.
+   ========================================================= */
+
+/* bingkai tirai lebih tipis di tepi */
+:root { --frame: 4.5vw; }
+
+/* tata letak dipadatkan */
+.sec { padding: clamp(3rem, 9vh, 5rem) 0; }
+.gallery-grid { grid-template-columns: repeat(2, 1fr); }
+.timeline { gap: .8rem; }
+.events, .gifts, .adat__list { gap: .8rem; }
+
+/* pohon foreground lebih kecil & samar agar tak ramai */
+.tree { opacity: .42; }
+.tree--tl, .tree--tr { width: 116px; }
+.tree--bl, .tree--br { width: 104px; }
+
+/* spread buku menumpuk: foto di atas, teks di bawah */
+.book__spread { grid-template-columns: 1fr; }
+.book--flip .book__page--text { order: 2; }
+.book--flip .book__page--photo { order: 1; }
+.book__page { min-height: 230px; }
+.book__spread::after { display: none; }
+
+/* rail rapat ke tepi kanan */
+.rail { right: 6px; }
+
+/* lightbox: tombol tutup mudah dijangkau ibu jari */
+.lightbox { padding: 4vh 4vw; }
+.lightbox__x { top: max(12px, env(safe-area-inset-top)); right: 12px; }
+
+/* kontrol pojok sedikit lebih kecil */
+.back-demo { font-size: .68rem; padding: .5em .9em; }
+.music { width: 40px; height: 40px; }

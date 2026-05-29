@@ -1,0 +1,100 @@
+/* =========================================================
+   Lavelle — Demo "Modern 3D"  ·  base.css
+   Gaya inti & bersama (berlaku di semua perangkat).
+   Penyesuaian khusus ada di desktop.css & mobile.css.
+   ========================================================= */
+:root {
+    --gold: #e9cd8c;
+    --gold-deep: #b08f48;
+    --ink: #f3ecdd;
+    --champagne: #efe2c4;
+    --navy: #070a12;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --script: 'Pinyon Script', cursive;
+    --sans: 'Jost', system-ui, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    background: var(--navy); color: var(--ink); font-family: var(--sans);
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+
+/* canvas 3D fixed di belakang; scroll/touch diteruskan ke halaman */
+canvas#scene { position: fixed; inset: 0; z-index: 0; display: block; pointer-events: none; }
+/* pemberi tinggi scroll (5 layar) */
+#spacer { position: relative; width: 100%; height: 520vh; z-index: 1; pointer-events: none; }
+
+/* vignette sinematik */
+.vignette { position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background: radial-gradient(125% 125% at 50% 45%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%); }
+
+/* ===== tombol ===== */
+.btn {
+    display: inline-flex; align-items: center; gap: .6em; cursor: pointer; border: none;
+    font-family: var(--sans); font-weight: 500; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase;
+    padding: 1em 2.1em; border-radius: 50px; text-decoration: none;
+    background: linear-gradient(135deg, #e9cd8c, #b08f48); color: #2a210f;
+    box-shadow: 0 12px 32px -12px rgba(212, 175, 106, .7); transition: transform .3s, box-shadow .3s;
+}
+.btn:hover { transform: translateY(-3px); box-shadow: 0 18px 42px -12px rgba(212, 175, 106, .85); }
+.btn:active { transform: translateY(-1px) scale(.985); }
+
+/* ===== loader ===== */
+.loader { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; background: var(--navy); transition: opacity .7s ease, visibility .7s ease; }
+.loader.done { opacity: 0; visibility: hidden; }
+.loader__in { text-align: center; }
+.loader span { font-family: var(--script); font-size: 3.2rem; background: linear-gradient(135deg, #f4e3b8, #b08f48); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.loader small { display: block; margin-top: .6rem; letter-spacing: .3em; text-transform: uppercase; font-size: .6rem; color: rgba(243, 236, 221, .5); }
+.loader__bar { width: 180px; height: 2px; margin: 1.2rem auto 0; background: rgba(255, 255, 255, .12); border-radius: 5px; overflow: hidden; }
+.loader__bar i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, #e9cd8c, #b08f48); transition: width .3s ease; }
+
+/* ===== kontrol tetap ===== */
+.back-demo { position: fixed; top: 16px; left: 16px; z-index: 20; background: rgba(255, 255, 255, .07); color: var(--ink); border: 1px solid rgba(212, 175, 106, .35); padding: .55em 1.05em; border-radius: 50px; font-size: .74rem; letter-spacing: .06em; text-decoration: none; display: inline-flex; gap: .45em; align-items: center; backdrop-filter: blur(6px); transition: border-color .3s, background .3s; }
+.back-demo:hover { border-color: var(--gold); background: rgba(255, 255, 255, .12); }
+
+.music { position: fixed; top: 16px; right: 16px; z-index: 20; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; background: rgba(255,255,255,.07); border: 1px solid rgba(212,175,106,.35); color: var(--ink); backdrop-filter: blur(6px); transition: border-color .3s, background .3s, transform .3s; }
+.music:hover { border-color: var(--gold); background: rgba(255,255,255,.12); }
+.music:active { transform: scale(.94); }
+.music.playing i { animation: spin 4s linear infinite; color: var(--gold); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* judul section (atas) */
+.sectitle { position: fixed; top: 18px; left: 0; right: 0; z-index: 15; text-align: center; letter-spacing: .34em; text-transform: uppercase; font-size: .64rem; color: var(--gold); pointer-events: none; transition: opacity .4s; }
+
+/* nama tamu (greeting) */
+.greeting { position: fixed; left: 0; right: 0; top: 42px; z-index: 15; text-align: center; pointer-events: none; transition: opacity .6s ease; }
+.greeting small { display: block; letter-spacing: .26em; text-transform: uppercase; font-size: .56rem; color: rgba(243, 236, 221, .55); }
+.greeting b { font-family: var(--serif); font-weight: 600; font-size: 1.15rem; color: var(--champagne); }
+body.scrolled .greeting { opacity: 0; }
+
+/* progress rail (kanan) */
+.rail { position: fixed; top: 50%; right: 18px; transform: translateY(-50%); z-index: 15; display: flex; flex-direction: column; gap: .9rem; }
+.rail .dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, .22); cursor: pointer; transition: all .3s; }
+.rail .dot.active { background: var(--gold); transform: scale(1.3); box-shadow: 0 0 12px rgba(233, 205, 140, .85); }
+.rail .dot:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* scroll hint */
+.hint { position: fixed; left: 0; right: 0; bottom: 26px; z-index: 15; text-align: center; font-size: .62rem; letter-spacing: .22em; text-transform: uppercase; color: rgba(243, 236, 221, .55); pointer-events: none; transition: opacity .6s; }
+.hint i { display: block; margin: .5rem auto 0; font-size: .9rem; color: var(--gold); animation: bob 1.6s ease-in-out infinite; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+.hint.gone { opacity: 0; }
+
+/* ===== RSVP overlay ===== */
+.rsvp { position: fixed; inset: 0; z-index: 16; display: flex; align-items: center; justify-content: center; padding: 90px 24px; opacity: 0; visibility: hidden; transition: opacity .6s ease, visibility .6s ease; pointer-events: none; }
+.rsvp.show { opacity: 1; visibility: visible; pointer-events: auto; }
+.rsvp__box { width: min(420px, 92vw); background: rgba(12, 16, 30, .5); border: 1px solid rgba(212, 175, 106, .35); border-radius: 18px; backdrop-filter: blur(12px); padding: 2rem 1.6rem; text-align: center; box-shadow: 0 30px 70px -30px rgba(0, 0, 0, .8); }
+.rsvp__box .k { letter-spacing: .34em; text-transform: uppercase; font-size: .6rem; color: var(--gold); }
+.rsvp__box h3 { font-family: var(--serif); font-size: 1.8rem; font-weight: 600; margin-top: .2rem; }
+.rsvp label { display: block; text-align: left; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(243, 236, 221, .7); margin: .9rem 0 .35rem; }
+.rsvp input, .rsvp select { width: 100%; background: rgba(255, 255, 255, .05); border: 1px solid rgba(212, 175, 106, .3); border-radius: 10px; padding: .8em .9em; color: var(--ink); font-family: var(--sans); font-size: .92rem; outline: none; }
+.rsvp input:focus, .rsvp select:focus { border-color: var(--gold); }
+.rsvp select option { background: #0c1020; }
+.rsvp .btn { width: 100%; justify-content: center; margin-top: 1.3rem; }
+.rsvp__ok { display: none; margin-top: 1rem; font-family: var(--serif); font-style: italic; color: var(--champagne); }
+.rsvp__ok.show { display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+    .music.playing i, .hint i { animation: none !important; }
+    html { scroll-behavior: auto; }
+}

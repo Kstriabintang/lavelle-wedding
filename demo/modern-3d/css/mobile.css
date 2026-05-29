@@ -1,0 +1,27 @@
+/* =========================================================
+   mobile.css — penyesuaian layar kecil (≤ 768px)
+   Dimuat via media attribute pada <link>.
+   ========================================================= */
+
+/* rail lebih ringkas & dekat tepi */
+.rail { right: 8px; gap: .7rem; }
+.rail .dot { width: 8px; height: 8px; }
+.rail .dot.active { transform: scale(1.4); }
+
+/* kontrol pojok sedikit lebih kecil agar tak menabrak konten */
+.back-demo { top: 12px; left: 12px; font-size: .68rem; padding: .5em .9em; }
+.music { top: 12px; right: 12px; width: 40px; height: 40px; }
+
+/* teks atas dirapatkan */
+.sectitle { top: 14px; font-size: .58rem; letter-spacing: .28em; }
+.greeting { top: 34px; }
+.greeting b { font-size: 1.05rem; }
+.greeting small { font-size: .52rem; }
+
+/* hint sedikit lebih naik dari home-bar */
+.hint { bottom: max(20px, env(safe-area-inset-bottom)); font-size: .58rem; }
+
+/* RSVP penuh & nyaman dijangkau */
+.rsvp { padding: 76px 18px; align-items: flex-end; }
+.rsvp__box { width: 100%; padding: 1.6rem 1.3rem; }
+.loader span { font-size: 2.6rem; }

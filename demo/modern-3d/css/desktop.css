@@ -1,0 +1,20 @@
+/* =========================================================
+   desktop.css — penyesuaian layar lebar (≥ 769px)
+   Dimuat via media attribute pada <link>.
+   ========================================================= */
+
+/* rail lebih lega & jelas di kanan */
+.rail { right: 24px; gap: 1rem; }
+.rail .dot { width: 10px; height: 10px; }
+
+/* judul section & greeting sedikit lebih besar */
+.sectitle { font-size: .68rem; letter-spacing: .38em; }
+.greeting b { font-size: 1.3rem; }
+.hint { font-size: .64rem; }
+
+/* kontrol pojok lebih besar */
+.back-demo { font-size: .76rem; padding: .6em 1.15em; }
+.music { width: 46px; height: 46px; }
+
+/* kursor menandakan area interaktif (parallax mengikuti pointer) */
+body { cursor: default; }

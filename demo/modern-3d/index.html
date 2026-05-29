@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Anindya &amp; Bima &mdash; Undangan 3D Sinematik | Demo Lavelle</title>
+    <meta name="description" content="Demo undangan pernikahan digital 3D sinematik berbasis scroll (Three.js) oleh Lavelle.">
+    <meta name="theme-color" content="#070a12">
+    <link rel="icon" type="image/png" href="../../img/lavelle-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&family=Jost:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- CSS terstruktur: inti + folder perangkat -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/desktop.css" media="(min-width: 769px)">
+    <link rel="stylesheet" href="css/mobile.css" media="(max-width: 768px)">
+</head>
+
+<body>
+    <!-- panggung 3D + ruang scroll -->
+    <canvas id="scene"></canvas>
+    <div id="spacer"></div>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <!-- backsound -->
+    <audio id="bgm" loop preload="none" src="../modern/audio/marry-you-violin.mp3"></audio>
+
+    <!-- loader -->
+    <div class="loader" id="loader">
+        <div class="loader__in">
+            <span>Lavelle</span>
+            <small>Memuat pengalaman 3D&hellip;</small>
+            <div class="loader__bar"><i id="loaderBar"></i></div>
+        </div>
+    </div>
+
+    <!-- kontrol tetap -->
+    <a href="../" class="back-demo" onclick="if(history.length>1){history.back();return false;}"><i class="fa-solid fa-arrow-left"></i> Galeri Demo</a>
+    <button class="music" id="musicBtn" aria-label="Putar / jeda musik"><i class="fa-solid fa-music"></i></button>
+
+    <!-- overlay teks -->
+    <div class="sectitle" id="secTitle"></div>
+    <div class="greeting" id="greeting" aria-hidden="true">
+        <small>Kepada Yth.</small>
+        <b id="guestName">Bapak / Ibu / Saudara/i</b>
+    </div>
+    <div class="rail" id="rail"></div>
+    <div class="hint" id="hint">Scroll untuk menjelajah<i class="fa-solid fa-chevron-down"></i></div>
+
+    <!-- RSVP -->
+    <div class="rsvp" id="rsvp">
+        <form class="rsvp__box" id="rsvpForm">
+            <span class="k">RSVP</span>
+            <h3>Konfirmasi Kehadiran</h3>
+            <label for="r-name">Nama</label>
+            <input type="text" id="r-name" placeholder="Nama lengkap" required>
+            <label for="r-att">Kehadiran</label>
+            <select id="r-att" required>
+                <option value="">Pilih&hellip;</option>
+                <option>Insya Allah Hadir</option>
+                <option>Maaf, Belum Bisa Hadir</option>
+            </select>
+            <button class="btn" type="submit"><i class="fa-solid fa-paper-plane"></i> Kirim Konfirmasi</button>
+            <p class="rsvp__ok" id="rsvpOk"><i class="fa-solid fa-circle-check"></i> Terima kasih, konfirmasimu sudah kami terima!</p>
+        </form>
+    </div>
+
+    <!-- Three.js + modul (urutan penting) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/content.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
