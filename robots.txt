@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lavelle.my.id/sitemap.xml
