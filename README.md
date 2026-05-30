@@ -94,10 +94,8 @@ Lavelle operates **100% online** — no physical office. We serve couples across
 
 ## Contact
 
-- **WhatsApp:** [+62 852-6440-2640](https://wa.me/6285264402640) · [+62 822-9991-3592](https://wa.me/6282299913592)
-- **Instagram:** [@lavelle.ld](https://instagram.com/lavelle.ld)
-- **Email:** lavelle.weddingku@gmail.com
-- **Website:** [lavelle.my.id](https://lavelle.my.id)
+For inquiries and bookings, please visit **[lavelle.my.id](https://lavelle.my.id)** —
+all contact details are available there.
 
 ## License
 
