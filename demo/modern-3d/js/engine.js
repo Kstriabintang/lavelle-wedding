@@ -103,7 +103,7 @@
             S.rsvp.group.rotation.y = Math.sin(t * 0.35 + 1) * 0.05;
             S.rsvp.group.position.y = L.centerY(4) + Math.sin(t * 0.7 + 1) * 0.12;
             S.rsvp.group.children.forEach(function (c) { if (c.material) c.material.opacity = util.clamp(l4 * 1.4, 0, 1); });
-            if (U.rsvpEl) U.rsvpEl.classList.toggle("show", l4 > 0.55);
+            if (U.rsvpEl) U.rsvpEl.classList.toggle("show", l4 > 0.78);
 
             // partikel hanyut
             M3D.particles.dust.rotation.y += 0.0003;

@@ -81,7 +81,7 @@ body.scrolled .greeting { opacity: 0; }
 .hint.gone { opacity: 0; }
 
 /* ===== RSVP overlay ===== */
-.rsvp { position: fixed; inset: 0; z-index: 16; display: flex; align-items: center; justify-content: center; padding: 90px 24px; opacity: 0; visibility: hidden; transition: opacity .6s ease, visibility .6s ease; pointer-events: none; }
+.rsvp { position: fixed; inset: 0; z-index: 16; display: flex; align-items: flex-end; justify-content: center; padding: 12vh 24px max(7vh, env(safe-area-inset-bottom)); opacity: 0; visibility: hidden; transition: opacity .6s ease, visibility .6s ease; pointer-events: none; }
 .rsvp.show { opacity: 1; visibility: visible; pointer-events: auto; }
 .rsvp__box { width: min(420px, 92vw); background: rgba(12, 16, 30, .5); border: 1px solid rgba(212, 175, 106, .35); border-radius: 18px; backdrop-filter: blur(12px); padding: 2rem 1.6rem; text-align: center; box-shadow: 0 30px 70px -30px rgba(0, 0, 0, .8); }
 .rsvp__box .k { letter-spacing: .34em; text-transform: uppercase; font-size: .6rem; color: var(--gold); }

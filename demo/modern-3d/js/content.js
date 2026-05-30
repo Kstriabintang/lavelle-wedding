@@ -62,11 +62,12 @@
         /* ===== 2 — OUR STORY (konstelasi foto) ===== */
         var gallery = new THREE.Group(); gallery.position.set(0, centerY(2), CZ); scene.add(gallery);
         M3D.photoURLs.forEach(function (src, i) {
-            var ang = (i / M3D.photoURLs.length) * Math.PI * 2, radius = 8 + (i % 3) * 1.3;
-            var yy = ((i / M3D.photoURLs.length) - 0.5) * 30 + (Math.random() - 0.5) * 2;
+            var ang = (i / M3D.photoURLs.length) * Math.PI * 2, radius = 9 + (i % 2) * 1.6;
+            // band tipis & rata (lurus) — foto tidak lagi terbang jauh ke atas-bawah
+            var yy = (i % 2 === 0 ? 1.6 : -1.6);
             var frame = new THREE.Group();
             frame.position.set(Math.sin(ang) * radius, yy, Math.cos(ang) * radius);
-            frame.rotation.y = ang; frame.rotation.z = (Math.random() - 0.5) * 0.2;
+            frame.rotation.y = ang; frame.rotation.z = 0;
             var border = new THREE.Mesh(new THREE.PlaneGeometry(2.05, 2.75), new THREE.MeshStandardMaterial({ color: 0xc9a85e, metalness: 0.7, roughness: 0.35, side: THREE.DoubleSide }));
             border.position.z = -0.02; frame.add(border);
             var mat = new THREE.MeshBasicMaterial({ color: 0x222633, side: THREE.DoubleSide });
@@ -77,7 +78,7 @@
         (function () {
             var cv = U.newCanvas(1200, 300);
             var draw = function () { var ctx = cv.getContext("2d"); ctx.clearRect(0, 0, 1200, 300); ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = U.goldGrad(ctx, 40, 240); ctx.font = "150px 'Pinyon Script',cursive"; ctx.fillText("Our Story", 600, 150); };
-            draw(); var tp = U.planeTex(cv, 9, 2.25); tp.mesh.position.set(0, 17, 0); gallery.add(tp.mesh); redraws.push(function () { draw(); tp.tex.needsUpdate = true; });
+            draw(); var tp = U.planeTex(cv, 9, 2.25); tp.mesh.position.set(0, 4.2, 0); gallery.add(tp.mesh); redraws.push(function () { draw(); tp.tex.needsUpdate = true; });
         })();
         S.gallery = { group: gallery };
 
@@ -118,7 +119,7 @@
                 ctx.fillStyle = U.goldGrad(ctx, 120, 330); ctx.font = "150px 'Pinyon Script',cursive"; ctx.fillText("Be Our Guest", W / 2, 250);
                 ctx.fillStyle = "#cfc6b0"; ctx.font = "italic 40px 'Cormorant Garamond',serif"; ctx.fillText("Konfirmasikan kehadiranmu", W / 2, 430);
             }
-            draw(); var tp = U.planeTex(cv, 6.6, 4.77); rsvp.add(tp.mesh); redraws.push(function () { draw(); tp.tex.needsUpdate = true; });
+            draw(); var tp = U.planeTex(cv, 6.6, 4.77); tp.mesh.position.set(0, 2.6, 0); rsvp.add(tp.mesh); redraws.push(function () { draw(); tp.tex.needsUpdate = true; });
         })();
         S.rsvp = { group: rsvp };
     };
