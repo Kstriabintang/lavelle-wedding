@@ -89,9 +89,8 @@ lavelle/
 
 ## Service Area
 
-Lavelle operates **100% online** — no physical office. We serve couples in
-**Pekanbaru**, **Pontianak**, and across **Indonesia**, with the entire process
-handled conveniently over WhatsApp.
+Lavelle operates **100% online** — no physical office. We serve couples across
+**Indonesia**, with the entire process handled conveniently over WhatsApp.
 
 ## Contact
 
