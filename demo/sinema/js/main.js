@@ -236,12 +236,25 @@
        AUDIO (fade)
        ==================================================== */
     var audio = document.getElementById("bgm"), musicBtn = document.getElementById("musicBtn"), TARGET_VOLUME = 0.75, fadeTimer;
-    var AUDIO_START = 10;   // mulai (& tiap loop) di detik ke-10
-    function seekStart() { try { if (audio.readyState > 0) audio.currentTime = AUDIO_START; } catch (e) {} }
-    // set posisi awal begitu metadata siap, sekali saja
-    audio.addEventListener("loadedmetadata", function () { try { if (audio.currentTime < AUDIO_START) audio.currentTime = AUDIO_START; } catch (e) {} }, { once: true });
-    // loop manual agar tiap putaran kembali ke detik AUDIO_START (bukan 0)
-    audio.addEventListener("ended", function () { seekStart(); audio.play().catch(function () {}); });
+    var AUDIO_START = 22;   // mulai (& tiap loop) di detik ke-22
+    var jumpedToStart = false;
+    // Loncat ke AUDIO_START HANYA bila audio sudah bisa di-seek ke sana
+    // (mencegah stall/diam di server tanpa Range request). Sebelum itu, biar main dari 0.
+    function trySeekStart() {
+        if (jumpedToStart) return;
+        try {
+            var sk = audio.seekable;
+            if (sk && sk.length && sk.end(sk.length - 1) >= AUDIO_START + 0.3) {
+                audio.currentTime = AUDIO_START;
+                jumpedToStart = true;
+            }
+        } catch (e) {}
+    }
+    audio.addEventListener("progress", trySeekStart);
+    audio.addEventListener("canplay", trySeekStart);
+    audio.addEventListener("canplaythrough", trySeekStart);
+    // loop manual: tiap putaran kembali ke AUDIO_START (file sudah ter-buffer penuh)
+    audio.addEventListener("ended", function () { try { audio.currentTime = AUDIO_START; } catch (e) {} audio.play().catch(function () {}); });
     function fadeTo(target, onDone) {
         clearInterval(fadeTimer); var step = (target - audio.volume) / 22;
         fadeTimer = setInterval(function () {
@@ -251,7 +264,7 @@
         }, 70);
     }
     var userWantsAudio = false;
-    function playMusic() { userWantsAudio = true; seekStart(); audio.volume = 0; audio.play().then(function () { seekStart(); musicBtn.classList.add("playing"); fadeTo(TARGET_VOLUME); }).catch(function () {}); }
+    function playMusic() { userWantsAudio = true; audio.volume = 0; audio.play().then(function () { musicBtn.classList.add("playing"); fadeTo(TARGET_VOLUME); trySeekStart(); }).catch(function () {}); }
     function pauseMusic() { userWantsAudio = false; musicBtn.classList.remove("playing"); fadeTo(0, function () { audio.pause(); }); }
     musicBtn.addEventListener("click", function () { audio.paused ? playMusic() : pauseMusic(); });
     // jeda musik otomatis saat tab disembunyikan, lanjut lagi saat kembali (jika tadinya menyala)
@@ -321,7 +334,9 @@
     /* ---------- Salin rekening ---------- */
     document.querySelectorAll(".btn-copy").forEach(function (b) {
         b.addEventListener("click", function () {
-            var txt = document.getElementById(b.dataset.copy).textContent.replace(/\s/g, "");
+            var el = document.getElementById(b.dataset.copy);
+            // alamat (data-raw): pertahankan spasi; nomor rekening: hapus spasi
+            var txt = el.hasAttribute("data-raw") ? el.textContent.trim().replace(/\s+/g, " ") : el.textContent.replace(/\s/g, "");
             if (navigator.clipboard) navigator.clipboard.writeText(txt);
             var old = b.innerHTML; b.innerHTML = '<i class="fa-solid fa-check"></i> Tersalin';
             setTimeout(function () { b.innerHTML = old; }, 1600);
