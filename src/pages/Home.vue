@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, nextTick, onMounted, onUnmounted } from 'vue'
 import { useHead } from '@unhead/vue'
 import { wa, waPlan, WA_1, WA_2, IG } from '../data/site'
 import { demos } from '../data/site'
@@ -123,6 +123,30 @@ const testimonials = [
   { name: 'Kirana & Arsa', role: 'Menikah Juni 2027', photo: 'pasangan-tatapan-dekat', stars: 5,
     text: 'Suka banget hasilnya. Amplop digitalnya praktis, buku ucapannya bikin haru. Terima kasih Lavelle sudah bikin hari kami makin berkesan.' },
 ]
+
+// Demo: kategori tab + carousel (biar tidak menumpuk)
+const demoCats = [
+  { key: 'adat', label: 'Adat Nusantara', icon: 'fa-landmark' },
+  { key: 'klasik', label: 'Klasik & Romantis', icon: 'fa-heart' },
+  { key: 'modern', label: 'Modern', icon: 'fa-wand-magic-sparkles' },
+]
+const demoCategory = {
+  minang: 'adat', jawa: 'adat', sunda: 'adat', bugis: 'adat',
+  luxe: 'klasik', klasik: 'klasik',
+  modern: 'modern', sinema: 'modern', modern3d: 'modern',
+}
+const activeCat = ref('adat')
+const filteredDemos = computed(() => demos.filter((d) => demoCategory[d.key] === activeCat.value))
+const countCat = (k) => demos.filter((d) => demoCategory[d.key] === k).length
+const track = ref(null)
+const setCat = (k) => { activeCat.value = k; nextTick(() => track.value && track.value.scrollTo({ left: 0 })) }
+const scrollDemos = (dir) => {
+  const el = track.value
+  if (!el) return
+  const card = el.querySelector('.demo--slide')
+  const w = card ? card.offsetWidth + 20 : 340
+  el.scrollBy({ left: dir * w, behavior: 'smooth' })
+}
 
 // Lightbox galeri
 const lightbox = ref(-1)
@@ -261,24 +285,37 @@ onUnmounted(() => document.removeEventListener('keydown', onKey))
         <p class="section__desc">Klik untuk melihat tampilan undangan secara langsung. Setiap desain dapat
           dikustomisasi sesuai keinginanmu.</p>
       </div>
-      <div class="grid grid--2">
-        <article v-for="d in demos" :key="d.key" class="demo reveal" :class="d.cardClass">
-          <div class="demo__thumb" :class="d.thumb">
-            <div class="mk" :class="d.frame">
-              <span class="mk__kicker">The Wedding Of</span>
-              <h4 class="mk__names">{{ d.names }}</h4>
-              <span class="mk__date">{{ d.date }}</span>
-              <span class="mk__btn">{{ d.btn }}</span>
-            </div>
-            <span class="demo__tag">{{ d.tag }}</span>
-          </div>
-          <div class="demo__body">
-            <h3>{{ d.title }}<em v-if="d.flag" class="demo__flag">{{ d.flag }}</em></h3>
-            <p>{{ d.desc }}</p>
-            <a :href="d.href" class="link">Lihat Demo <i class="fa-solid fa-arrow-right-long"></i></a>
-          </div>
-        </article>
+      <div class="demo-tabs reveal">
+        <button v-for="c in demoCats" :key="c.key" class="demo-tab" :class="{ 'is-active': activeCat === c.key }"
+          @click="setCat(c.key)">
+          <i :class="`fa-solid ${c.icon}`"></i> {{ c.label }} <span>{{ countCat(c.key) }}</span>
+        </button>
       </div>
+      <div class="demo-carousel reveal">
+        <button class="demo-arrow demo-arrow--prev" aria-label="Sebelumnya" @click="scrollDemos(-1)">
+          <i class="fa-solid fa-chevron-left"></i></button>
+        <div class="demo-track" ref="track">
+          <article v-for="d in filteredDemos" :key="d.key" class="demo demo--slide" :class="d.cardClass">
+            <div class="demo__thumb" :class="d.thumb">
+              <div class="mk" :class="d.frame">
+                <span class="mk__kicker">The Wedding Of</span>
+                <h4 class="mk__names">{{ d.names }}</h4>
+                <span class="mk__date">{{ d.date }}</span>
+                <span class="mk__btn">{{ d.btn }}</span>
+              </div>
+              <span class="demo__tag">{{ d.tag }}</span>
+            </div>
+            <div class="demo__body">
+              <h3>{{ d.title }}<em v-if="d.flag" class="demo__flag">{{ d.flag }}</em></h3>
+              <p>{{ d.desc }}</p>
+              <a :href="d.href" class="link">Lihat Demo <i class="fa-solid fa-arrow-right-long"></i></a>
+            </div>
+          </article>
+        </div>
+        <button class="demo-arrow demo-arrow--next" aria-label="Berikutnya" @click="scrollDemos(1)">
+          <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <p class="demo-hint reveal"><i class="fa-solid fa-arrows-left-right"></i> Geser untuk melihat lebih banyak</p>
       <p class="demo__note reveal"><i class="fa-regular fa-circle-question"></i> Punya referensi desain sendiri?
         Kirim ke kami, tim Lavelle siap mewujudkannya.</p>
       <div style="text-align:center; margin-top:1.8rem;" class="reveal">
