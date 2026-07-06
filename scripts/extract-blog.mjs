@@ -7,6 +7,10 @@ import { dirname, join } from 'node:path'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const BLOG = join(__dirname, '..', 'public', 'blog')
 
+// Decode HTML entity umum -> teks bersih (untuk field yang ditampilkan sbg teks)
+const ENT = { '&amp;': '&', '&mdash;': '—', '&ndash;': '–', '&middot;': '·', '&hellip;': '…', '&rsaquo;': '›', '&lsaquo;': '‹', '&quot;': '"', '&nbsp;': ' ', '&copy;': '©', '&times;': '×', '&raquo;': '»', '&laquo;': '«', '&infin;': '∞', '&#39;': "'", '&apos;': "'" }
+const decode = (s) => String(s).replace(/&[a-z#0-9]+;/gi, (m) => ENT[m] ?? m)
+const pickT = (re, s, d = '') => decode(pick(re, s, d))
 const pick = (re, s, d = '') => { const m = s.match(re); return m ? m[1].trim() : d }
 // Perbaiki link relatif artikel -> absolut situs
 const fixLinks = (html) => html
@@ -21,17 +25,17 @@ for (const m of indexHtml.matchAll(cardRe)) {
   list.push({
     slug: m[1],
     image: m[2].replace('../img/', '/img/'),
-    category: m[3].trim(),
-    title: m[4].replace(/\s+/g, ' ').trim(),
-    excerpt: m[5].replace(/\s+/g, ' ').trim(),
-    meta: m[6].replace(/\s+/g, ' ').trim(),
+    category: decode(m[3].trim()),
+    title: decode(m[4].replace(/\s+/g, ' ').trim()),
+    excerpt: decode(m[5].replace(/\s+/g, ' ').trim()),
+    meta: decode(m[6].replace(/\s+/g, ' ').trim()),
   })
 }
 
 // Meta halaman index blog
 const indexMeta = {
-  title: pick(/<title>([\s\S]*?)<\/title>/, indexHtml),
-  description: pick(/<meta name="description"\s+content="([\s\S]*?)">/, indexHtml),
+  title: pickT(/<title>([\s\S]*?)<\/title>/, indexHtml),
+  description: pickT(/<meta name="description"\s+content="([\s\S]*?)">/, indexHtml),
   ogImage: pick(/<meta property="og:image" content="(.*?)">/, indexHtml),
   jsonLd: pick(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/, indexHtml),
 }
@@ -49,20 +53,20 @@ for (const slug of slugs) {
   const prose = pick(/<div class="prose">([\s\S]*)<\/div>\s*<\/article>/, h)
   posts[slug] = {
     slug,
-    title: pick(/<title>([\s\S]*?)<\/title>/, h),
-    description: pick(/<meta name="description"\s+content="([\s\S]*?)">/, h),
-    keywords: pick(/<meta name="keywords" content="(.*?)">/, h),
+    title: pickT(/<title>([\s\S]*?)<\/title>/, h),
+    description: pickT(/<meta name="description"\s+content="([\s\S]*?)">/, h),
+    keywords: pickT(/<meta name="keywords" content="(.*?)">/, h),
     canonical: pick(/<link rel="canonical" href="(.*?)">/, h),
-    ogTitle: pick(/<meta property="og:title" content="(.*?)">/, h),
-    ogDescription: pick(/<meta property="og:description" content="(.*?)">/, h),
+    ogTitle: pickT(/<meta property="og:title" content="(.*?)">/, h),
+    ogDescription: pickT(/<meta property="og:description" content="(.*?)">/, h),
     ogImage: pick(/<meta property="og:image" content="(.*?)">/, h),
-    twitterDescription: pick(/<meta name="twitter:description" content="(.*?)">/, h),
-    category: pick(/<span class="article__cat">(.*?)<\/span>/, h),
-    heading: pick(/<h1 class="article__title">([\s\S]*?)<\/h1>/, h).replace(/\s+/g, ' ').trim(),
-    articleMeta: pick(/<p class="article__meta">([\s\S]*?)<\/p>/, h).replace(/\s+/g, ' ').trim(),
-    breadcrumb: pick(/&rsaquo;\s*<a href="\.\.\/">Blog<\/a>\s*&rsaquo;\s*([\s\S]*?)<\/nav>/, h).replace(/\s+/g, ' ').trim(),
+    twitterDescription: pickT(/<meta name="twitter:description" content="(.*?)">/, h),
+    category: pickT(/<span class="article__cat">(.*?)<\/span>/, h),
+    heading: decode(pick(/<h1 class="article__title">([\s\S]*?)<\/h1>/, h).replace(/\s+/g, ' ').trim()),
+    articleMeta: decode(pick(/<p class="article__meta">([\s\S]*?)<\/p>/, h).replace(/\s+/g, ' ').trim()),
+    breadcrumb: decode(pick(/&rsaquo;\s*<a href="\.\.\/">Blog<\/a>\s*&rsaquo;\s*([\s\S]*?)<\/nav>/, h).replace(/\s+/g, ' ').trim()),
     cover: pick(/<img class="article__cover"\s+src="(.*?)"/, h).replace('../../img/', '/img/'),
-    coverAlt: pick(/<img class="article__cover"[\s\S]*?alt="(.*?)"/, h),
+    coverAlt: pickT(/<img class="article__cover"[\s\S]*?alt="(.*?)"/, h),
     jsonLd: pick(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/, h),
     body: fixLinks(prose).trim(),
   }

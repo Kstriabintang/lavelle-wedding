@@ -1,6 +1,6 @@
 // DIHASILKAN OTOMATIS oleh scripts/extract-blog.mjs — jangan edit tangan.
 export const indexMeta = {
-  "title": "Blog Lavelle — Tips &amp; Inspirasi Undangan Pernikahan Digital",
+  "title": "Blog Lavelle — Tips & Inspirasi Undangan Pernikahan Digital",
   "description": "Kumpulan tips, panduan, dan inspirasi seputar undangan pernikahan digital dari Lavelle. Pelajari cara memilih, contoh kata-kata undangan, dan ide untuk hari bahagiamu.",
   "ogImage": "https://lavelle.my.id/img/mentahan/pasangan-pose-romantis.jpeg",
   "jsonLd": "{\n      \"@context\": \"https://schema.org\",\n      \"@type\": \"Blog\",\n      \"@id\": \"https://lavelle.my.id/blog/\",\n      \"name\": \"Blog Lavelle\",\n      \"description\": \"Tips, panduan, dan inspirasi seputar undangan pernikahan digital.\",\n      \"publisher\": { \"@type\": \"Organization\", \"name\": \"Lavelle\", \"logo\": { \"@type\": \"ImageObject\", \"url\": \"https://lavelle.my.id/img/lavelle-logo.png\" } },\n      \"blogPost\": [\n        { \"@type\": \"BlogPosting\", \"headline\": \"Tips Memilih Undangan Pernikahan Digital yang Tepat\", \"url\": \"https://lavelle.my.id/blog/tips-memilih-undangan-pernikahan-digital/\", \"datePublished\": \"2026-05-30\", \"author\": { \"@type\": \"Organization\", \"name\": \"Lavelle\" } },\n        { \"@type\": \"BlogPosting\", \"headline\": \"40+ Contoh Kata-Kata Undangan Pernikahan Digital\", \"url\": \"https://lavelle.my.id/blog/contoh-kata-kata-undangan-pernikahan-digital/\", \"datePublished\": \"2026-05-30\", \"author\": { \"@type\": \"Organization\", \"name\": \"Lavelle\" } },\n        { \"@type\": \"BlogPosting\", \"headline\": \"Undangan Digital vs Cetak: Mana yang Lebih Hemat?\", \"url\": \"https://lavelle.my.id/blog/undangan-digital-vs-cetak/\", \"datePublished\": \"2026-05-30\", \"author\": { \"@type\": \"Organization\", \"name\": \"Lavelle\" } },\n        { \"@type\": \"BlogPosting\", \"headline\": \"10 Ide Tema Undangan Pernikahan Digital yang Elegan\", \"url\": \"https://lavelle.my.id/blog/ide-tema-undangan-pernikahan-digital/\", \"datePublished\": \"2026-05-30\", \"author\": { \"@type\": \"Organization\", \"name\": \"Lavelle\" } },\n        { \"@type\": \"BlogPosting\", \"headline\": \"Panduan Lengkap Membuat Undangan Pernikahan Digital\", \"url\": \"https://lavelle.my.id/blog/panduan-membuat-undangan-pernikahan-digital/\", \"datePublished\": \"2026-05-30\", \"author\": { \"@type\": \"Organization\", \"name\": \"Lavelle\" } },\n        { \"@type\": \"BlogPosting\", \"headline\": \"Cara Menyebar Undangan Digital lewat WhatsApp\", \"url\": \"https://lavelle.my.id/blog/cara-menyebar-undangan-digital-whatsapp/\", \"datePublished\": \"2026-05-30\", \"author\": { \"@type\": \"Organization\", \"name\": \"Lavelle\" } },\n        { \"@type\": \"BlogPosting\", \"headline\": \"7 Fitur Wajib di Undangan Pernikahan Digital\", \"url\": \"https://lavelle.my.id/blog/fitur-wajib-undangan-pernikahan-digital/\", \"datePublished\": \"2026-05-30\", \"author\": { \"@type\": \"Organization\", \"name\": \"Lavelle\" } },\n        { \"@type\": \"BlogPosting\", \"headline\": \"Tips Memilih Foto Prewedding untuk Undangan Digital\", \"url\": \"https://lavelle.my.id/blog/tips-foto-prewedding-undangan-digital/\", \"datePublished\": \"2026-05-30\", \"author\": { \"@type\": \"Organization\", \"name\": \"Lavelle\" } },\n        { \"@type\": \"BlogPosting\", \"headline\": \"Amplop Digital: Cara Menerima Kado Pernikahan secara Online\", \"url\": \"https://lavelle.my.id/blog/amplop-digital-pernikahan/\", \"datePublished\": \"2026-05-30\", \"author\": { \"@type\": \"Organization\", \"name\": \"Lavelle\" } }\n      ]\n    }"
@@ -13,15 +13,15 @@ export const postList = [
     "category": "Panduan",
     "title": "Tips Memilih Undangan Pernikahan Digital yang Tepat",
     "excerpt": "7 hal penting yang wajib kamu perhatikan sebelum memesan undangan digital agar hasilnya elegan, lengkap, dan sesuai budget.",
-    "meta": "30 Mei 2026 &middot; 6 menit baca"
+    "meta": "30 Mei 2026 · 6 menit baca"
   },
   {
     "slug": "contoh-kata-kata-undangan-pernikahan-digital",
     "image": "/img/mentahan/pasangan-tatapan-dekat.jpeg",
     "category": "Inspirasi",
     "title": "40+ Contoh Kata-Kata Undangan Pernikahan Digital",
-    "excerpt": "Kumpulan contoh kalimat undangan yang manis, islami, modern, dan simpel &mdash; siap kamu salin dan sesuaikan.",
-    "meta": "30 Mei 2026 &middot; 7 menit baca"
+    "excerpt": "Kumpulan contoh kalimat undangan yang manis, islami, modern, dan simpel — siap kamu salin dan sesuaikan.",
+    "meta": "30 Mei 2026 · 7 menit baca"
   },
   {
     "slug": "undangan-digital-vs-cetak",
@@ -29,23 +29,23 @@ export const postList = [
     "category": "Edukasi",
     "title": "Undangan Digital vs Cetak: Mana yang Lebih Hemat?",
     "excerpt": "Perbandingan biaya, kepraktisan, fitur, dan dampak lingkungan antara undangan digital dan undangan cetak.",
-    "meta": "30 Mei 2026 &middot; 6 menit baca"
+    "meta": "30 Mei 2026 · 6 menit baca"
   },
   {
     "slug": "ide-tema-undangan-pernikahan-digital",
     "image": "/img/mentahan/pasangan-estetik-instagram.jpeg",
     "category": "Inspirasi",
     "title": "10 Ide Tema Undangan Pernikahan Digital yang Elegan",
-    "excerpt": "Dari klasik, modern, sinematik, hingga rustic &amp; islami &mdash; temukan tema yang paling mencerminkan kepribadian kalian.",
-    "meta": "30 Mei 2026 &middot; 8 menit baca"
+    "excerpt": "Dari klasik, modern, sinematik, hingga rustic & islami — temukan tema yang paling mencerminkan kepribadian kalian.",
+    "meta": "30 Mei 2026 · 8 menit baca"
   },
   {
     "slug": "panduan-membuat-undangan-pernikahan-digital",
     "image": "/img/mentahan/pasangan-outdoor-1.jpeg",
     "category": "Panduan",
     "title": "Panduan Lengkap Membuat Undangan Pernikahan Digital",
-    "excerpt": "Langkah demi langkah dari nol &mdash; konsep, data &amp; foto, pilih tema, revisi, hingga membagikan link.",
-    "meta": "30 Mei 2026 &middot; 7 menit baca"
+    "excerpt": "Langkah demi langkah dari nol — konsep, data & foto, pilih tema, revisi, hingga membagikan link.",
+    "meta": "30 Mei 2026 · 7 menit baca"
   },
   {
     "slug": "cara-menyebar-undangan-digital-whatsapp",
@@ -53,7 +53,7 @@ export const postList = [
     "category": "Panduan",
     "title": "Cara Menyebar Undangan Digital lewat WhatsApp",
     "excerpt": "Personalisasi nama tamu, contoh pesan pengantar, chat personal vs broadcast, dan etikanya.",
-    "meta": "30 Mei 2026 &middot; 6 menit baca"
+    "meta": "30 Mei 2026 · 6 menit baca"
   },
   {
     "slug": "fitur-wajib-undangan-pernikahan-digital",
@@ -61,15 +61,15 @@ export const postList = [
     "category": "Edukasi",
     "title": "7 Fitur Wajib di Undangan Pernikahan Digital",
     "excerpt": "RSVP, buku ucapan, galeri, hitung mundur, maps, amplop digital, hingga personalisasi nama tamu.",
-    "meta": "30 Mei 2026 &middot; 6 menit baca"
+    "meta": "30 Mei 2026 · 6 menit baca"
   },
   {
     "slug": "tips-foto-prewedding-undangan-digital",
     "image": "/img/mentahan/pasangan-pantai-senja.jpeg",
     "category": "Tips",
     "title": "Tips Memilih Foto Prewedding untuk Undangan Digital",
-    "excerpt": "Resolusi, orientasi foto, konsistensi warna &amp; tema, hingga jumlah ideal agar undangan tampak elegan.",
-    "meta": "30 Mei 2026 &middot; 5 menit baca"
+    "excerpt": "Resolusi, orientasi foto, konsistensi warna & tema, hingga jumlah ideal agar undangan tampak elegan.",
+    "meta": "30 Mei 2026 · 5 menit baca"
   },
   {
     "slug": "amplop-digital-pernikahan",
@@ -77,7 +77,7 @@ export const postList = [
     "category": "Edukasi",
     "title": "Amplop Digital: Cara Menerima Kado Pernikahan Online",
     "excerpt": "Apa itu amplop digital, cara kerjanya lewat transfer/QRIS, keamanan, dan etika menyediakannya.",
-    "meta": "30 Mei 2026 &middot; 5 menit baca"
+    "meta": "30 Mei 2026 · 5 menit baca"
   }
 ]
 
@@ -94,7 +94,7 @@ export const posts = {
     "twitterDescription": "Cara kerja amplop digital untuk undangan pernikahan.",
     "category": "Edukasi",
     "heading": "Amplop Digital: Cara Menerima Kado Pernikahan secara Online",
-    "articleMeta": "Oleh Lavelle &middot; 30 Mei 2026 &middot; 5 menit baca",
+    "articleMeta": "Oleh Lavelle · 30 Mei 2026 · 5 menit baca",
     "breadcrumb": "Amplop Digital Pernikahan",
     "cover": "/img/mentahan/pasangan-pelukan-1.jpeg",
     "coverAlt": "Amplop digital untuk pernikahan",
@@ -113,7 +113,7 @@ export const posts = {
     "twitterDescription": "Panduan membagikan undangan pernikahan digital lewat WhatsApp.",
     "category": "Panduan",
     "heading": "Cara Menyebar Undangan Pernikahan Digital lewat WhatsApp",
-    "articleMeta": "Oleh Lavelle &middot; 30 Mei 2026 &middot; 6 menit baca",
+    "articleMeta": "Oleh Lavelle · 30 Mei 2026 · 6 menit baca",
     "breadcrumb": "Cara Menyebar lewat WhatsApp",
     "cover": "/img/mentahan/pasangan-duduk.jpeg",
     "coverAlt": "Cara menyebar undangan digital lewat WhatsApp",
@@ -122,17 +122,17 @@ export const posts = {
   },
   "contoh-kata-kata-undangan-pernikahan-digital": {
     "slug": "contoh-kata-kata-undangan-pernikahan-digital",
-    "title": "40+ Contoh Kata-Kata Undangan Pernikahan Digital (Islami &amp; Modern) | Lavelle",
+    "title": "40+ Contoh Kata-Kata Undangan Pernikahan Digital (Islami & Modern) | Lavelle",
     "description": "Kumpulan contoh kata-kata undangan pernikahan digital: pembuka islami, kalimat modern, simpel, hingga ucapan untuk tamu. Siap kamu salin & sesuaikan.",
     "keywords": "contoh kata-kata undangan pernikahan, kata undangan digital, kalimat undangan nikah, undangan pernikahan islami",
     "canonical": "https://lavelle.my.id/blog/contoh-kata-kata-undangan-pernikahan-digital/",
-    "ogTitle": "40+ Contoh Kata-Kata Undangan Pernikahan Digital (Islami &amp; Modern)",
+    "ogTitle": "40+ Contoh Kata-Kata Undangan Pernikahan Digital (Islami & Modern)",
     "ogDescription": "Kumpulan contoh kalimat undangan pernikahan digital yang manis, islami, dan modern — siap disesuaikan.",
     "ogImage": "https://lavelle.my.id/img/mentahan/pasangan-tatapan-dekat.jpeg",
     "twitterDescription": "Contoh kalimat undangan pernikahan digital: islami, modern, & simpel.",
     "category": "Inspirasi",
     "heading": "40+ Contoh Kata-Kata Undangan Pernikahan Digital",
-    "articleMeta": "Oleh Lavelle &middot; 30 Mei 2026 &middot; 7 menit baca",
+    "articleMeta": "Oleh Lavelle · 30 Mei 2026 · 7 menit baca",
     "breadcrumb": "Contoh Kata-Kata Undangan",
     "cover": "/img/mentahan/pasangan-tatapan-dekat.jpeg",
     "coverAlt": "Contoh kata-kata undangan pernikahan digital",
@@ -151,7 +151,7 @@ export const posts = {
     "twitterDescription": "Fitur penting yang harus ada di undangan pernikahan digital.",
     "category": "Edukasi",
     "heading": "7 Fitur Wajib yang Harus Ada di Undangan Pernikahan Digital",
-    "articleMeta": "Oleh Lavelle &middot; 30 Mei 2026 &middot; 6 menit baca",
+    "articleMeta": "Oleh Lavelle · 30 Mei 2026 · 6 menit baca",
     "breadcrumb": "Fitur Wajib Undangan Digital",
     "cover": "/img/mentahan/pasangan-romantis.jpeg",
     "coverAlt": "Fitur wajib undangan pernikahan digital",
@@ -170,7 +170,7 @@ export const posts = {
     "twitterDescription": "Inspirasi tema undangan pernikahan digital yang elegan & modern.",
     "category": "Inspirasi",
     "heading": "10 Ide Tema Undangan Pernikahan Digital yang Elegan",
-    "articleMeta": "Oleh Lavelle &middot; 30 Mei 2026 &middot; 8 menit baca",
+    "articleMeta": "Oleh Lavelle · 30 Mei 2026 · 8 menit baca",
     "breadcrumb": "Ide Tema Undangan Digital",
     "cover": "/img/mentahan/pasangan-estetik-instagram.jpeg",
     "coverAlt": "Ide tema undangan pernikahan digital elegan",
@@ -189,7 +189,7 @@ export const posts = {
     "twitterDescription": "Langkah demi langkah membuat undangan pernikahan digital dari awal.",
     "category": "Panduan",
     "heading": "Panduan Lengkap Membuat Undangan Pernikahan Digital dari Awal",
-    "articleMeta": "Oleh Lavelle &middot; 30 Mei 2026 &middot; 7 menit baca",
+    "articleMeta": "Oleh Lavelle · 30 Mei 2026 · 7 menit baca",
     "breadcrumb": "Panduan Membuat Undangan Digital",
     "cover": "/img/mentahan/pasangan-outdoor-1.jpeg",
     "coverAlt": "Panduan membuat undangan pernikahan digital",
@@ -208,7 +208,7 @@ export const posts = {
     "twitterDescription": "Pilih foto prewedding terbaik untuk undangan pernikahan digitalmu.",
     "category": "Tips",
     "heading": "Tips Memilih Foto Prewedding untuk Undangan Digital",
-    "articleMeta": "Oleh Lavelle &middot; 30 Mei 2026 &middot; 5 menit baca",
+    "articleMeta": "Oleh Lavelle · 30 Mei 2026 · 5 menit baca",
     "breadcrumb": "Tips Foto Prewedding",
     "cover": "/img/mentahan/pasangan-pantai-senja.jpeg",
     "coverAlt": "Tips memilih foto prewedding untuk undangan digital",
@@ -227,7 +227,7 @@ export const posts = {
     "twitterDescription": "7 hal penting sebelum memesan undangan pernikahan digital.",
     "category": "Panduan",
     "heading": "Tips Memilih Undangan Pernikahan Digital yang Tepat",
-    "articleMeta": "Oleh Lavelle &middot; 30 Mei 2026 &middot; 6 menit baca",
+    "articleMeta": "Oleh Lavelle · 30 Mei 2026 · 6 menit baca",
     "breadcrumb": "Tips Memilih Undangan Digital",
     "cover": "/img/mentahan/pasangan-pose-romantis.jpeg",
     "coverAlt": "Pasangan memilih undangan pernikahan digital",
@@ -236,7 +236,7 @@ export const posts = {
   },
   "undangan-digital-vs-cetak": {
     "slug": "undangan-digital-vs-cetak",
-    "title": "Undangan Digital vs Cetak: Mana yang Lebih Hemat &amp; Praktis? | Lavelle",
+    "title": "Undangan Digital vs Cetak: Mana yang Lebih Hemat & Praktis? | Lavelle",
     "description": "Bandingkan undangan pernikahan digital dan cetak dari sisi biaya, kepraktisan, fitur, dan dampak lingkungan. Temukan mana yang paling cocok untukmu.",
     "keywords": "undangan digital vs cetak, undangan pernikahan hemat, perbandingan undangan, undangan online",
     "canonical": "https://lavelle.my.id/blog/undangan-digital-vs-cetak/",
@@ -245,8 +245,8 @@ export const posts = {
     "ogImage": "https://lavelle.my.id/img/mentahan/momen-bahagia.jpeg",
     "twitterDescription": "Perbandingan undangan digital vs cetak dari biaya hingga kepraktisan.",
     "category": "Edukasi",
-    "heading": "Undangan Digital vs Cetak: Mana yang Lebih Hemat &amp; Praktis?",
-    "articleMeta": "Oleh Lavelle &middot; 30 Mei 2026 &middot; 6 menit baca",
+    "heading": "Undangan Digital vs Cetak: Mana yang Lebih Hemat & Praktis?",
+    "articleMeta": "Oleh Lavelle · 30 Mei 2026 · 6 menit baca",
     "breadcrumb": "Undangan Digital vs Cetak",
     "cover": "/img/mentahan/momen-bahagia.jpeg",
     "coverAlt": "Perbandingan undangan digital dan cetak",
