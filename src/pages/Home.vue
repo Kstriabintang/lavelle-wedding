@@ -11,6 +11,22 @@ import WhatsappFloat from '../components/WhatsappFloat.vue'
 
 const openPlan = (plan) => window.open(waPlan(plan), '_blank')
 
+// Harga count-up saat masuk viewport (elegan)
+const pBasic = ref(99)
+const pPrem = ref(249)
+const pEks = ref(549)
+function countTo(target, refVar, dur = 1300) {
+  const start = performance.now()
+  const step = (now) => {
+    const t = Math.min(1, (now - start) / dur)
+    const eased = 1 - Math.pow(1 - t, 3) // easeOutCubic
+    refVar.value = Math.round(target * eased)
+    if (t < 1) requestAnimationFrame(step)
+    else refVar.value = target
+  }
+  requestAnimationFrame(step)
+}
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -160,7 +176,27 @@ const onKey = (e) => {
   else if (e.key === 'ArrowRight') nextShot()
   else if (e.key === 'ArrowLeft') prevShot()
 }
-onMounted(() => document.addEventListener('keydown', onKey))
+onMounted(() => {
+  document.addEventListener('keydown', onKey)
+  // Count-up harga saat section #paket terlihat
+  if (typeof IntersectionObserver !== 'undefined') {
+    const el = document.getElementById('paket')
+    if (el) {
+      pBasic.value = 0; pPrem.value = 0; pEks.value = 0
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            countTo(99, pBasic, 1200)
+            countTo(249, pPrem, 1450)
+            countTo(549, pEks, 1650)
+            io.disconnect()
+          }
+        })
+      }, { threshold: 0.35 })
+      io.observe(el)
+    }
+  }
+})
 onUnmounted(() => document.removeEventListener('keydown', onKey))
 </script>
 
@@ -337,7 +373,7 @@ onUnmounted(() => document.removeEventListener('keydown', onKey))
         <article class="plan reveal">
           <h3 class="plan__name">Basic</h3>
           <p class="plan__for">Sederhana &amp; tetap manis</p>
-          <div class="plan__price"><span>Rp</span>99<small>rb</small></div>
+          <div class="plan__price"><span>Rp</span>{{ pBasic }}<small>rb</small></div>
           <ul class="plan__list">
             <li><i class="fa-solid fa-check"></i> 1 link undangan digital</li>
             <li><i class="fa-solid fa-check"></i> Foto &amp; data mempelai</li>
@@ -354,7 +390,7 @@ onUnmounted(() => document.removeEventListener('keydown', onKey))
           <span class="plan__badge">Paling Diminati</span>
           <h3 class="plan__name">Premium</h3>
           <p class="plan__for">Lengkap untuk hari spesial</p>
-          <div class="plan__price"><span>Rp</span>249<small>rb</small></div>
+          <div class="plan__price"><span>Rp</span>{{ pPrem }}<small>rb</small></div>
           <ul class="plan__list">
             <li><i class="fa-solid fa-check"></i> Semua fitur paket Basic</li>
             <li><i class="fa-solid fa-check"></i> RSVP kehadiran otomatis</li>
@@ -369,7 +405,7 @@ onUnmounted(() => document.removeEventListener('keydown', onKey))
         <article class="plan plan--dark reveal">
           <h3 class="plan__name">Eksklusif</h3>
           <p class="plan__for">Desain custom, tanpa batas</p>
-          <div class="plan__price"><span>Rp</span>549<small>rb</small></div>
+          <div class="plan__price"><span>Rp</span>{{ pEks }}<small>rb</small></div>
           <ul class="plan__list">
             <li><i class="fa-solid fa-check"></i> Semua fitur paket Premium</li>
             <li><i class="fa-solid fa-check"></i> Desain custom sesuai tema</li>

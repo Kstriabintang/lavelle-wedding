@@ -628,6 +628,33 @@ a:focus-visible, button:focus-visible, summary:focus-visible, .btn:focus-visible
 .demo--compact .mk__names { font-size: 2.1rem; }
 @media (min-width: 901px) { .demo-grid { grid-template-columns: repeat(3, 1fr); } }
 
+/* --- Paket: animasi elegan --- */
+.plan__price { font-variant-numeric: tabular-nums; }
+.plan.in .plan__price { animation: pricePop .8s cubic-bezier(.16, 1, .3, 1) .15s both; }
+@keyframes pricePop { 0% { opacity: 0; transform: translateY(12px) scale(.95); } 100% { opacity: 1; transform: none; } }
+/* checklist muncul bertahap */
+.plan .plan__list li { opacity: 0; transform: translateX(-10px); transition: opacity .5s ease, transform .55s cubic-bezier(.16, 1, .3, 1); }
+.plan.in .plan__list li { opacity: 1; transform: none; }
+.plan.in .plan__list li:nth-child(1) { transition-delay: .22s; }
+.plan.in .plan__list li:nth-child(2) { transition-delay: .30s; }
+.plan.in .plan__list li:nth-child(3) { transition-delay: .38s; }
+.plan.in .plan__list li:nth-child(4) { transition-delay: .46s; }
+.plan.in .plan__list li:nth-child(5) { transition-delay: .54s; }
+.plan.in .plan__list li:nth-child(6) { transition-delay: .62s; }
+.plan.in .plan__list li:nth-child(7) { transition-delay: .70s; }
+/* badge "Paling Diminati" berkilau */
+.plan__badge { overflow: hidden; }
+.plan__badge::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .55) 50%, transparent 65%); transform: translateX(-170%); animation: badgeSheen 3.6s ease-in-out infinite; }
+@keyframes badgeSheen { 0%, 55% { transform: translateX(-170%); } 100% { transform: translateX(170%); } }
+/* kartu unggulan: glow emas lembut berdenyut */
+.plan--featured::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: 0 0 46px -6px rgba(216, 173, 104, .5); opacity: .4; animation: featPulse 3.6s ease-in-out infinite; }
+@keyframes featPulse { 0%, 100% { opacity: .3; } 50% { opacity: .8; } }
+@media (prefers-reduced-motion: reduce) {
+    .plan .plan__list li { opacity: 1; transform: none; transition: none; }
+    .plan.in .plan__price, .plan__badge::after, .plan--featured::after { animation: none; }
+    .plan--featured::after { opacity: .5; }
+}
+
 /* --- Transisi antar-halaman (router-view) --- */
 .page-enter-active, .page-leave-active { transition: opacity .35s ease, transform .35s ease; }
 .page-enter-from { opacity: 0; transform: translateY(10px); }
