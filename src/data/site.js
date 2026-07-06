@@ -13,6 +13,38 @@ export const waPlan = (plan) =>
 
 export const demos = [
   {
+    key: 'minang', href: '/demo/adat/minang/?to=Tamu%20Undangan',
+    thumb: 'demo__thumb--minang', frame: 'mk--frame-d',
+    names: 'Annisa & Fadhil', date: '12 . 09 . 2027', btn: 'Buka Undangan',
+    tag: 'Adat Minang — Songket', title: 'Undangan Adat Minang', flag: 'Adat · Vue',
+    desc: 'Ornamen songket emas & rumah gadang, prosesi Basandiang, slot karikatur pasangan berbusana adat, countdown, galeri, hingga RSVP.',
+    cardClass: '',
+  },
+  {
+    key: 'jawa', href: '/demo/adat/jawa/?to=Tamu%20Undangan',
+    thumb: 'demo__thumb--jawa', frame: 'mk--frame-d',
+    names: 'Ratna & Bagus', date: '21 . 08 . 2027', btn: 'Buka Undangan',
+    tag: 'Adat Jawa — Batik Sogan', title: 'Undangan Adat Jawa', flag: 'Adat · Vue',
+    desc: 'Nuansa sogan & motif batik parang, prosesi Siraman–Panggih, ornamen emas mewah, slot karikatur, countdown, dan RSVP.',
+    cardClass: '',
+  },
+  {
+    key: 'sunda', href: '/demo/adat/sunda/?to=Tamu%20Undangan',
+    thumb: 'demo__thumb--sunda', frame: 'mk--frame-d',
+    names: 'Siti & Asep', date: '18 . 07 . 2027', btn: 'Buka Undangan',
+    tag: 'Adat Sunda — Mega Mendung', title: 'Undangan Adat Sunda', flag: 'Adat · Vue',
+    desc: 'Hijau-emas dengan motif mega mendung, prosesi Sawer & Ngeuyeuk Seureuh, slot karikatur, ornamen SVG buatan tangan.',
+    cardClass: '',
+  },
+  {
+    key: 'bugis', href: '/demo/adat/bugis/?to=Tamu%20Undangan',
+    thumb: 'demo__thumb--bugis', frame: 'mk--frame-d',
+    names: 'Andi Tenri & Andi Baso', date: '03 . 10 . 2027', btn: 'Buka Undangan',
+    tag: 'Adat Bugis — Lipa Sabbe', title: 'Undangan Adat Bugis', flag: 'Adat · Vue',
+    desc: 'Merah-emas megah dengan motif lipa sabbe, prosesi Mappacci, slot karikatur bangsawan Bugis, countdown, dan galeri.',
+    cardClass: '',
+  },
+  {
     key: 'luxe', href: '/demo/luxe/?to=Tamu%20Undangan',
     thumb: 'demo__thumb--luxe', frame: 'mk--frame',
     names: 'Rania & Fajar', date: '15 . 05 . 2027', btn: 'Buka Undangan',

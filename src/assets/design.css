@@ -237,6 +237,16 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
 .demo__thumb--luxe .mk__names { font-family: var(--script-1); color: #c17a72; }
 .demo__thumb--luxe .mk__date { color: #a8836a; }
 .demo__thumb--luxe .mk__btn { background: linear-gradient(135deg, #d8a679, #b7825f); color: #fff; }
+/* Adat (demo Vue) — kartu gelap mewah + emas per suku */
+.demo__thumb--minang .mk, .demo__thumb--jawa .mk, .demo__thumb--sunda .mk, .demo__thumb--bugis .mk { border-color: rgba(230, 197, 101, .5); background: rgba(0, 0, 0, .18); }
+.demo__thumb--minang .mk__names, .demo__thumb--jawa .mk__names, .demo__thumb--sunda .mk__names, .demo__thumb--bugis .mk__names { font-family: var(--script-2); color: #fff; }
+.demo__thumb--minang .mk__kicker, .demo__thumb--jawa .mk__kicker, .demo__thumb--sunda .mk__kicker, .demo__thumb--bugis .mk__kicker { color: #e6c565; }
+.demo__thumb--minang .mk__date, .demo__thumb--jawa .mk__date, .demo__thumb--sunda .mk__date, .demo__thumb--bugis .mk__date { color: #efe2c4; }
+.demo__thumb--minang .mk__btn, .demo__thumb--jawa .mk__btn, .demo__thumb--sunda .mk__btn, .demo__thumb--bugis .mk__btn { background: linear-gradient(135deg, #efd07a, #a8801a); color: #2a0d12; }
+.demo__thumb--minang { background: linear-gradient(160deg, #6e1423, #3a0c14); }
+.demo__thumb--jawa { background: linear-gradient(160deg, #6b4423, #241609); }
+.demo__thumb--sunda { background: linear-gradient(160deg, #1f5d50, #0d2b26); }
+.demo__thumb--bugis { background: linear-gradient(160deg, #7a1420, #2a0810); }
 /* label kecil "Eksklusif" di judul demo */
 .demo__flag { display: inline-block; vertical-align: middle; margin-left: .5em; font-family: var(--sans); font-style: normal; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; padding: .35em .8em; border-radius: 50px; background: var(--grad); color: #fff; }
 .demo__tag { position: absolute; top: 1rem; right: 1rem; background: rgba(255, 250, 240, .92); color: var(--ink); font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; padding: .45em 1em; border-radius: 50px; font-weight: 500; }
