@@ -465,3 +465,72 @@ a:focus-visible, button:focus-visible, summary:focus-visible, .btn:focus-visible
 /* --- Footer: tautan dengan indent halus saat hover --- */
 .footer__col a { transition: color .25s, padding-left .25s; }
 .footer__col a:hover { padding-left: 4px; }
+
+/* --- Tombol toggle tema --- */
+.nav__actions { display: flex; align-items: center; gap: .8rem; }
+.theme-toggle {
+    width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line-2);
+    background: transparent; color: inherit; cursor: pointer; display: grid; place-items: center;
+    font-size: 1rem; transition: background .3s, color .3s, border-color .3s, transform .3s;
+}
+.theme-toggle:hover { transform: translateY(-2px) rotate(-8deg); color: var(--gold-deep); border-color: var(--gold); }
+.nav:not(.scrolled) .theme-toggle { color: var(--cream); border-color: rgba(255, 250, 240, .4); }
+.blog-nav .theme-toggle { width: 36px; height: 36px; }
+
+/* ===================================================
+   DARK MODE — palet hangat elegan (charcoal · sage · gold)
+   Aktif via <html data-theme="dark">. Semua warna via var,
+   jadi cukup mendefinisikan ulang + menimpa permukaan terang.
+   =================================================== */
+:root[data-theme="dark"] {
+    --bg: #14160f;
+    --bg-2: #1b1e15;
+    --cream: #f4ecdd;            /* tetap terang: dipakai sbg teks di atas gelap */
+    --ink: #ece4d3;             /* teks utama -> terang */
+    --ink-soft: #bcb3a2;
+    --ink-mute: #8b8474;
+    --green: #6f7c53;
+    --green-deep: #4f5a38;
+    --green-deepest: #0e100a;
+    --sage: #9aa383;
+    --gold: #d8ad68;
+    --gold-bright: #ead0a0;
+    --gold-deep: #d8ad68;        /* dinaikkan agar kontras di latar gelap */
+    --line: rgba(255, 255, 255, .10);
+    --line-2: rgba(255, 255, 255, .18);
+    --glass: #1f2317;
+    --grad-soft: linear-gradient(135deg, #22261a, #191c12);
+    --glow-pink: 0 14px 34px -16px rgba(0, 0, 0, .55);
+    --glow-purple: 0 18px 44px -18px rgba(0, 0, 0, .55);
+    --shadow: 0 26px 60px -28px rgba(0, 0, 0, .75);
+    color-scheme: dark;
+}
+:root[data-theme="dark"] body::before {
+    background:
+        radial-gradient(60% 50% at 10% 0%, rgba(151, 160, 127, .10), transparent 60%),
+        radial-gradient(55% 45% at 100% 14%, rgba(200, 154, 82, .10), transparent 60%),
+        linear-gradient(180deg, var(--bg) 0%, #0d0f09 100%);
+}
+/* Permukaan yang tadinya hardcoded terang */
+:root[data-theme="dark"] .nav.scrolled { background: rgba(16, 18, 12, .82); border-bottom-color: var(--line); }
+:root[data-theme="dark"] .demo__tag { background: rgba(16, 18, 12, .85); color: var(--ink); }
+:root[data-theme="dark"] .strip::before { background: linear-gradient(90deg, var(--green-deep), transparent); }
+:root[data-theme="dark"] .strip::after { background: linear-gradient(270deg, var(--green-deep), transparent); }
+:root[data-theme="dark"] .about__deco::after { background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, .5)); }
+:root[data-theme="dark"] .plan--dark { background: #0f1119; border-color: #23252f; }
+@media (max-width: 900px) {
+    :root[data-theme="dark"] .nav__links { background: #16180f; border-left-color: var(--line); }
+}
+/* Blog (blog.css memakai var yang sama; hanya beberapa hardcoded perlu ditimpa) */
+:root[data-theme="dark"] .blog-nav { background: rgba(16, 18, 12, .82); }
+:root[data-theme="dark"] .post-card { background: rgba(31, 35, 23, .7); }
+:root[data-theme="dark"] .blog-foot { background: rgba(16, 18, 12, .6); }
+:root[data-theme="dark"] .faq-list details,
+:root[data-theme="dark"] .prose table { background: rgba(31, 35, 23, .7); }
+:root[data-theme="dark"] .prose blockquote { background: rgba(31, 35, 23, .6); }
+:root[data-theme="dark"] body::after { opacity: .35; }
+/* Foto sedikit diredupkan agar nyaman di mata pada mode gelap */
+:root[data-theme="dark"] .shot img,
+:root[data-theme="dark"] .post-card__img,
+:root[data-theme="dark"] .article__cover,
+:root[data-theme="dark"] .about__photo { filter: brightness(.9); }

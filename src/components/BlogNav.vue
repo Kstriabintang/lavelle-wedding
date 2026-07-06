@@ -1,3 +1,7 @@
+<script setup>
+import ThemeToggle from './ThemeToggle.vue'
+</script>
+
 <template>
   <nav class="blog-nav">
     <div class="blog-nav__in">
@@ -8,6 +12,7 @@
         <a href="/#paket">Paket</a>
         <a href="/#demo">Demo</a>
         <a href="/#kontak" class="btn btn--gold btn--sm">Pesan</a>
+        <ThemeToggle />
       </div>
     </div>
   </nav>

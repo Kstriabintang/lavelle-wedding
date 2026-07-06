@@ -21,6 +21,18 @@
     <link rel="apple-touch-icon" href="/img/lavelle-logo.png">
 
     <title>Lavelle — Jasa Undangan Pernikahan Digital Premium</title>
+
+    <!-- Set tema sebelum paint (hindari flash) -->
+    <script>
+        (function () {
+            try {
+                var q = new URLSearchParams(location.search).get('theme');
+                var t = (q === 'dark' || q === 'light') ? q : localStorage.getItem('lavelle-theme');
+                if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                document.documentElement.dataset.theme = t;
+            } catch (e) {}
+        })();
+    </script>
 </head>
 
 <body>

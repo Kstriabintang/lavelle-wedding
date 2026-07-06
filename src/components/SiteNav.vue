@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import ThemeToggle from './ThemeToggle.vue'
 
 const scrolled = ref(false)
 const open = ref(false)
@@ -42,7 +43,10 @@ const links = [
         <a v-for="l in links" :key="l.href" :href="l.href" @click="closeMenu">{{ l.label }}</a>
         <a href="/#kontak" class="btn btn--gold btn--sm" @click="closeMenu">Pesan Sekarang</a>
       </nav>
-      <button class="nav__toggle" aria-label="Menu" @click="openMenu"><i class="fa-solid fa-bars"></i></button>
+      <div class="nav__actions">
+        <ThemeToggle />
+        <button class="nav__toggle" aria-label="Menu" @click="openMenu"><i class="fa-solid fa-bars"></i></button>
+      </div>
     </div>
   </header>
   <div class="nav__overlay" :class="{ open }" aria-hidden="true" @click="closeMenu"></div>
