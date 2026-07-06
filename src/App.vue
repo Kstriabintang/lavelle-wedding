@@ -1,15 +1,10 @@
 <script setup>
 import { onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import PreLoader from './components/PreLoader.vue'
-import FloatingHearts from './components/FloatingHearts.vue'
-import SiteNav from './components/SiteNav.vue'
-import SiteFooter from './components/SiteFooter.vue'
-import WhatsappFloat from './components/WhatsappFloat.vue'
 
 const router = useRouter()
 
-// Reveal saat masuk viewport (menggantikan main.js lama, dengan stagger CSS tetap jalan)
+// Reveal saat masuk viewport (dipakai lintas halaman)
 function wireReveal() {
   if (typeof IntersectionObserver === 'undefined') return
   const io = new IntersectionObserver(
@@ -28,10 +23,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <PreLoader />
-  <FloatingHearts />
-  <SiteNav />
   <router-view />
-  <SiteFooter />
-  <WhatsappFloat />
 </template>

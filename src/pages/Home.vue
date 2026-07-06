@@ -1,8 +1,68 @@
 <script setup>
+import { useHead } from '@unhead/vue'
 import { wa, waPlan, WA_1, WA_2, IG } from '../data/site'
 import { demos } from '../data/site'
+import PreLoader from '../components/PreLoader.vue'
+import FloatingHearts from '../components/FloatingHearts.vue'
+import SiteNav from '../components/SiteNav.vue'
+import SiteFooter from '../components/SiteFooter.vue'
+import WhatsappFloat from '../components/WhatsappFloat.vue'
 
 const openPlan = (plan) => window.open(waPlan(plan), '_blank')
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization', '@id': 'https://lavelle.my.id/#organization', name: 'Lavelle',
+      url: 'https://lavelle.my.id/', logo: 'https://lavelle.my.id/img/lavelle-logo.png',
+      image: 'https://lavelle.my.id/img/mentahan/pasangan-bukit-sunset.jpeg',
+      description: 'Jasa pembuatan undangan pernikahan digital yang elegan, personal, dan berkelas.',
+      email: 'lavelle.weddingku@gmail.com', areaServed: 'Indonesia', sameAs: ['https://instagram.com/lavelle.ld'],
+      contactPoint: { '@type': 'ContactPoint', telephone: '+6285264402640', contactType: 'customer service', areaServed: 'ID', availableLanguage: 'Indonesian' },
+    },
+    { '@type': 'WebSite', '@id': 'https://lavelle.my.id/#website', url: 'https://lavelle.my.id/', name: 'Lavelle', inLanguage: 'id-ID', publisher: { '@id': 'https://lavelle.my.id/#organization' } },
+    {
+      '@type': 'Service', name: 'Undangan Pernikahan Digital', serviceType: 'Undangan pernikahan digital',
+      provider: { '@id': 'https://lavelle.my.id/#organization' }, areaServed: 'Indonesia', url: 'https://lavelle.my.id/#paket',
+      offers: [
+        { '@type': 'Offer', name: 'Basic', price: '99000', priceCurrency: 'IDR', url: 'https://lavelle.my.id/#paket' },
+        { '@type': 'Offer', name: 'Premium', price: '249000', priceCurrency: 'IDR', url: 'https://lavelle.my.id/#paket' },
+        { '@type': 'Offer', name: 'Eksklusif', price: '549000', priceCurrency: 'IDR', url: 'https://lavelle.my.id/#paket' },
+      ],
+    },
+    {
+      '@type': 'FAQPage', '@id': 'https://lavelle.my.id/#faq',
+      mainEntity: [
+        { '@type': 'Question', name: 'Berapa lama proses pembuatan undangan?', acceptedAnswer: { '@type': 'Answer', text: 'Umumnya 1–3 hari kerja setelah data lengkap kami terima. Paket Eksklusif mendapat prioritas pengerjaan.' } },
+        { '@type': 'Question', name: 'Apakah link undangan bisa diakses selamanya?', acceptedAnswer: { '@type': 'Answer', text: 'Link aktif minimal 1 tahun. Untuk paket Eksklusif dengan domain pribadi, masa aktif mengikuti domain yang kamu miliki.' } },
+        { '@type': 'Question', name: 'Bisakah desainnya disesuaikan dengan tema kami?', acceptedAnswer: { '@type': 'Answer', text: 'Tentu! Warna, font, dan tata letak bisa disesuaikan. Untuk desain custom sepenuhnya, pilih paket Eksklusif.' } },
+        { '@type': 'Question', name: 'Bagaimana cara membayarnya?', acceptedAnswer: { '@type': 'Answer', text: 'Pembayaran via transfer bank atau e-wallet. Biasanya DP di awal, pelunasan setelah undangan disetujui.' } },
+        { '@type': 'Question', name: 'Apakah ada batas jumlah tamu?', acceptedAnswer: { '@type': 'Answer', text: 'Tidak ada. Satu link undangan bisa dibagikan ke tamu sebanyak yang kamu mau, dan nama tamu bisa dipersonalisasi otomatis.' } },
+      ],
+    },
+  ],
+}
+
+useHead({
+  title: 'Lavelle — Jasa Undangan Pernikahan Digital Premium',
+  link: [{ rel: 'canonical', href: 'https://lavelle.my.id/' }],
+  meta: [
+    { name: 'description', content: 'Lavelle membuat undangan pernikahan digital yang elegan, mewah, dan personal. Lengkap dengan RSVP, buku ucapan, galeri, dan amplop digital. Pesan undangan website impianmu sekarang.' },
+    { name: 'keywords', content: 'undangan pernikahan digital, undangan website, jasa undangan online, undangan nikah, wedding invitation, undangan digital premium' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:title', content: 'Lavelle — Jasa Undangan Pernikahan Digital Premium' },
+    { property: 'og:description', content: 'Undangan pernikahan digital yang elegan & personal — RSVP, buku ucapan, galeri, hingga amplop digital dalam satu link. Konsultasi gratis.' },
+    { property: 'og:url', content: 'https://lavelle.my.id/' },
+    { property: 'og:image', content: 'https://lavelle.my.id/img/mentahan/pasangan-bukit-sunset.jpeg' },
+    { property: 'og:image:alt', content: 'Undangan pernikahan digital Lavelle' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Lavelle — Jasa Undangan Pernikahan Digital Premium' },
+    { name: 'twitter:description', content: 'Undangan pernikahan digital yang elegan & personal dalam satu link. Konsultasi gratis.' },
+    { name: 'twitter:image', content: 'https://lavelle.my.id/img/mentahan/pasangan-bukit-sunset.jpeg' },
+  ],
+  script: [{ type: 'application/ld+json', innerHTML: JSON.stringify(jsonLd) }],
+})
 
 const features = [
   { icon: 'fa-feather-pointed', title: 'Desain Elegan & Personal', text: 'Setiap undangan dirancang dengan sentuhan mewah dan disesuaikan dengan tema, warna, serta cerita cinta kalian.' },
@@ -37,6 +97,10 @@ const strip = ['Desain Elegan', 'RSVP Otomatis', 'Buku Ucapan', 'Galeri Foto', '
 </script>
 
 <template>
+  <PreLoader />
+  <FloatingHearts />
+  <SiteNav />
+
   <!-- HERO -->
   <section class="hero" id="home" style="background-image:url('/img/mentahan/pasangan-bukit-sunset.jpeg')">
     <div class="hero__scrim"></div>
@@ -265,4 +329,7 @@ const strip = ['Desain Elegan', 'RSVP Otomatis', 'Buku Ucapan', 'Galeri Foto', '
       </div>
     </div>
   </section>
+
+  <SiteFooter />
+  <WhatsappFloat />
 </template>

@@ -3,6 +3,7 @@ import App from './App.vue'
 import { routes } from './router'
 import './assets/tailwind.css'
 import './assets/design.css'
+import './assets/blog.css'
 
 // ViteSSG: pre-render tiap route ke HTML statis saat build (SEO aman),
 // lalu di-hydrate jadi app Vue interaktif di browser.
