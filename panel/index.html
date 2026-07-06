@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Template — Lavelle</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../img/lavelle-logo.png">
+    <style>
+        :root {
+            --gold: #c0a35e;
+            --gold-deep: #9c7f3f;
+            --cream: #faf6ee;
+            --ink: #34302a;
+            --ink-soft: #6b6459;
+            --line: #e6ddcb;
+            --white: #fffdf8;
+            --danger: #b4553f;
+            --ok: #4a5436;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+            line-height: 1.5;
+        }
+
+        /* ===== Layout ===== */
+        .app { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); height: 100vh; }
+        @media (max-width: 900px) { .app { grid-template-columns: 1fr; height: auto; } }
+
+        .panel { overflow-y: auto; padding: 0 0 4rem; background: var(--cream); }
+        .preview { position: sticky; top: 0; height: 100vh; background: #222; display: flex; flex-direction: column; }
+        @media (max-width: 900px) { .preview { position: static; height: 80vh; } }
+
+        /* ===== Header ===== */
+        .head {
+            position: sticky; top: 0; z-index: 5;
+            background: var(--white); border-bottom: 1px solid var(--line);
+            padding: .9rem 1.4rem; display: flex; align-items: center; gap: .7rem;
+        }
+        .head img { width: 30px; height: 30px; object-fit: contain; }
+        .head b { font-size: 1.05rem; letter-spacing: .3px; }
+        .head span { color: var(--ink-soft); font-size: .82rem; }
+
+        .body { padding: 1.4rem; }
+
+        /* ===== Sections ===== */
+        details.sec {
+            background: var(--white); border: 1px solid var(--line); border-radius: 12px;
+            margin-bottom: 1rem; overflow: hidden;
+        }
+        details.sec > summary {
+            list-style: none; cursor: pointer; padding: .95rem 1.1rem;
+            font-weight: 600; font-size: .98rem; display: flex; align-items: center; gap: .6rem;
+            background: linear-gradient(180deg, #fffdf8, #f7f0e2);
+        }
+        details.sec > summary::-webkit-details-marker { display: none; }
+        details.sec > summary::before { content: "▸"; color: var(--gold-deep); font-size: .8rem; }
+        details.sec[open] > summary::before { content: "▾"; }
+        .sec__inner { padding: 1rem 1.1rem 1.2rem; }
+
+        /* ===== Fields ===== */
+        label.f { display: block; margin-bottom: .85rem; }
+        label.f > span { display: block; font-size: .8rem; color: var(--ink-soft); margin-bottom: .28rem; font-weight: 500; }
+        input, textarea, select {
+            width: 100%; font: inherit; font-size: .92rem; color: var(--ink);
+            padding: .55rem .7rem; border: 1px solid var(--line); border-radius: 8px;
+            background: var(--white); transition: border-color .15s;
+        }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--gold); }
+        textarea { resize: vertical; min-height: 60px; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+        .hint { font-size: .74rem; color: var(--ink-soft); margin-top: -.5rem; margin-bottom: .7rem; }
+
+        /* ===== Event cards ===== */
+        .ev { border: 1px dashed var(--line); border-radius: 10px; padding: .8rem; margin-bottom: .8rem; position: relative; background: #fdfbf5; }
+        .ev__del {
+            position: absolute; top: .5rem; right: .5rem; border: none; background: none;
+            color: var(--danger); cursor: pointer; font-size: .8rem; font-weight: 600;
+        }
+
+        /* ===== Buttons ===== */
+        .btn {
+            font: inherit; font-weight: 600; font-size: .9rem; cursor: pointer;
+            border: none; border-radius: 9px; padding: .6rem 1.1rem; transition: filter .15s, transform .05s;
+        }
+        .btn:active { transform: translateY(1px); }
+        .btn--gold { background: linear-gradient(180deg, var(--gold), var(--gold-deep)); color: #fff; }
+        .btn--gold:hover { filter: brightness(1.06); }
+        .btn--soft { background: #efe7d5; color: var(--ink); }
+        .btn--soft:hover { filter: brightness(.98); }
+        .btn--sm { padding: .4rem .8rem; font-size: .82rem; }
+
+        .toolbar {
+            position: sticky; bottom: 0; z-index: 4;
+            background: var(--white); border-top: 1px solid var(--line);
+            padding: .8rem 1.4rem; display: flex; gap: .6rem; flex-wrap: wrap; align-items: center;
+        }
+        .toolbar .grow { flex: 1; }
+
+        /* ===== Preview pane ===== */
+        .pv__bar {
+            background: #2b2b2b; color: #ddd; padding: .55rem .9rem; font-size: .8rem;
+            display: flex; align-items: center; gap: .6rem; border-bottom: 1px solid #000;
+        }
+        .pv__bar .dot { width: 9px; height: 9px; border-radius: 50%; background: #e9cd8c; }
+        .pv__bar select { width: auto; padding: .25rem .5rem; font-size: .78rem; background: #3a3a3a; color: #eee; border-color: #555; }
+        iframe { flex: 1; width: 100%; border: none; background: #fff; }
+
+        /* ===== Modal (kode data.js) ===== */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: none; align-items: center; justify-content: center; padding: 1.5rem; z-index: 20; }
+        .modal.show { display: flex; }
+        .modal__box { background: var(--white); border-radius: 14px; max-width: 720px; width: 100%; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; }
+        .modal__head { padding: 1rem 1.3rem; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+        .modal__head b { font-size: 1rem; }
+        .modal pre { margin: 0; padding: 1.1rem 1.3rem; overflow: auto; font-size: .78rem; background: #2b2b2b; color: #e8e2d2; flex: 1; }
+        .modal__foot { padding: .9rem 1.3rem; border-top: 1px solid var(--line); display: flex; gap: .6rem; justify-content: flex-end; }
+        .steps { padding: .9rem 1.3rem 0; font-size: .82rem; color: var(--ink-soft); }
+        .steps b { color: var(--ink); }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <!-- ============ FORM ============ -->
+        <div class="panel">
+            <div class="head">
+                <img src="../img/lavelle-logo.png" alt="Lavelle">
+                <div>
+                    <b>Panel Template</b><br>
+                    <span>Isi data undangan &mdash; tanpa koding</span>
+                </div>
+            </div>
+
+            <div class="body">
+                <label class="f">
+                    <span>Tema Undangan</span>
+                    <select id="tpl">
+                        <option value="klasik">Klasik — Blush &amp; Sage</option>
+                        <option value="modern" disabled>Modern — segera</option>
+                        <option value="sinema" disabled>Sinema — segera</option>
+                        <option value="modern-3d" disabled>Modern 3D — segera</option>
+                    </select>
+                </label>
+
+                <!-- Pasangan -->
+                <details class="sec" open>
+                    <summary>Pasangan &amp; Nama</summary>
+                    <div class="sec__inner">
+                        <label class="f"><span>Nama tampil (mis. Kayla &amp; Raka)</span>
+                            <input id="c-display" placeholder="Kayla & Raka"></label>
+                        <div class="row">
+                            <div>
+                                <p class="hint" style="font-weight:600;color:var(--gold-deep)">Mempelai Wanita</p>
+                                <label class="f"><span>Nama panggilan</span><input id="b-name"></label>
+                                <label class="f"><span>Nama lengkap</span><input id="b-full"></label>
+                                <label class="f"><span>Inisial (1 huruf)</span><input id="b-initial" maxlength="2"></label>
+                                <label class="f"><span>Orang tua</span><textarea id="b-parents"></textarea></label>
+                                <label class="f"><span>Link Instagram (opsional)</span><input id="b-ig" placeholder="https://instagram.com/..."></label>
+                                <label class="f"><span>Alamat foto (opsional)</span><input id="b-photo" placeholder="../../img/klien/nama.jpeg"></label>
+                            </div>
+                            <div>
+                                <p class="hint" style="font-weight:600;color:var(--gold-deep)">Mempelai Pria</p>
+                                <label class="f"><span>Nama panggilan</span><input id="g-name"></label>
+                                <label class="f"><span>Nama lengkap</span><input id="g-full"></label>
+                                <label class="f"><span>Inisial (1 huruf)</span><input id="g-initial" maxlength="2"></label>
+                                <label class="f"><span>Orang tua</span><textarea id="g-parents"></textarea></label>
+                                <label class="f"><span>Link Instagram (opsional)</span><input id="g-ig" placeholder="https://instagram.com/..."></label>
+                                <label class="f"><span>Alamat foto (opsional)</span><input id="g-photo" placeholder="../../img/klien/nama.jpeg"></label>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Tanggal -->
+                <details class="sec">
+                    <summary>Tanggal &amp; Waktu</summary>
+                    <div class="sec__inner">
+                        <label class="f"><span>Tanggal &amp; jam acara utama</span>
+                            <input type="datetime-local" id="d-iso"></label>
+                        <label class="f"><span>Tulisan tanggal (yang tampil)</span>
+                            <input id="d-display" placeholder="Sabtu, 20 Desember 2026"></label>
+                        <button type="button" class="btn btn--soft btn--sm" id="d-auto">↻ Isi otomatis dari tanggal di atas</button>
+                        <p class="hint" style="margin-top:.6rem">Setelah tanggal ini terlewati beberapa hari, undangan otomatis berubah jadi mode "Kenangan".</p>
+                        <label class="f"><span>Tanggal berubah ke mode Kenangan</span>
+                            <input type="datetime-local" id="d-after"></label>
+                    </div>
+                </details>
+
+                <!-- Ayat -->
+                <details class="sec">
+                    <summary>Ayat / Kutipan Pembuka</summary>
+                    <div class="sec__inner">
+                        <label class="f"><span>Isi kutipan</span><textarea id="q-text"></textarea></label>
+                        <label class="f"><span>Sumber</span><input id="q-src" placeholder="QS. Ar-Rum: 21"></label>
+                    </div>
+                </details>
+
+                <!-- Acara -->
+                <details class="sec">
+                    <summary>Rangkaian Acara</summary>
+                    <div class="sec__inner">
+                        <div id="events"></div>
+                        <button type="button" class="btn btn--soft btn--sm" id="ev-add">+ Tambah acara</button>
+                    </div>
+                </details>
+
+                <!-- Galeri -->
+                <details class="sec">
+                    <summary>Galeri Foto</summary>
+                    <div class="sec__inner">
+                        <label class="f"><span>Foto utama (satu alamat foto per baris)</span>
+                            <textarea id="gal" rows="6"></textarea></label>
+                        <p class="hint">Contoh: <code>../../img/mentahan/summer-1.jpeg</code></p>
+                        <label class="f"><span>Foto tambahan mode Kenangan (opsional)</span>
+                            <textarea id="gal-after" rows="4"></textarea></label>
+                    </div>
+                </details>
+
+                <!-- Musik & Penutup -->
+                <details class="sec">
+                    <summary>Musik &amp; Penutup</summary>
+                    <div class="sec__inner">
+                        <label class="f"><span>Alamat file musik</span><input id="m-src" placeholder="./audio/lagu.mp3"></label>
+                        <div class="row">
+                            <label class="f"><span>Mulai dari detik ke-</span><input type="number" id="m-start" min="0"></label>
+                            <label class="f"><span>Volume (0–1)</span><input type="number" id="m-vol" min="0" max="1" step="0.05"></label>
+                        </div>
+                        <label class="f"><span>Kalimat penutup</span><textarea id="closing"></textarea></label>
+                    </div>
+                </details>
+            </div>
+
+            <div class="toolbar">
+                <button class="btn btn--soft btn--sm" id="btn-refresh">↻ Perbarui Preview</button>
+                <span class="grow"></span>
+                <button class="btn btn--soft" id="btn-reset">Reset ke Contoh</button>
+                <button class="btn btn--gold" id="btn-gen">Generate data.js</button>
+            </div>
+        </div>
+
+        <!-- ============ PREVIEW ============ -->
+        <div class="preview">
+            <div class="pv__bar">
+                <span class="dot"></span> Preview langsung
+                <span style="flex:1"></span>
+                <select id="pv-mode">
+                    <option value="before">Mode: Undangan</option>
+                    <option value="after">Mode: Kenangan</option>
+                </select>
+                <button class="btn btn--soft btn--sm" id="pv-open" style="padding:.25rem .6rem">Buka tab baru ↗</button>
+            </div>
+            <iframe id="pv" title="Preview undangan"></iframe>
+        </div>
+    </div>
+
+    <!-- ============ MODAL: data.js ============ -->
+    <div class="modal" id="modal">
+        <div class="modal__box">
+            <div class="modal__head">
+                <b>File data.js siap pakai</b>
+                <button class="btn btn--soft btn--sm" id="modal-close">Tutup</button>
+            </div>
+            <div class="steps">
+                Langkah pakai: <b>1)</b> Download / salin isi ini &rarr; <b>2)</b> ganti file
+                <code>demo/&lt;tema&gt;/data.js</code> di folder undangan klien &rarr; <b>3)</b> upload ke GitHub. Selesai.
+            </div>
+            <pre id="code"></pre>
+            <div class="modal__foot">
+                <button class="btn btn--soft" id="btn-copy">Salin</button>
+                <button class="btn btn--gold" id="btn-download">Download data.js</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        "use strict";
+
+        /* ====== Contoh data awal (default Klasik) ====== */
+        const SAMPLE = {
+            meta: { template: "klasik", brand: "Lavelle", title: "Kayla & Raka — Undangan Pernikahan", description: "Undangan pernikahan Kayla & Raka. Tema Klasik oleh Lavelle." },
+            couple: {
+                display: "Kayla & Raka",
+                bride: { name: "Kayla", full: "Kayla Ayu Lestari", initial: "K", photo: "", parents: "Putri pertama dari<br>Bapak Suryadi & Ibu Maryani", ig: "" },
+                groom: { name: "Raka", full: "Raka Pratama", initial: "R", photo: "", parents: "Putra kedua dari<br>Bapak Hendra & Ibu Sulastri", ig: "" }
+            },
+            date: { display: "Sabtu, 20 Desember 2026", iso: "2026-12-20T08:00:00+07:00", afterIso: "2026-12-23T00:00:00+07:00" },
+            quote: { text: "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya.", source: "QS. Ar-Rum: 21" },
+            events: [
+                { title: "Akad Nikah", icon: "fa-ring", date: "Sabtu, 20 Desember 2026", time: "08.00 – 10.00 WIB", venue: "Masjid Agung, Jakarta", map: "" },
+                { title: "Resepsi", icon: "fa-champagne-glasses", date: "Sabtu, 20 Desember 2026", time: "11.00 – 14.00 WIB", venue: "Ballroom Mawar, Jakarta", map: "" }
+            ],
+            gallery: [
+                "../../img/mentahan/summer-1.jpeg", "../../img/mentahan/summer-2.jpeg", "../../img/mentahan/summer-3.jpeg",
+                "../../img/mentahan/summer-4.jpeg", "../../img/mentahan/pasangan-duduk.jpeg", "../../img/mentahan/pasangan-romantis.jpeg"
+            ],
+            galleryAfter: [
+                "../../img/mentahan/pasangan-outdoor-1.jpeg", "../../img/mentahan/pasangan-outdoor-4.jpeg", "../../img/mentahan/pasangan-outdoor-5.jpeg",
+                "../../img/mentahan/pasangan-pantai.jpeg", "../../img/mentahan/pasangan-pelukan-1.jpeg", "../../img/mentahan/pasangan-pelukan-3.jpeg"
+            ],
+            music: { src: "./audio/until-i-found-you-violin.mp3", startAt: 31, volume: 0.75 },
+            closing: "Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu."
+        };
+
+        const EVENT_ICONS = [
+            { v: "fa-ring", t: "Akad / Cincin" },
+            { v: "fa-champagne-glasses", t: "Resepsi" },
+            { v: "fa-mosque", t: "Masjid" },
+            { v: "fa-church", t: "Gereja" },
+            { v: "fa-utensils", t: "Jamuan" },
+            { v: "fa-heart", t: "Hati" },
+            { v: "fa-hands-praying", t: "Doa" }
+        ];
+
+        const $ = (id) => document.getElementById(id);
+        const HARI = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        const BULAN = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+        let state = JSON.parse(JSON.stringify(SAMPLE));
+
+        /* ====== ISI form dari state ====== */
+        function fillForm() {
+            $("tpl").value = state.meta.template || "klasik";
+            $("c-display").value = state.couple.display || "";
+            const b = state.couple.bride, g = state.couple.groom;
+            $("b-name").value = b.name || ""; $("b-full").value = b.full || ""; $("b-initial").value = b.initial || "";
+            $("b-parents").value = (b.parents || "").replace(/<br>/g, "\n"); $("b-ig").value = b.ig || ""; $("b-photo").value = b.photo || "";
+            $("g-name").value = g.name || ""; $("g-full").value = g.full || ""; $("g-initial").value = g.initial || "";
+            $("g-parents").value = (g.parents || "").replace(/<br>/g, "\n"); $("g-ig").value = g.ig || ""; $("g-photo").value = g.photo || "";
+            $("d-iso").value = isoToLocal(state.date.iso);
+            $("d-after").value = isoToLocal(state.date.afterIso);
+            $("d-display").value = state.date.display || "";
+            $("q-text").value = state.quote.text || ""; $("q-src").value = state.quote.source || "";
+            $("gal").value = (state.gallery || []).join("\n");
+            $("gal-after").value = (state.galleryAfter || []).join("\n");
+            $("m-src").value = state.music.src || ""; $("m-start").value = state.music.startAt; $("m-vol").value = state.music.volume;
+            $("closing").value = state.closing || "";
+            renderEvents();
+        }
+
+        function renderEvents() {
+            const box = $("events");
+            box.innerHTML = "";
+            state.events.forEach((ev, i) => {
+                const opts = EVENT_ICONS.map(o => `<option value="${o.v}" ${o.v === ev.icon ? "selected" : ""}>${o.t}</option>`).join("");
+                const el = document.createElement("div");
+                el.className = "ev";
+                el.innerHTML = `
+                    <button type="button" class="ev__del" data-i="${i}">✕ hapus</button>
+                    <label class="f"><span>Nama acara</span><input data-i="${i}" data-k="title" value="${esc(ev.title)}"></label>
+                    <label class="f"><span>Ikon</span><select data-i="${i}" data-k="icon">${opts}</select></label>
+                    <div class="row">
+                        <label class="f"><span>Tanggal</span><input data-i="${i}" data-k="date" value="${esc(ev.date)}"></label>
+                        <label class="f"><span>Waktu</span><input data-i="${i}" data-k="time" value="${esc(ev.time)}"></label>
+                    </div>
+                    <label class="f"><span>Tempat</span><input data-i="${i}" data-k="venue" value="${esc(ev.venue)}"></label>
+                    <label class="f"><span>Link Google Maps (opsional)</span><input data-i="${i}" data-k="map" value="${esc(ev.map)}"></label>`;
+                box.appendChild(el);
+            });
+            box.querySelectorAll("input,select").forEach(inp => {
+                inp.addEventListener("input", () => {
+                    state.events[+inp.dataset.i][inp.dataset.k] = inp.value;
+                    schedulePreview();
+                });
+            });
+            box.querySelectorAll(".ev__del").forEach(btn => {
+                btn.addEventListener("click", () => { state.events.splice(+btn.dataset.i, 1); renderEvents(); schedulePreview(); });
+            });
+        }
+
+        function esc(s) { return String(s == null ? "" : s).replace(/"/g, "&quot;"); }
+
+        /* ====== BACA form -> state ====== */
+        function readForm() {
+            state.meta.template = $("tpl").value;
+            state.couple.display = $("c-display").value;
+            state.meta.title = (state.couple.display || "Undangan") + " — Undangan Pernikahan";
+            state.meta.description = "Undangan pernikahan " + (state.couple.display || "") + " oleh Lavelle.";
+            const b = state.couple.bride, g = state.couple.groom;
+            b.name = $("b-name").value; b.full = $("b-full").value; b.initial = $("b-initial").value;
+            b.parents = $("b-parents").value.trim().replace(/\n/g, "<br>"); b.ig = $("b-ig").value; b.photo = $("b-photo").value;
+            g.name = $("g-name").value; g.full = $("g-full").value; g.initial = $("g-initial").value;
+            g.parents = $("g-parents").value.trim().replace(/\n/g, "<br>"); g.ig = $("g-ig").value; g.photo = $("g-photo").value;
+            state.date.iso = localToIso($("d-iso").value) || state.date.iso;
+            state.date.afterIso = localToIso($("d-after").value) || state.date.afterIso;
+            state.date.display = $("d-display").value;
+            state.quote.text = $("q-text").value; state.quote.source = $("q-src").value;
+            state.gallery = linesToArr($("gal").value);
+            state.galleryAfter = linesToArr($("gal-after").value);
+            state.music.src = $("m-src").value;
+            state.music.startAt = Number($("m-start").value) || 0;
+            state.music.volume = Number($("m-vol").value);
+            state.closing = $("closing").value;
+        }
+
+        function linesToArr(txt) { return txt.split("\n").map(s => s.trim()).filter(Boolean); }
+
+        /* ====== Konversi tanggal ====== */
+        function isoToLocal(iso) { // "2026-12-20T08:00:00+07:00" -> "2026-12-20T08:00"
+            if (!iso) return "";
+            const m = String(iso).match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/);
+            return m ? m[1] + "T" + m[2] : "";
+        }
+        function localToIso(v) { return v ? v + ":00+07:00" : ""; }
+
+        function autoDisplay() {
+            const v = $("d-iso").value;
+            if (!v) return;
+            const d = new Date(v);
+            $("d-display").value = HARI[d.getDay()] + ", " + d.getDate() + " " + BULAN[d.getMonth()] + " " + d.getFullYear();
+            // auto set afterIso = +3 hari kalau kosong
+            if (!$("d-after").value) {
+                const a = new Date(d.getTime() + 3 * 86400000);
+                $("d-after").value = a.toISOString().slice(0, 16);
+            }
+            readForm(); schedulePreview();
+        }
+
+        /* ====== Preview ====== */
+        let pvTimer;
+        function schedulePreview() { clearTimeout(pvTimer); pvTimer = setTimeout(updatePreview, 450); }
+        function updatePreview() {
+            readForm();
+            try { sessionStorage.setItem("LAVELLE_PREVIEW", JSON.stringify(state)); } catch (e) {}
+            const mode = $("pv-mode").value;
+            $("pv").src = "../demo/" + state.meta.template + "/?preview=1&mode=" + mode + "&_=" + encodeURIComponent(Date.now());
+        }
+
+        /* ====== Generate data.js ====== */
+        function buildFileText() {
+            readForm();
+            const header =
+                "/* =========================================================\n" +
+                "   Lavelle — Data Undangan (dibuat lewat Panel Template)\n" +
+                "   Ubah lewat panel, lalu ganti file ini di folder klien.\n" +
+                "   ========================================================= */\n";
+            const footer =
+                "\n\n/* MODE PREVIEW — jangan diubah */\n" +
+                "(function(){try{var q=new URLSearchParams(location.search);" +
+                "if(q.get(\"preview\")===\"1\"){var d=sessionStorage.getItem(\"LAVELLE_PREVIEW\");" +
+                "if(d)window.LAVELLE=JSON.parse(d);}}catch(e){}})();\n";
+            return header + "window.LAVELLE = " + JSON.stringify(state, null, 2) + ";" + footer;
+        }
+
+        function openModal() {
+            $("code").textContent = buildFileText();
+            $("modal").classList.add("show");
+        }
+
+        /* ====== Events global ====== */
+        document.addEventListener("input", (e) => {
+            if (e.target.closest("#events")) return; // ditangani sendiri
+            if (e.target.closest(".body")) schedulePreview();
+        });
+        $("d-auto").addEventListener("click", autoDisplay);
+        $("ev-add").addEventListener("click", () => {
+            state.events.push({ title: "Acara Baru", icon: "fa-heart", date: "", time: "", venue: "", map: "" });
+            renderEvents(); schedulePreview();
+        });
+        $("btn-refresh").addEventListener("click", updatePreview);
+        $("pv-mode").addEventListener("change", updatePreview);
+        $("pv-open").addEventListener("click", () => {
+            readForm();
+            try { sessionStorage.setItem("LAVELLE_PREVIEW", JSON.stringify(state)); } catch (e) {}
+            window.open("../demo/" + state.meta.template + "/?preview=1&mode=" + $("pv-mode").value, "_blank");
+        });
+        $("btn-reset").addEventListener("click", () => {
+            if (confirm("Kembalikan semua isian ke contoh?")) { state = JSON.parse(JSON.stringify(SAMPLE)); fillForm(); updatePreview(); }
+        });
+        $("btn-gen").addEventListener("click", openModal);
+        $("modal-close").addEventListener("click", () => $("modal").classList.remove("show"));
+        $("btn-copy").addEventListener("click", () => {
+            navigator.clipboard.writeText(buildFileText()).then(() => alert("Tersalin! Tempel ke file data.js."));
+        });
+        $("btn-download").addEventListener("click", () => {
+            const blob = new Blob([buildFileText()], { type: "text/javascript" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob); a.download = "data.js"; a.click();
+            URL.revokeObjectURL(a.href);
+        });
+
+        /* ====== Mulai ====== */
+        fillForm();
+        updatePreview();
+    </script>
+</body>
+
+</html>

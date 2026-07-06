@@ -30,8 +30,8 @@
     <div class="cover" id="cover">
         <div class="cover__frame">
             <p class="cover__kicker">The Wedding Of</p>
-            <h1 class="cover__names">Kayla &amp; Raka</h1>
-            <p class="cover__date">Sabtu, 20 Desember 2026</p>
+            <h1 class="cover__names lv-names">Kayla &amp; Raka</h1>
+            <p class="cover__date" id="lv-cover-date">Sabtu, 20 Desember 2026</p>
             <div class="cover__to">Kepada Yth. Bapak/Ibu/Saudara/i<b id="guestName">Tamu Undangan</b></div>
             <button class="btn btn-open" id="openBtn"><i class="fa-regular fa-envelope-open"></i> Buka Undangan</button>
         </div>
@@ -44,11 +44,11 @@
     <section class="hero">
         <div class="wrap">
             <span class="kicker reveal">We Are Getting Married</span>
-            <h1 class="names reveal">Kayla <span class="amp">&amp;</span> Raka</h1>
+            <h1 class="names reveal" id="lv-hero-names">Kayla <span class="amp">&amp;</span> Raka</h1>
             <div class="divider reveal"><i class="fa-solid fa-spa"></i></div>
-            <p class="reveal phase-before" style="font-family:var(--serif); font-size:1.3rem; font-style:italic; color:var(--sage-deep);">
+            <p class="reveal phase-before" id="lv-hero-date" style="font-family:var(--serif); font-size:1.3rem; font-style:italic; color:var(--sage-deep);">
                 Sabtu, 20 Desember 2026</p>
-            <p class="reveal phase-after" style="font-family:var(--serif); font-size:1.3rem; font-style:italic; color:var(--sage-deep);">
+            <p class="reveal phase-after" id="lv-hero-date-after" style="font-family:var(--serif); font-size:1.3rem; font-style:italic; color:var(--sage-deep);">
                 Telah menikah &middot; 20 Desember 2026</p>
         </div>
     </section>
@@ -56,9 +56,9 @@
     <!-- QUOTE -->
     <section class="quote alt">
         <div class="wrap reveal">
-            <p>"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu
+            <p id="lv-quote">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu
                 sendiri, supaya kamu cenderung dan merasa tenteram kepadanya."</p>
-            <cite>&mdash; QS. Ar-Rum: 21</cite>
+            <cite id="lv-quote-src">&mdash; QS. Ar-Rum: 21</cite>
         </div>
     </section>
 
@@ -66,20 +66,20 @@
     <section>
         <div class="wrap">
             <span class="kicker reveal">Mempelai</span>
-            <h2 class="title-script reveal">Kayla &amp; Raka</h2>
+            <h2 class="title-script reveal lv-names">Kayla &amp; Raka</h2>
             <div class="divider reveal"><i class="fa-solid fa-spa"></i></div>
             <div class="couple">
                 <div class="person reveal">
-                    <div class="person__photo">K</div>
-                    <h3>Kayla Ayu Lestari</h3>
-                    <p class="par">Putri pertama dari<br>Bapak Suryadi &amp; Ibu Maryani</p>
-                    <a class="ig" href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <div class="person__photo" id="lv-bride-photo">K</div>
+                    <h3 id="lv-bride-name">Kayla Ayu Lestari</h3>
+                    <p class="par" id="lv-bride-parents">Putri pertama dari<br>Bapak Suryadi &amp; Ibu Maryani</p>
+                    <a class="ig" id="lv-bride-ig" href="#"><i class="fa-brands fa-instagram"></i></a>
                 </div>
                 <div class="person reveal">
-                    <div class="person__photo">R</div>
-                    <h3>Raka Pratama</h3>
-                    <p class="par">Putra kedua dari<br>Bapak Hendra &amp; Ibu Sulastri</p>
-                    <a class="ig" href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <div class="person__photo" id="lv-groom-photo">R</div>
+                    <h3 id="lv-groom-name">Raka Pratama</h3>
+                    <p class="par" id="lv-groom-parents">Putra kedua dari<br>Bapak Hendra &amp; Ibu Sulastri</p>
+                    <a class="ig" id="lv-groom-ig" href="#"><i class="fa-brands fa-instagram"></i></a>
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@
                 <div class="divider reveal"><i class="fa-solid fa-spa"></i></div>
                 <p class="reveal" style="color:var(--ink-soft); max-width:520px; margin:0 auto;">
                     Dengan penuh syukur, kami telah resmi mengikat janji suci pada
-                    <b style="color:var(--ink);">Sabtu, 20 Desember 2026</b>. Terima kasih atas doa restu &amp;
+                    <b style="color:var(--ink);" id="lv-married-date">Sabtu, 20 Desember 2026</b>. Terima kasih atas doa restu &amp;
                     kehadiran yang menjadi bagian tak terlupakan dari hari bahagia kami.</p>
                 <span class="married-badge reveal"><i class="fa-solid fa-ring"></i> Resmi Menjadi Suami &amp; Istri</span>
             </div>
@@ -120,7 +120,7 @@
             <span class="kicker reveal">Waktu &amp; Tempat</span>
             <h2 class="title reveal">Rangkaian Acara</h2>
             <div class="divider reveal"><i class="fa-solid fa-spa"></i></div>
-            <div class="events">
+            <div class="events" id="lv-events">
                 <div class="event-card reveal">
                     <div class="ic"><i class="fa-solid fa-ring"></i></div>
                     <h3>Akad Nikah</h3>
@@ -145,7 +145,7 @@
             <h2 class="title-script reveal phase-before">Our Moments</h2>
             <h2 class="title-script reveal phase-after">Dokumentasi Pernikahan</h2>
             <div class="divider reveal"><i class="fa-solid fa-spa"></i></div>
-            <div class="gallery-grid reveal">
+            <div class="gallery-grid reveal" id="lv-gallery">
                 <div class="ph"><img src="../../img/mentahan/summer-1.jpeg" alt="Momen" loading="lazy"></div>
                 <div class="ph"><img src="../../img/mentahan/summer-2.jpeg" alt="Momen" loading="lazy"></div>
                 <div class="ph"><img src="../../img/mentahan/summer-3.jpeg" alt="Momen" loading="lazy"></div>
@@ -168,10 +168,10 @@
     <section class="closing">
         <div class="wrap reveal">
             <span class="kicker">Terima Kasih</span>
-            <p style="font-family:var(--serif); font-size:1.2rem; font-style:italic; color:var(--ink-soft); margin-bottom:1rem;">
+            <p id="lv-closing" style="font-family:var(--serif); font-size:1.2rem; font-style:italic; color:var(--ink-soft); margin-bottom:1rem;">
                 Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa
                 restu.</p>
-            <h2 class="names">Kayla &amp; Raka</h2>
+            <h2 class="names lv-names">Kayla &amp; Raka</h2>
         </div>
     </section>
 
@@ -179,6 +179,7 @@
         Undangan digital oleh <a href="../../">Lavelle</a> &middot; Tema Klasik &mdash; Blush &amp; Sage
     </footer>
 
+    <script src="./data.js"></script>
     <script src="./js/main.js"></script>
 </body>
 
