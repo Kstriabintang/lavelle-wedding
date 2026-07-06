@@ -85,10 +85,10 @@ body::after {
 .article__meta { color: var(--ink-mute); font-size: .85rem; }
 .article__cover { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius); margin-bottom: 2rem; box-shadow: 0 20px 50px -28px rgba(74, 60, 25, .5); }
 
-.prose { color: var(--ink); line-height: 1.85; font-size: 1.06rem; }
-.prose p { margin: 0 0 1.2rem; }
+.prose { color: var(--ink); font-family: var(--serif-2); line-height: 1.85; font-size: 1.24rem; letter-spacing: .002em; }
+.prose p { margin: 0 0 1.25rem; font-weight: 500; }
 /* drop cap elegan di paragraf pertama */
-.prose > p:first-of-type::first-letter { font-family: var(--serif); font-size: 3.4em; line-height: .82; float: left; margin: .06em .12em 0 0; color: var(--gold-deep); font-weight: 600; }
+.prose > p:first-of-type::first-letter { font-family: var(--serif); font-size: 3.6em; line-height: .8; float: left; margin: .04em .12em 0 0; color: var(--gold-deep); font-weight: 600; }
 .prose h2 { font-family: var(--serif); font-size: 1.7rem; font-weight: 600; margin: 2.3rem 0 .8rem; color: var(--ink); padding-bottom: .35rem; border-bottom: 1px solid var(--line); }
 .prose h3 { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; margin: 1.6rem 0 .6rem; }
 .prose ul, .prose ol { margin: 0 0 1.2rem 1.3rem; }

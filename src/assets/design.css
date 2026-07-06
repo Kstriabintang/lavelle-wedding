@@ -27,7 +27,8 @@
     --glow-pink: 0 14px 34px -16px rgba(94, 74, 30, .35);
     --glow-purple: 0 18px 44px -18px rgba(60, 70, 40, .35);
     --shadow: 0 26px 60px -28px rgba(74, 60, 25, .45);
-    --serif: 'Cormorant Garamond', Georgia, serif;
+    --serif: 'Fraunces', 'Cormorant Garamond', Georgia, serif;   /* display — mewah & editorial */
+    --serif-2: 'Cormorant Garamond', Georgia, serif;             /* prose — anggun & mudah dibaca */
     --sans: 'Jost', system-ui, sans-serif;
     --script-1: 'Great Vibes', cursive;
     --script-2: 'Pinyon Script', cursive;
@@ -40,7 +41,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 body {
     font-family: var(--sans); color: var(--ink); background: var(--bg);
     line-height: 1.7; font-weight: 300; -webkit-font-smoothing: antialiased; overflow-x: hidden; position: relative;
+    font-optical-sizing: auto; text-rendering: optimizeLegibility;
 }
+h1, h2, h3, h4, .section__title, .hero__title { font-optical-sizing: auto; }
 body::before {
     content: ""; position: fixed; inset: 0; z-index: -2;
     background:
@@ -380,3 +383,85 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
     .hearts, .pl__logo, .strip__track { animation: none !important; }
     .reveal { transition: none; opacity: 1; transform: none; }
 }
+
+/* ===================================================
+   PREMIUM POLISH — tipografi Fraunces, micro-interaksi,
+   detail elegan (v2). Ditambahkan di akhir agar menimpa.
+   =================================================== */
+
+/* Seleksi teks & scrollbar bernuansa brand */
+::selection { background: rgba(194, 149, 79, .22); color: var(--ink); }
+html { scrollbar-color: var(--sage) transparent; }
+
+/* Aksesibilitas: focus ring lembut & konsisten */
+a:focus-visible, button:focus-visible, summary:focus-visible, .btn:focus-visible {
+    outline: 2px solid var(--gold-deep); outline-offset: 3px; border-radius: 6px;
+}
+
+/* --- Display headings (Fraunces): tracking & keseimbangan optis --- */
+.hero__title { letter-spacing: -.015em; font-weight: 500; }
+.section__title { letter-spacing: -.008em; text-wrap: balance; }
+.eyebrow { font-weight: 600; }
+.pl__name, .brand__name { letter-spacing: 3px; }
+
+/* --- Tombol: lebih mewah & responsif --- */
+.btn { position: relative; overflow: hidden; will-change: transform; }
+.btn::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, .18) 50%, transparent 80%);
+    transform: translateX(-120%); transition: transform .6s ease;
+}
+.btn:hover::after { transform: translateX(120%); }
+.btn:active { transform: translateY(-1px) scale(.99); }
+.btn--gold { box-shadow: 0 10px 26px -14px rgba(51, 59, 37, .5); }
+
+/* --- Eyebrow: garis emas dengan titik ujung --- */
+.eyebrow span { position: relative; }
+.section--alt { position: relative; }
+
+/* --- Kartu keunggulan: aksen atas muncul saat hover --- */
+.card { position: relative; overflow: hidden; }
+.card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--grad); transform: scaleX(0); transform-origin: left; transition: transform .45s cubic-bezier(.16,1,.3,1);
+}
+.card:hover::before { transform: scaleX(1); }
+.card__icon { transition: transform .45s cubic-bezier(.16,1,.3,1), box-shadow .35s; }
+.card:hover .card__icon { transform: rotate(-6deg) scale(1.06); }
+
+/* --- Pricing: kartu unggulan sedikit lebih hidup --- */
+.plan { transition: transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s, border-color .35s; }
+.plan__price { letter-spacing: -.02em; }
+.plan__badge { box-shadow: 0 8px 20px -8px rgba(168, 119, 47, .6); }
+
+/* --- Moodboard: sudut & bayang lebih lembut + overlay halus --- */
+.shot { border-radius: 16px; }
+.shot::after {
+    content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(42, 49, 32, .28));
+    opacity: 0; transition: opacity .4s;
+}
+.shot:hover::after { opacity: 1; }
+
+/* --- Demo cards: tag & tombol mock lebih halus --- */
+.demo__tag { backdrop-filter: blur(4px); box-shadow: 0 6px 16px -8px rgba(0,0,0,.25); }
+.link i { transition: transform .3s; }
+.link:hover i { transform: translateX(3px); }
+
+/* --- Navbar: transisi brand & tautan lebih halus --- */
+.nav__links a:not(.btn)::after { height: 1.5px; }
+
+/* --- FAQ: sedikit lebih empuk --- */
+.faq__item summary { transition: color .25s; }
+.faq__item[open] summary { color: var(--gold-deep); }
+
+/* --- Strip: gradasi tepi agar teks tak terpotong kasar --- */
+.strip { position: relative; }
+.strip::before, .strip::after {
+    content: ""; position: absolute; top: 0; bottom: 0; width: 64px; z-index: 2; pointer-events: none;
+}
+.strip::before { left: 0; background: linear-gradient(90deg, var(--green-deep), transparent); }
+.strip::after { right: 0; background: linear-gradient(270deg, var(--green-deep), transparent); }
+
+/* --- Footer: tautan dengan indent halus saat hover --- */
+.footer__col a { transition: color .25s, padding-left .25s; }
+.footer__col a:hover { padding-left: 4px; }

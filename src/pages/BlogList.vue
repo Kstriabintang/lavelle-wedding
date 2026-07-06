@@ -3,6 +3,24 @@ import { useHead } from '@unhead/vue'
 import BlogNav from '../components/BlogNav.vue'
 import BlogFooter from '../components/BlogFooter.vue'
 import { indexMeta, postList } from '../data/blog'
+import { posts } from '../data/blog'
+
+// Schema Blog dibuat dari daftar lengkap (artikel lama + baru)
+const blogSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  '@id': 'https://lavelle.my.id/blog/',
+  name: 'Blog Lavelle',
+  description: 'Tips, panduan, dan inspirasi seputar undangan pernikahan digital.',
+  publisher: { '@type': 'Organization', name: 'Lavelle', logo: { '@type': 'ImageObject', url: 'https://lavelle.my.id/img/lavelle-logo.png' } },
+  blogPost: postList.map((p) => ({
+    '@type': 'BlogPosting',
+    headline: p.title,
+    url: `https://lavelle.my.id/blog/${p.slug}/`,
+    image: (posts[p.slug] && posts[p.slug].ogImage) || `https://lavelle.my.id${p.image}`,
+    author: { '@type': 'Organization', name: 'Lavelle' },
+  })),
+})
 
 useHead({
   title: indexMeta.title,
@@ -15,7 +33,7 @@ useHead({
     { property: 'og:url', content: 'https://lavelle.my.id/blog/' },
     { property: 'og:image', content: indexMeta.ogImage },
   ],
-  script: [{ type: 'application/ld+json', innerHTML: indexMeta.jsonLd }],
+  script: [{ type: 'application/ld+json', innerHTML: blogSchema }],
 })
 </script>
 
