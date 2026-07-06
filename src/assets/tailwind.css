@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Token brand Lavelle tersedia sebagai utility Tailwind (mis. text-gold, bg-green) */
+@theme {
+  --color-bg: #f4ecdd;
+  --color-bg-2: #ece0cb;
+  --color-cream: #faf4e8;
+  --color-ink: #3b352a;
+  --color-ink-soft: #6d6151;
+  --color-ink-mute: #9a8d77;
+  --color-green: #4a5436;
+  --color-green-deep: #333b25;
+  --color-green-deepest: #2a3120;
+  --color-sage: #97a07f;
+  --color-gold: #c2954f;
+  --color-gold-bright: #d8ad68;
+  --color-gold-deep: #a8772f;
+
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Jost", system-ui, sans-serif;
+  --font-script: "Great Vibes", cursive;
+  --font-script2: "Pinyon Script", cursive;
+}
