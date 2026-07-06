@@ -616,6 +616,17 @@ a:focus-visible, button:focus-visible, summary:focus-visible, .btn:focus-visible
     line-height: 1.14; margin-bottom: 1rem; letter-spacing: -.01em; text-wrap: balance; }
 .demo-hero p { color: rgba(255, 250, 240, .9); font-size: 1.06rem; max-width: 600px; margin: 0 auto; }
 .demo-hero p strong { color: var(--gold-bright); font-weight: 500; }
+.demo-hero--slim { min-height: 34vh; padding: 128px 0 54px; }
+
+/* Galeri /demo/: kartu kompak biar semua muat rapat (grid 3×3) */
+.demo-gallery { padding-top: clamp(48px, 6vw, 72px); }
+.demo-grid { gap: 1.4rem; }
+.demo--compact .demo__thumb { height: 230px; }
+.demo--compact .demo__body { padding: 1.4rem 1.5rem; }
+.demo--compact .demo__body h3 { font-size: 1.34rem; }
+.demo--compact .demo__body p { font-size: .92rem; margin-bottom: 1rem; }
+.demo--compact .mk__names { font-size: 2.1rem; }
+@media (min-width: 901px) { .demo-grid { grid-template-columns: repeat(3, 1fr); } }
 
 /* --- Transisi antar-halaman (router-view) --- */
 .page-enter-active, .page-leave-active { transition: opacity .35s ease, transform .35s ease; }

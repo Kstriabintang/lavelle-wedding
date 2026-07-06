@@ -1,4 +1,5 @@
 <script setup>
+import { ref, computed } from 'vue'
 import { useHead } from '@unhead/vue'
 import { demos } from '../data/site'
 import SiteNav from '../components/SiteNav.vue'
@@ -18,38 +19,46 @@ useHead({
   ],
 })
 
-const groups = [
-  { key: 'adat', label: 'Adat Nusantara', heading: 'Undangan Adat Nusantara', desc: 'Bernuansa adat dengan ornamen khas tiap suku dan slot karikatur pasangan — dibangun interaktif berbasis Vue.', keys: ['minang', 'jawa', 'sunda', 'bugis'] },
-  { key: 'klasik', label: 'Klasik & Romantis', heading: 'Klasik & Romantis', desc: 'Hangat, elegan, dan timeless — cocok untuk pernikahan adat maupun modern.', keys: ['luxe', 'klasik'] },
-  { key: 'modern', label: 'Modern', heading: 'Modern & Sinematik', desc: 'Mewah, minimalis, hingga pengalaman 3D interaktif berbasis WebGL.', keys: ['modern', 'sinema', 'modern3d'] },
+const demoCategory = {
+  minang: 'adat', jawa: 'adat', sunda: 'adat', bugis: 'adat',
+  luxe: 'klasik', klasik: 'klasik',
+  modern: 'modern', sinema: 'modern', modern3d: 'modern',
+}
+const cats = [
+  { key: 'all', label: 'Semua', icon: 'fa-border-all' },
+  { key: 'adat', label: 'Adat Nusantara', icon: 'fa-landmark' },
+  { key: 'klasik', label: 'Klasik & Romantis', icon: 'fa-heart' },
+  { key: 'modern', label: 'Modern', icon: 'fa-wand-magic-sparkles' },
 ]
-const byKey = Object.fromEntries(demos.map((d) => [d.key, d]))
-const grouped = groups.map((g) => ({ ...g, items: g.keys.map((k) => byKey[k]).filter(Boolean) }))
+const active = ref('all')
+const filtered = computed(() => active.value === 'all' ? demos : demos.filter((d) => demoCategory[d.key] === active.value))
+const countCat = (k) => k === 'all' ? demos.length : demos.filter((d) => demoCategory[d.key] === k).length
 </script>
 
 <template>
   <SiteNav />
 
-  <section class="demo-hero" style="background-image:url('/img/mentahan/pasangan-outdoor-4.jpeg')">
+  <section class="demo-hero demo-hero--slim" style="background-image:url('/img/mentahan/pasangan-outdoor-4.jpeg')">
     <div class="demo-hero__scrim"></div>
     <div class="container demo-hero__inner">
       <p class="eyebrow eyebrow--light"><span></span> Galeri Demo <span></span></p>
       <h1>Semua desain undangan Lavelle</h1>
-      <p>Klik <strong>Lihat Demo</strong> untuk membuka undangan secara langsung. Setiap desain dapat disesuaikan
-        tema, warna, dan cerita kalian — bahkan nama tamu tampil otomatis.</p>
-      <a href="/#kontak" class="btn btn--gold" style="margin-top:1.6rem">Konsultasi Gratis</a>
+      <p>Klik <strong>Lihat Demo</strong> untuk membuka undangan langsung. Semua desain dapat disesuaikan tema, warna,
+        dan cerita kalian — bahkan nama tamu tampil otomatis.</p>
     </div>
   </section>
 
-  <section v-for="(g, i) in grouped" :key="g.key" class="section" :class="{ 'section--alt': i % 2 === 1 }" :id="g.key">
+  <section class="section demo-gallery">
     <div class="container">
-      <div class="section__head reveal">
-        <p class="eyebrow"><span></span> {{ g.label }}</p>
-        <h2 class="section__title">{{ g.heading }}</h2>
-        <p class="section__desc">{{ g.desc }}</p>
+      <div class="demo-tabs">
+        <button v-for="c in cats" :key="c.key" class="demo-tab" :class="{ 'is-active': active === c.key }"
+          @click="active = c.key">
+          <i :class="`fa-solid ${c.icon}`"></i> {{ c.label }} <span>{{ countCat(c.key) }}</span>
+        </button>
       </div>
-      <div class="grid grid--3">
-        <article v-for="d in g.items" :key="d.key" class="demo reveal" :class="d.cardClass">
+
+      <div class="grid grid--3 demo-grid">
+        <article v-for="d in filtered" :key="d.key" class="demo demo--compact" :class="d.cardClass">
           <div class="demo__thumb" :class="d.thumb">
             <div class="mk" :class="d.frame">
               <span class="mk__kicker">The Wedding Of</span>
@@ -66,18 +75,11 @@ const grouped = groups.map((g) => ({ ...g, items: g.keys.map((k) => byKey[k]).fi
           </div>
         </article>
       </div>
-    </div>
-  </section>
 
-  <section class="cta" id="kontak" style="background-image:url('/img/mentahan/pasangan-outdoor-2.jpeg')">
-    <div class="container cta__inner reveal">
-      <p class="eyebrow eyebrow--light"><span></span> Punya Referensi Sendiri? <span></span></p>
-      <h2>Wujudkan undangan impianmu.</h2>
-      <p class="cta__sub">Kirim referensi desain atau ceritakan konsepmu — tim Lavelle siap merangkainya jadi undangan digital yang istimewa.</p>
-      <div class="cta__btns">
-        <a href="/#paket" class="btn btn--gold btn--lg">Lihat Paket &amp; Harga</a>
-        <a href="/" class="btn btn--ghost btn--lg">Kembali ke Beranda</a>
-      </div>
+      <p class="demo__note" style="margin-top:2.6rem">
+        <i class="fa-regular fa-circle-question"></i> Punya referensi desain sendiri, atau ingin suku adat lain?
+        <a href="/#kontak" class="link" style="display:inline-flex">Hubungi kami <i class="fa-solid fa-arrow-right-long"></i></a>
+      </p>
     </div>
   </section>
 
