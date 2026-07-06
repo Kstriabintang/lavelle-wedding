@@ -607,6 +607,16 @@ a:focus-visible, button:focus-visible, summary:focus-visible, .btn:focus-visible
 }
 @media (min-width: 641px) { .demo-hint { display: none; } }
 
+/* --- Galeri Demo (halaman /demo/) hero --- */
+.demo-hero { position: relative; min-height: 48vh; display: grid; place-items: center; text-align: center;
+    padding: 150px 0 72px; background-size: cover; background-position: center; overflow: hidden; }
+.demo-hero__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(42, 49, 32, .74), rgba(42, 49, 32, .88)); }
+.demo-hero__inner { position: relative; z-index: 1; max-width: 720px; color: var(--cream); }
+.demo-hero h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2.2rem, 5vw, 3.4rem); color: #fff;
+    line-height: 1.14; margin-bottom: 1rem; letter-spacing: -.01em; text-wrap: balance; }
+.demo-hero p { color: rgba(255, 250, 240, .9); font-size: 1.06rem; max-width: 600px; margin: 0 auto; }
+.demo-hero p strong { color: var(--gold-bright); font-weight: 500; }
+
 /* --- Transisi antar-halaman (router-view) --- */
 .page-enter-active, .page-leave-active { transition: opacity .35s ease, transform .35s ease; }
 .page-enter-from { opacity: 0; transform: translateY(10px); }

@@ -14,7 +14,7 @@ export default defineConfig({
     formatting: 'minify',
     includedRoutes() {
       return [
-        '/', '/blog/', '/panel/', '/demo/luxe/',
+        '/', '/blog/', '/panel/', '/demo/', '/demo/luxe/',
         ...adatSlugs.map((s) => `/demo/adat/${s}/`),
         ...slugs.map((s) => `/blog/${s}/`),
       ]
