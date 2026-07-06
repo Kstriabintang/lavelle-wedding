@@ -12,7 +12,7 @@ export default defineConfig({
     script: 'async',
     formatting: 'minify',
     includedRoutes() {
-      return ['/', '/blog/', '/panel/', ...slugs.map((s) => `/blog/${s}/`)]
+      return ['/', '/blog/', '/panel/', '/demo/luxe/', ...slugs.map((s) => `/blog/${s}/`)]
     },
   },
 })

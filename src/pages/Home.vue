@@ -1,4 +1,5 @@
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useHead } from '@unhead/vue'
 import { wa, waPlan, WA_1, WA_2, IG } from '../data/site'
 import { demos } from '../data/site'
@@ -94,6 +95,49 @@ const faqs = [
 ]
 
 const strip = ['Desain Elegan', 'RSVP Otomatis', 'Buku Ucapan', 'Galeri Foto', 'Amplop Digital', 'Lokasi & Maps', 'Musik Latar', 'Hitung Mundur']
+
+// Nilai unggulan — jujur & berbasis fitur (bukan angka karangan)
+const valueProps = [
+  { icon: 'fa-infinity', value: 'Tanpa Batas', label: 'Tamu undangan' },
+  { icon: 'fa-bolt', value: '1–3 Hari', label: 'Proses pengerjaan' },
+  { icon: 'fa-palette', value: '100% Custom', label: 'Sesuai tema kalian' },
+  { icon: 'fa-headset', value: 'Dibimbing', label: 'Admin siap membantu' },
+]
+
+// Perbandingan undangan digital vs cetak
+const compare = [
+  { aspect: 'Biaya', digital: 'Terjangkau, sekali bayar', cetak: 'Mahal & berulang per lembar' },
+  { aspect: 'Waktu', digital: 'Siap 1–3 hari kerja', cetak: 'Berminggu-minggu cetak & kirim' },
+  { aspect: 'Jangkauan', digital: '1 link untuk ribuan tamu', cetak: 'Terbatas jumlah cetakan' },
+  { aspect: 'Fitur', digital: 'RSVP, maps, galeri, musik, amplop', cetak: 'Statis — hanya teks & gambar' },
+  { aspect: 'Ramah Lingkungan', digital: 'Tanpa kertas, hemat & hijau', cetak: 'Boros kertas' },
+  { aspect: 'Revisi', digital: 'Mudah diubah kapan saja', cetak: 'Harus cetak ulang' },
+]
+
+// GANTI dengan testimoni asli klien Lavelle setelah tersedia.
+const testimonials = [
+  { name: 'Kayla & Raka', role: 'Menikah Desember 2026', photo: 'pasangan-pose-romantis', stars: 5,
+    text: 'Undangannya cantik banget, semua tamu sampai muji! Prosesnya cepat dan adminnya sabar bantuin kami dari nol sampai jadi.' },
+  { name: 'Anindya & Bima', role: 'Menikah Februari 2027', photo: 'pasangan-candid', stars: 5,
+    text: 'Desainnya persis seperti yang kami mau — elegan dan mewah. Fitur RSVP-nya ngebantu banget ngatur tamu. Sangat direkomendasikan!' },
+  { name: 'Kirana & Arsa', role: 'Menikah Juni 2027', photo: 'pasangan-tatapan-dekat', stars: 5,
+    text: 'Suka banget hasilnya. Amplop digitalnya praktis, buku ucapannya bikin haru. Terima kasih Lavelle sudah bikin hari kami makin berkesan.' },
+]
+
+// Lightbox galeri
+const lightbox = ref(-1)
+const openLightbox = (i) => { lightbox.value = i }
+const closeLightbox = () => { lightbox.value = -1 }
+const nextShot = () => { lightbox.value = (lightbox.value + 1) % gallery.length }
+const prevShot = () => { lightbox.value = (lightbox.value - 1 + gallery.length) % gallery.length }
+const onKey = (e) => {
+  if (lightbox.value < 0) return
+  if (e.key === 'Escape') closeLightbox()
+  else if (e.key === 'ArrowRight') nextShot()
+  else if (e.key === 'ArrowLeft') prevShot()
+}
+onMounted(() => document.addEventListener('keydown', onKey))
+onUnmounted(() => document.removeEventListener('keydown', onKey))
 </script>
 
 <template>
@@ -130,6 +174,19 @@ const strip = ['Desain Elegan', 'RSVP Otomatis', 'Buku Ucapan', 'Galeri Foto', '
     </div>
   </div>
 
+  <!-- VALUE PROPS -->
+  <div class="vprops">
+    <div class="container">
+      <div class="vprops__grid reveal">
+        <div v-for="v in valueProps" :key="v.label" class="vprop">
+          <i :class="`fa-solid ${v.icon} vprop__icon`"></i>
+          <div class="vprop__value">{{ v.value }}</div>
+          <div class="vprop__label">{{ v.label }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- KEUNGGULAN -->
   <section class="section" id="keunggulan">
     <div class="container">
@@ -147,6 +204,35 @@ const strip = ['Desain Elegan', 'RSVP Otomatis', 'Buku Ucapan', 'Galeri Foto', '
     </div>
   </section>
 
+  <!-- PERBANDINGAN DIGITAL vs CETAK -->
+  <section class="section section--alt" id="perbandingan">
+    <div class="container container--narrow">
+      <div class="section__head reveal">
+        <p class="eyebrow"><span></span> Kenapa Digital</p>
+        <h2 class="section__title">Undangan digital vs cetak</h2>
+        <p class="section__desc">Lebih hemat, lebih cepat, dan jauh lebih kaya fitur — tanpa mengurangi kesan elegan.</p>
+      </div>
+      <div class="compare-wrap reveal">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th class="aspect-h">Aspek</th>
+              <th class="col-digital"><span>Digital <em class="tag">Lavelle</em></span></th>
+              <th class="col-cetak">Cetak Konvensional</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="c in compare" :key="c.aspect">
+              <td class="aspect">{{ c.aspect }}</td>
+              <td class="col-digital"><i class="fa-solid fa-circle-check"></i>{{ c.digital }}</td>
+              <td class="col-cetak"><i class="fa-solid fa-circle-xmark"></i>{{ c.cetak }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <!-- GALERI -->
   <section class="section section--alt" id="galeri">
     <div class="container">
@@ -157,8 +243,10 @@ const strip = ['Desain Elegan', 'RSVP Otomatis', 'Buku Ucapan', 'Galeri Foto', '
           natural, dan penuh rasa.</p>
       </div>
       <div class="moodboard">
-        <div v-for="g in gallery" :key="g" class="shot reveal">
-          <img :src="`/img/mentahan/${g}.jpeg`" alt="Inspirasi" loading="lazy">
+        <div v-for="(g, i) in gallery" :key="g" class="shot reveal" role="button" tabindex="0"
+          aria-label="Perbesar foto" @click="openLightbox(i)" @keydown.enter="openLightbox(i)">
+          <img :src="`/img/mentahan/${g}.jpeg`" alt="Inspirasi undangan pernikahan Lavelle" loading="lazy">
+          <span class="shot__zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
         </div>
       </div>
     </div>
@@ -260,6 +348,33 @@ const strip = ['Desain Elegan', 'RSVP Otomatis', 'Buku Ucapan', 'Galeri Foto', '
     </div>
   </section>
 
+  <!-- ULASAN / TESTIMONI -->
+  <section class="section section--alt" id="ulasan">
+    <div class="container">
+      <div class="section__head reveal">
+        <p class="eyebrow"><span></span> Ulasan Klien <span></span></p>
+        <h2 class="section__title">Cerita bahagia dari mereka</h2>
+        <p class="section__desc">Kepercayaan pasangan yang telah mempercayakan hari istimewanya kepada Lavelle.</p>
+      </div>
+      <div class="tgrid">
+        <figure v-for="t in testimonials" :key="t.name" class="tcard reveal">
+          <span class="tcard__quote">&ldquo;</span>
+          <div class="tcard__stars" :aria-label="`${t.stars} dari 5 bintang`">
+            <i v-for="s in t.stars" :key="s" class="fa-solid fa-star"></i>
+          </div>
+          <blockquote class="tcard__text">{{ t.text }}</blockquote>
+          <figcaption class="tcard__author">
+            <img :src="`/img/mentahan/${t.photo}.jpeg`" :alt="t.name" loading="lazy">
+            <div>
+              <div class="tcard__name">{{ t.name }}</div>
+              <div class="tcard__role">{{ t.role }}</div>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
   <!-- CARA PESAN -->
   <section class="section section--alt" id="cara-pesan">
     <div class="container">
@@ -332,4 +447,19 @@ const strip = ['Desain Elegan', 'RSVP Otomatis', 'Buku Ucapan', 'Galeri Foto', '
 
   <SiteFooter />
   <WhatsappFloat />
+
+  <!-- LIGHTBOX GALERI -->
+  <transition name="lb">
+    <div v-if="lightbox >= 0" class="lightbox" @click.self="closeLightbox">
+      <img class="lightbox__img" :src="`/img/mentahan/${gallery[lightbox]}.jpeg`"
+        :alt="`Inspirasi undangan ${lightbox + 1}`">
+      <button class="lightbox__btn lightbox__close" aria-label="Tutup" @click="closeLightbox">
+        <i class="fa-solid fa-xmark"></i></button>
+      <button class="lightbox__btn lightbox__prev" aria-label="Foto sebelumnya" @click.stop="prevShot">
+        <i class="fa-solid fa-chevron-left"></i></button>
+      <button class="lightbox__btn lightbox__next" aria-label="Foto berikutnya" @click.stop="nextShot">
+        <i class="fa-solid fa-chevron-right"></i></button>
+      <span class="lightbox__count">{{ lightbox + 1 }} / {{ gallery.length }}</span>
+    </div>
+  </transition>
 </template>

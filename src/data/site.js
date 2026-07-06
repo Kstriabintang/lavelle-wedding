@@ -13,6 +13,14 @@ export const waPlan = (plan) =>
 
 export const demos = [
   {
+    key: 'luxe', href: '/demo/luxe/?to=Tamu%20Undangan',
+    thumb: 'demo__thumb--luxe', frame: 'mk--frame',
+    names: 'Rania & Fajar', date: '15 . 05 . 2027', btn: 'Buka Undangan',
+    tag: 'Rose Gold — Ivory & Mawar', title: 'Tema Rose Gold', flag: 'Baru · Vue',
+    desc: 'Undangan interaktif berbasis Vue: cover elegan, kisah cinta, hitung mundur, galeri lightbox, RSVP, hingga amplop digital — nuansa ivory & rose gold yang romantis.',
+    cardClass: 'demo--klasik',
+  },
+  {
     key: 'klasik', href: '/demo/klasik/?to=Tamu%20Undangan',
     thumb: 'demo__thumb--klasik', frame: 'mk--frame',
     names: 'Kayla & Raka', date: '20 . 12 . 2026', btn: 'Buka Undangan',

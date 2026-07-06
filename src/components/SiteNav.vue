@@ -25,6 +25,7 @@ const links = [
   { href: '/#galeri', label: 'Galeri' },
   { href: '/#paket', label: 'Paket' },
   { href: '/#demo', label: 'Demo' },
+  { href: '/#ulasan', label: 'Ulasan' },
   { href: '/#cara-pesan', label: 'Cara Pesan' },
   { href: '/#faq', label: 'FAQ' },
   { href: '/blog/', label: 'Blog' },

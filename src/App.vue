@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import ScrollProgress from './components/ScrollProgress.vue'
 
 const router = useRouter()
 
@@ -18,10 +19,16 @@ function wireReveal() {
 
 onMounted(() => {
   wireReveal()
-  router.afterEach(() => nextTick(wireReveal))
+  // fallback bila transisi/hook belum sempat memicu
+  router.afterEach(() => nextTick(() => setTimeout(wireReveal, 80)))
 })
 </script>
 
 <template>
-  <router-view />
+  <ScrollProgress />
+  <router-view v-slot="{ Component }">
+    <transition name="page" mode="out-in" @after-enter="wireReveal">
+      <component :is="Component" />
+    </transition>
+  </router-view>
 </template>
