@@ -56,10 +56,92 @@ const prevLb = () => { lb.value = (lb.value - 1 + gallery.length) % gallery.leng
 const form = ref({ nama: '', hadir: 'Hadir, Insya Allah', jumlah: 1, ucapan: '' })
 function sendRsvp() {
   const c = cfg.value
+  if (!form.value.nama) return
+  // Tampilkan langsung di dinding ucapan + simpan lokal (demo tanpa backend)
+  if (form.value.ucapan) {
+    const w = { name: form.value.nama, hadir: form.value.hadir, msg: form.value.ucapan }
+    wishes.value = [w, ...wishes.value]
+    persistWish(w)
+  }
   const msg = `Assalamualaikum. Konfirmasi kehadiran undangan pernikahan adat ${c.suku} — ${c.bride} & ${c.groom}:%0A%0ANama: ${form.value.nama}%0AKehadiran: ${form.value.hadir}%0AJumlah tamu: ${form.value.jumlah}%0AUcapan & doa: ${form.value.ucapan}`
   if (typeof window !== 'undefined') window.open(`https://wa.me/${WA_1}?text=${encodeURIComponent(decodeURIComponent(msg))}`, '_blank')
+  form.value.ucapan = ''
 }
 const mapsUrl = computed(() => `https://maps.google.com/?q=${encodeURIComponent(cfg.value.mapsQuery)}`)
+
+// ---- Salin ke clipboard (rekening/tautan) ----
+const copied = ref('')
+function copyText(text, tag) {
+  if (typeof navigator === 'undefined' || !navigator.clipboard) return
+  navigator.clipboard.writeText(text).then(() => {
+    copied.value = tag
+    setTimeout(() => { if (copied.value === tag) copied.value = '' }, 1800)
+  }).catch(() => {})
+}
+
+// ---- Amplop digital (rekening + QRIS) ----
+const gifts = computed(() => [
+  { bank: 'BCA', no: '1234 5678 90', raw: '1234567890', an: cfg.value.brideFull },
+  { bank: 'Mandiri', no: '0987 6543 21', raw: '0987654321', an: cfg.value.groomFull },
+])
+
+// ---- Tambahkan ke kalender (Google + .ics) ----
+const calStamp = computed(() => cfg.value.date.replace(/-/g, ''))
+const calDates = computed(() => `${calStamp.value}T010000Z/${calStamp.value}T070000Z`) // 08.00–14.00 WIB
+const gcalUrl = computed(() => {
+  const c = cfg.value
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    + `&text=${encodeURIComponent(`Pernikahan ${c.bride} & ${c.groom}`)}`
+    + `&dates=${calDates.value}`
+    + `&details=${encodeURIComponent(`Undangan pernikahan adat ${c.suku}`)}`
+    + `&location=${encodeURIComponent(c.venue)}`
+})
+function downloadIcs() {
+  const c = cfg.value
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Lavelle//Undangan//ID', 'BEGIN:VEVENT',
+    `DTSTART:${calStamp.value}T010000Z`, `DTEND:${calStamp.value}T070000Z`,
+    `SUMMARY:Pernikahan ${c.bride} & ${c.groom}`, `LOCATION:${c.venue}`,
+    `DESCRIPTION:Undangan pernikahan adat ${c.suku}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url; a.download = `undangan-${c.slug}.ics`; a.click()
+  setTimeout(() => URL.revokeObjectURL(url), 500)
+}
+
+// ---- Bagikan undangan ----
+const shareUrl = computed(() => (typeof window !== 'undefined' ? window.location.href : 'https://lavelle.my.id'))
+function shareWa() {
+  const c = cfg.value
+  const t = `Undangan Pernikahan ${c.bride} & ${c.groom} — ${c.dateText}.%0ABuka undangan: ${shareUrl.value}`
+  if (typeof window !== 'undefined') window.open(`https://wa.me/?text=${encodeURIComponent(decodeURIComponent(t))}`, '_blank')
+}
+function shareNative() {
+  if (typeof navigator !== 'undefined' && navigator.share) {
+    navigator.share({ title: pageTitle.value, url: shareUrl.value }).catch(() => {})
+  } else copyText(shareUrl.value, 'link')
+}
+
+// ---- Ucapan & Doa (buku tamu) — contoh ter-seed + tersimpan lokal ----
+const seedWishes = [
+  { name: 'Keluarga Besar', hadir: 'Hadir', msg: 'Barakallahu lakuma wa baraka ‘alaikuma. Semoga menjadi keluarga sakinah, mawaddah, warahmah.' },
+  { name: 'Rara & Dimas', hadir: 'Hadir', msg: 'Selamat menempuh hidup baru! Bahagia selalu untuk kalian berdua.' },
+  { name: 'Sahabat SMA', hadir: 'Insya Allah Hadir', msg: 'Akhirnya sah juga! Langgeng sampai kakek-nenek ya 🤍' },
+  { name: 'Tante Wulan', hadir: 'Berhalangan', msg: 'Maaf belum bisa hadir, doa terbaik selalu menyertai kalian.' },
+]
+const wishes = ref([...seedWishes])
+const wishStoreKey = computed(() => `lavelle-wishes-${cfg.value.slug}`)
+function loadWishes() {
+  let saved = []
+  try { saved = JSON.parse(localStorage.getItem(wishStoreKey.value) || '[]') } catch { saved = [] }
+  wishes.value = [...saved, ...seedWishes]
+}
+function persistWish(w) {
+  let saved = []
+  try { saved = JSON.parse(localStorage.getItem(wishStoreKey.value) || '[]') } catch { saved = [] }
+  saved = [w, ...saved].slice(0, 50)
+  try { localStorage.setItem(wishStoreKey.value, JSON.stringify(saved)) } catch { /* penuh/diblokir */ }
+}
 
 // ---- Busana adat per suku (untuk karikatur SVG orisinal) ----
 const HEADDRESS = {
@@ -145,6 +227,7 @@ onMounted(() => {
   // Tautan pratinjau langsung-isi (mis. untuk showcase). Musik tetap butuh gesture.
   if (params.get('preview') === '1') opened.value = true
   tick(); timer = setInterval(tick, 1000)
+  loadWishes()
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll()
   document.addEventListener('keydown', onKey)
   nextTick(() => setTimeout(wireReveal, 100))
@@ -385,6 +468,25 @@ onUnmounted(() => {
         </div>
       </section>
 
+      <!-- Kisah Cinta / Love Story -->
+      <section v-if="cfg.loveStory" class="a-sec a-sec--paper">
+        <div class="a-wrap a-center">
+          <p class="a-kicker a-reveal">Perjalanan Kami</p>
+          <h2 class="a-title a-reveal">Kisah Cinta</h2>
+          <svg class="a-div a-reveal" viewBox="0 0 260 28"><use href="#ornDivider" /></svg>
+          <ol class="a-story">
+            <li v-for="(s, i) in cfg.loveStory" :key="i" class="a-story__item a-reveal" :class="{ 'is-right': i % 2 }">
+              <span class="a-story__dot"><i class="fa-solid fa-heart"></i></span>
+              <div class="a-story__card">
+                <span class="a-story__year">{{ s.year }}</span>
+                <h3>{{ s.title }}</h3>
+                <p>{{ s.desc }}</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
       <!-- Prosesi Adat -->
       <section class="a-sec a-sec--deep">
         <svg class="a-motif" aria-hidden="true"><rect width="100%" height="100%" fill="url(#adatMotif)" /></svg>
@@ -414,6 +516,10 @@ onUnmounted(() => {
             <div class="a-cd"><strong>{{ cd.m }}</strong><span>Menit</span></div>
             <div class="a-cd"><strong>{{ cd.s }}</strong><span>Detik</span></div>
           </div>
+          <div class="a-calbtns a-reveal">
+            <a class="a-btn a-btn--outline" :href="gcalUrl" target="_blank" rel="noopener"><i class="fa-regular fa-calendar-plus"></i> Google Calendar</a>
+            <button class="a-btn a-btn--outline" type="button" @click="downloadIcs"><i class="fa-solid fa-download"></i> Simpan (.ics)</button>
+          </div>
         </div>
       </section>
 
@@ -436,6 +542,32 @@ onUnmounted(() => {
               <p class="a-event__place"><i class="fa-solid fa-location-dot"></i> {{ cfg.venue }}</p>
               <a class="a-btn a-btn--outline" :href="mapsUrl" target="_blank" rel="noopener"><i class="fa-solid fa-map-location-dot"></i> Lihat Lokasi</a>
             </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Streaming -->
+      <section class="a-sec a-sec--deep">
+        <svg class="a-motif" aria-hidden="true"><rect width="100%" height="100%" fill="url(#adatMotif)" /></svg>
+        <div class="a-wrap a-center">
+          <p class="a-kicker a-kicker--light a-reveal">Turut Menyaksikan</p>
+          <h2 class="a-title a-title--light a-reveal">Live Streaming</h2>
+          <svg class="a-div a-div--light a-reveal" viewBox="0 0 260 28"><use href="#ornDivider" /></svg>
+          <p class="a-note a-reveal">Bagi keluarga dan sahabat yang berhalangan hadir, akad &amp; resepsi dapat disaksikan secara langsung.</p>
+          <div class="a-stream a-reveal">
+            <div class="a-stream__screen">
+              <iframe v-if="cfg.liveStream && cfg.liveStream.youtube"
+                      :src="`https://www.youtube.com/embed/${cfg.liveStream.youtube}`"
+                      title="Live Streaming" loading="lazy" allowfullscreen></iframe>
+              <div v-else class="a-stream__ph">
+                <span class="a-stream__play"><i class="fa-solid fa-play"></i></span>
+                <p>Tautan siaran langsung akan aktif menjelang hari-H</p>
+              </div>
+            </div>
+            <div class="a-stream__links">
+              <a class="a-btn a-btn--gold" :href="(cfg.liveStream && cfg.liveStream.youtube) ? `https://youtu.be/${cfg.liveStream.youtube}` : '#'" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a>
+              <a class="a-btn a-btn--outline a-btn--outline-light" :href="(cfg.liveStream && cfg.liveStream.zoom) ? cfg.liveStream.zoom : '#'" target="_blank" rel="noopener"><i class="fa-solid fa-video"></i> Zoom Meeting</a>
+            </div>
           </div>
         </div>
       </section>
@@ -464,8 +596,29 @@ onUnmounted(() => {
           <svg class="a-div a-div--light a-reveal" viewBox="0 0 260 28"><use href="#ornDivider" /></svg>
           <p class="a-note a-reveal">Doa restu Anda adalah hadiah terindah. Namun bila berkenan memberi tanda kasih, dapat melalui:</p>
           <div class="a-gift a-reveal">
-            <div class="a-bank"><span class="a-bank__label">BCA</span><span class="a-bank__no">1234 5678 90</span><span class="a-bank__an">a.n. {{ cfg.bride }}</span></div>
-            <div class="a-bank"><span class="a-bank__label">Mandiri</span><span class="a-bank__no">0987 6543 21</span><span class="a-bank__an">a.n. {{ cfg.groom }}</span></div>
+            <div v-for="g in gifts" :key="g.bank" class="a-bank">
+              <span class="a-bank__label">{{ g.bank }}</span>
+              <span class="a-bank__no">{{ g.no }}</span>
+              <span class="a-bank__an">a.n. {{ g.an }}</span>
+              <button class="a-copy" type="button" @click="copyText(g.raw, g.bank)">
+                <i :class="copied === g.bank ? 'fa-solid fa-check' : 'fa-regular fa-copy'"></i>
+                {{ copied === g.bank ? 'Tersalin' : 'Salin No. Rekening' }}
+              </button>
+            </div>
+            <div class="a-bank a-bank--qris">
+              <span class="a-bank__label">QRIS</span>
+              <svg class="a-qris" viewBox="0 0 100 100" role="img" aria-label="Contoh kode QRIS">
+                <rect width="100" height="100" rx="6" fill="#fff" />
+                <g fill="var(--deep)">
+                  <path d="M10 10h24v24H10zM14 14v16h16V14zM18 18h8v8h-8z" />
+                  <path d="M66 10h24v24H66zM70 14v16h16V14zM74 18h8v8h-8z" />
+                  <path d="M10 66h24v24H10zM14 70v16h16V70zM18 74h8v8h-8z" />
+                  <path d="M40 10h6v6h-6zM48 12h6v10h-8v-4h2zM40 20h8v6h-6v8h-6v-8h4zM56 10h4v8h-4zM40 34h48v6h-8v-2h-6v2h-6v-4h-4v4h-6v-2h-6v2h-6zM10 40h6v8h-6zM22 40h12v6h-6v4h-6zM40 44h6v4h-6zM52 40h8v8h-4v-4h-4zM66 40h6v6h6v-6h6v12h-6v-2h-6v4h-6zM40 52h6v14h-6zM52 52h8v6h-4v4h6v-6h6v6h6v6h-8v-2h-6v4h-6v-4h-6v-4h4v-4h-6zM82 52h6v14h-6zM52 74h6v6h-6zM66 72h8v6h-2v6h-6v-4h4v-2h-4zM82 72h6v6h-6zM52 84h24v6h-6v-2h-6v2h-6v-2h-6z" />
+                </g>
+              </svg>
+              <span class="a-bank__an">{{ cfg.bride }} &amp; {{ cfg.groom }}</span>
+              <small class="a-qris__note">Contoh — scan untuk transfer</small>
+            </div>
           </div>
         </div>
       </section>
@@ -474,7 +627,7 @@ onUnmounted(() => {
       <section class="a-sec a-sec--paper">
         <div class="a-wrap a-center">
           <p class="a-kicker a-reveal">Konfirmasi Kehadiran</p>
-          <h2 class="a-title a-reveal">RSVP</h2>
+          <h2 class="a-title a-reveal">Ucapan, Doa &amp; RSVP</h2>
           <svg class="a-div a-reveal" viewBox="0 0 260 28"><use href="#ornDivider" /></svg>
           <form class="a-form a-reveal" @submit.prevent="sendRsvp">
             <input v-model="form.nama" type="text" placeholder="Nama Anda" required>
@@ -485,9 +638,22 @@ onUnmounted(() => {
             </select>
             <input v-model="form.jumlah" type="number" min="1" max="10" placeholder="Jumlah tamu">
             <textarea v-model="form.ucapan" rows="3" placeholder="Ucapan &amp; doa untuk mempelai"></textarea>
-            <button class="a-btn a-btn--gold" type="submit"><i class="fa-brands fa-whatsapp"></i> Kirim via WhatsApp</button>
-            <small>Demo — konfirmasi diteruskan ke WhatsApp admin.</small>
+            <button class="a-btn a-btn--gold" type="submit"><i class="fa-brands fa-whatsapp"></i> Kirim Ucapan &amp; Konfirmasi</button>
+            <small>Ucapan tampil di bawah &amp; konfirmasi diteruskan ke WhatsApp admin.</small>
           </form>
+
+          <div class="a-wishes a-reveal">
+            <p class="a-wishes__count"><i class="fa-solid fa-comment-dots"></i> {{ wishes.length }} Ucapan &amp; Doa</p>
+            <ul class="a-wishes__list">
+              <li v-for="(w, i) in wishes" :key="i" class="a-wish">
+                <span class="a-wish__ava">{{ w.name.charAt(0).toUpperCase() }}</span>
+                <div class="a-wish__body">
+                  <p class="a-wish__head"><strong>{{ w.name }}</strong><span class="a-wish__tag">{{ w.hadir }}</span></p>
+                  <p class="a-wish__msg">{{ w.msg }}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -498,6 +664,16 @@ onUnmounted(() => {
           <p class="a-note a-reveal">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.</p>
           <h2 class="a-names a-names--closing a-reveal">{{ cfg.bride }} <span>&amp;</span> {{ cfg.groom }}</h2>
           <p class="a-salam a-salam--closing a-reveal">Wassalamu’alaikum Warahmatullahi Wabarakatuh</p>
+          <div class="a-share a-reveal">
+            <span class="a-share__label">Bagikan undangan</span>
+            <div class="a-share__btns">
+              <button type="button" class="a-share__btn" @click="shareWa" aria-label="Bagikan via WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
+              <button type="button" class="a-share__btn" @click="shareNative" aria-label="Bagikan"><i class="fa-solid fa-share-nodes"></i></button>
+              <button type="button" class="a-share__btn" @click="copyText(shareUrl, 'link')" aria-label="Salin tautan">
+                <i :class="copied === 'link' ? 'fa-solid fa-check' : 'fa-solid fa-link'"></i>
+              </button>
+            </div>
+          </div>
           <a class="a-credit" href="/">Undangan digital oleh <strong>Lavelle</strong></a>
         </div>
       </section>
@@ -696,6 +872,59 @@ onUnmounted(() => {
 /* ---------- Kilau emas ---------- */
 .a-names span, .a-crest__mono, .a-title--light { background-size: 200% auto; }
 
+/* ---------- Kisah Cinta (timeline) ---------- */
+.a-story { list-style: none; margin: 1.8rem auto 0; padding: 0; max-width: 620px; position: relative; }
+.a-story::before { content: ""; position: absolute; top: 6px; bottom: 6px; left: 50%; width: 2px; transform: translateX(-50%); background: linear-gradient(var(--gold2), transparent); opacity: .5; }
+.a-story__item { position: relative; width: 50%; padding: 0 1.8rem 1.8rem 0; text-align: right; }
+.a-story__item.is-right { margin-left: 50%; padding: 0 0 1.8rem 1.8rem; text-align: left; }
+.a-story__dot { position: absolute; top: 4px; right: -13px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--gold-soft), var(--gold2)); color: var(--deep); font-size: .7rem; box-shadow: 0 6px 16px -6px rgba(0, 0, 0, .5); z-index: 1; }
+.a-story__item.is-right .a-story__dot { right: auto; left: -13px; }
+.a-story__card { border: 1px solid var(--gold2); border-radius: 12px; padding: 1.1rem 1.3rem; background: var(--paper); box-shadow: 0 16px 34px -26px rgba(0, 0, 0, .4); display: inline-block; }
+.a-story__year { font-family: var(--serif); font-style: italic; color: var(--gold2); font-size: .9rem; }
+.a-story__card h3 { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; color: var(--primary); margin: .1rem 0 .3rem; }
+.a-story__card p { font-size: .9rem; color: var(--ink-soft); line-height: 1.55; }
+
+/* ---------- Live Streaming ---------- */
+.a-stream { max-width: 560px; margin: 1.4rem auto 0; }
+.a-stream__screen { position: relative; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; border: 1px solid var(--gold2); background: rgba(0, 0, 0, .3); box-shadow: 0 24px 50px -28px rgba(0, 0, 0, .7); }
+.a-stream__screen iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.a-stream__ph { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: .9rem; padding: 1.4rem; text-align: center; }
+.a-stream__ph p { font-size: .86rem; color: rgba(255, 255, 255, .75); max-width: 280px; }
+.a-stream__play { width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; color: var(--deep); font-size: 1.3rem; background: linear-gradient(135deg, var(--gold-soft), var(--gold2)); box-shadow: 0 0 0 8px rgba(230, 197, 101, .12); animation: streamPulse 2.4s ease-in-out infinite; }
+@keyframes streamPulse { 0%, 100% { box-shadow: 0 0 0 8px rgba(230, 197, 101, .12); } 50% { box-shadow: 0 0 0 16px rgba(230, 197, 101, .04); } }
+.a-stream__links { display: flex; justify-content: center; gap: .8rem; flex-wrap: wrap; margin-top: 1.1rem; }
+.a-btn--outline-light { border-color: var(--gold-soft); color: var(--gold-soft); }
+.a-btn--outline-light:hover { background: var(--gold-soft); color: var(--deep); }
+
+/* ---------- Salin rekening + QRIS ---------- */
+.a-copy { margin-top: .9rem; display: inline-flex; align-items: center; gap: .5em; font-family: var(--sans); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; padding: .5em 1em; border-radius: 40px; border: 1px solid var(--gold-soft); background: rgba(230, 197, 101, .12); color: var(--gold-soft); transition: background .3s; }
+.a-copy:hover { background: rgba(230, 197, 101, .24); }
+.a-bank--qris { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.a-qris { width: 132px; height: 132px; margin: .4rem 0 .6rem; border-radius: 8px; box-shadow: 0 10px 24px -14px rgba(0, 0, 0, .6); }
+.a-qris__note { font-size: .7rem; color: rgba(255, 255, 255, .55); }
+
+/* ---------- Ucapan & Doa (buku tamu) ---------- */
+.a-wishes { max-width: 460px; margin: 2rem auto 0; text-align: left; }
+.a-wishes__count { text-align: center; font-family: var(--serif); font-style: italic; color: var(--gold2); margin-bottom: 1rem; }
+.a-wishes__count i { margin-right: .4em; }
+.a-wishes__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .8rem; max-height: 380px; overflow-y: auto; padding-right: .3rem; }
+.a-wishes__list::-webkit-scrollbar { width: 6px; }
+.a-wishes__list::-webkit-scrollbar-thumb { background: var(--gold2); border-radius: 6px; }
+.a-wish { display: flex; gap: .8rem; padding: .9rem 1rem; border: 1px solid rgba(200, 162, 39, .28); border-radius: 12px; background: rgba(255, 255, 255, .55); }
+.a-wish__ava { flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-family: var(--serif); font-weight: 600; color: var(--deep); background: linear-gradient(135deg, var(--gold-soft), var(--gold2)); }
+.a-wish__head { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.a-wish__head strong { font-size: .95rem; color: var(--ink); }
+.a-wish__tag { font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: var(--gold2); border: 1px solid var(--gold2); border-radius: 30px; padding: .1em .7em; }
+.a-wish__msg { font-size: .9rem; color: var(--ink-soft); line-height: 1.5; margin-top: .25rem; }
+
+/* ---------- Bagikan ---------- */
+.a-calbtns { display: flex; justify-content: center; gap: .8rem; flex-wrap: wrap; margin-top: 1.4rem; }
+.a-share { margin-top: 2rem; }
+.a-share__label { display: block; font-size: .68rem; letter-spacing: .24em; text-transform: uppercase; color: var(--gold-soft); margin-bottom: .7rem; }
+.a-share__btns { display: flex; justify-content: center; gap: .8rem; }
+.a-share__btn { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--gold2); background: rgba(255, 255, 255, .06); color: var(--gold-soft); cursor: pointer; font-size: 1.05rem; display: grid; place-items: center; transition: transform .3s, background .3s; }
+.a-share__btn:hover { transform: translateY(-3px); background: rgba(230, 197, 101, .16); }
+
 /* ---------- Back to top ---------- */
 .a-top { position: fixed; bottom: 24px; right: 24px; z-index: 70; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--gold2); background: var(--primary); color: var(--gold-soft); cursor: pointer; display: grid; place-items: center; box-shadow: 0 12px 30px -12px rgba(0, 0, 0, .6); }
 
@@ -716,11 +945,15 @@ onUnmounted(() => {
   .a-events { grid-template-columns: 1fr; }
   .a-gallery { grid-template-columns: repeat(2, 1fr); }
   .a-lb-prev { left: 1vw; } .a-lb-next { right: 1vw; }
+  .a-story::before { left: 13px; }
+  .a-story__item, .a-story__item.is-right { width: 100%; margin-left: 0; padding: 0 0 1.6rem 2.4rem; text-align: left; }
+  .a-story__dot, .a-story__item.is-right .a-story__dot { left: 0; right: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   .a-reveal { opacity: 1; transform: none; transition: none; }
   .a-petals { display: none; }
   .a-music.is-on .a-music__disc, .a-music.is-on .a-music__wave i { animation: none; }
   .a-carico circle, .a-carico path { animation: none; }
+  .a-stream__play { animation: none; }
 }
 </style>

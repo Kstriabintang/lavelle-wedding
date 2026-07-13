@@ -35,6 +35,13 @@ export const adat = {
       { icon: 'fa-crown', title: 'Basandiang', desc: 'Kedua mempelai bersanding di pelaminan bertahtakan songket dan emas.' },
       { icon: 'fa-bowl-rice', title: 'Makan Bajamba', desc: 'Jamuan adat menikmati hidangan bersama dalam kebersamaan.' },
     ],
+    loveStory: [
+      { year: '2019', title: 'Pertama Bertemu', desc: 'Takdir mempertemukan kami di tanah Minang, pada sebuah acara keluarga di Bukittinggi.' },
+      { year: '2022', title: 'Mulai Dekat', desc: 'Dari sekadar bertegur sapa, tumbuh rasa yang saling menguatkan.' },
+      { year: '2026', title: 'Khitbah', desc: 'Dengan restu kedua keluarga, niat suci itu diikat dalam lamaran adat.' },
+      { year: '2027', title: 'Menuju Janji Suci', desc: 'Kini kami melangkah menyempurnakan separuh agama.' },
+    ],
+    liveStream: { youtube: '', zoom: '' },
     accent: 'Marawa · Suntiang · Songket',
   },
 
@@ -65,6 +72,13 @@ export const adat = {
       { icon: 'fa-dove', title: 'Panggih', desc: 'Pertemuan kedua pengantin dengan rangkaian upacara adat Jawa.' },
       { icon: 'fa-hand-holding-heart', title: 'Ngunduh Mantu', desc: 'Penerimaan mempelai di kediaman keluarga pengantin pria.' },
     ],
+    loveStory: [
+      { year: '2018', title: 'Wiwitan Katresnan', desc: 'Awal perjumpaan kami di Yogyakarta, dalam kesederhanaan yang menenteramkan.' },
+      { year: '2021', title: 'Sansaya Raket', desc: 'Kian dekat, saling memahami dalam suka maupun duka.' },
+      { year: '2026', title: 'Nontoni & Lamaran', desc: 'Kedua keluarga bertemu, merestui langkah kami menuju pelaminan.' },
+      { year: '2027', title: 'Dhauping Panganten', desc: 'Kini kami siap bersanding dalam ikatan yang suci.' },
+    ],
+    liveStream: { youtube: '', zoom: '' },
     accent: 'Blangkon · Kebaya · Batik Parang',
   },
 
@@ -95,6 +109,13 @@ export const adat = {
       { icon: 'fa-coins', title: 'Sawer', desc: 'Menyawer beras, uang, dan permen sebagai simbol keberkahan.' },
       { icon: 'fa-fire', title: 'Meuleum Harupat', desc: 'Membakar lidi sebagai lambang keteguhan membina rumah tangga.' },
     ],
+    loveStory: [
+      { year: '2019', title: 'Patepang Munggaran', desc: 'Cinta kami bermula di Bandung, dina hiji sonten nu teu kahilapkeun.' },
+      { year: '2022', title: 'Beuki Raket', desc: 'Silih pikanyaah, silih ngadeudeul dina unggal kaayaan.' },
+      { year: '2026', title: 'Neundeun Omong', desc: 'Kadua kulawarga tepang, ngaréstuan niat suci kami.' },
+      { year: '2027', title: 'Nuju Janji Suci', desc: 'Ayeuna kami sumping kana poé nu pangbagjana.' },
+    ],
+    liveStream: { youtube: '', zoom: '' },
     accent: 'Siger · Kebaya · Mega Mendung',
   },
 
@@ -125,6 +146,13 @@ export const adat = {
       { icon: 'fa-gift', title: 'Mappenre Botting', desc: 'Prosesi mengantar mempelai pria menuju kediaman mempelai wanita.' },
       { icon: 'fa-crown', title: 'Mappasikarawa', desc: 'Sentuhan pertama kedua mempelai penuh makna dan doa.' },
     ],
+    loveStory: [
+      { year: '2019', title: 'Sipakatau', desc: 'Pertemuan pertama kami di Makassar, dalam adat yang menjunjung sipakatau.' },
+      { year: '2022', title: 'Makkarawa Ati', desc: 'Rasa itu tumbuh, saling menghargai dan menguatkan satu sama lain.' },
+      { year: '2026', title: 'Mammanu’-manu’', desc: 'Utusan keluarga datang meminang, merestui niat suci kami.' },
+      { year: '2027', title: 'Menuju Botting', desc: 'Kini kami melangkah menuju hari yang penuh berkah.' },
+    ],
+    liveStream: { youtube: '', zoom: '' },
     accent: 'Baju Bodo · Songkok · Lipa Sabbe',
   },
 }
