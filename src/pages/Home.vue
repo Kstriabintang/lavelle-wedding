@@ -8,6 +8,7 @@ import FloatingHearts from '../components/FloatingHearts.vue'
 import SiteNav from '../components/SiteNav.vue'
 import SiteFooter from '../components/SiteFooter.vue'
 import WhatsappFloat from '../components/WhatsappFloat.vue'
+import HomeThemeCatalog from '../components/HomeThemeCatalog.vue'
 
 const openPlan = (plan) => window.open(waPlan(plan), '_blank')
 
@@ -246,6 +247,9 @@ onUnmounted(() => document.removeEventListener('keydown', onKey))
       </div>
     </div>
   </div>
+
+  <!-- KATALOG TEMA — phone mockup -->
+  <HomeThemeCatalog />
 
   <!-- KEUNGGULAN -->
   <section class="section" id="keunggulan">
