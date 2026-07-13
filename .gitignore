@@ -4,3 +4,8 @@ dist-ssr
 .DS_Store
 *.local
 .vite
+*.log
+
+# Material mentah & pesanan klien — jangan di-commit
+drive-download-*/
+client-001/

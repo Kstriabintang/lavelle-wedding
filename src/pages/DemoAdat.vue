@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { adat, adatGallery } from '../data/adat'
 import { WA_1 } from '../data/site'
+import { useGamelan } from '../composables/useGamelan'
 
 const route = useRoute()
 const cfg = computed(() => adat[route.params.suku] || adat.minang)
@@ -26,6 +27,8 @@ const guest = ref('Tamu Undangan')
 const opened = ref(false)
 function openInvite() {
   opened.value = true
+  // Undangan "hidup": putar musik latar saat dibuka (gesture user).
+  startMusic()
   nextTick(() => { if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' }) })
 }
 
@@ -57,6 +60,62 @@ function sendRsvp() {
 }
 const mapsUrl = computed(() => `https://maps.google.com/?q=${encodeURIComponent(cfg.value.mapsQuery)}`)
 
+// ---- Busana adat per suku (untuk karikatur SVG orisinal) ----
+const HEADDRESS = {
+  minang: { bride: 'suntiang', groom: 'saluak', label: 'Suntiang & Saluak' },
+  jawa: { bride: 'paes', groom: 'blangkon', label: 'Paes Ageng & Blangkon' },
+  sunda: { bride: 'siger', groom: 'bendo', label: 'Siger & Bendo' },
+  bugis: { bride: 'bugis', groom: 'songkok', label: 'Bunga Simpolong & Songkok' },
+}
+const dress = computed(() => HEADDRESS[cfg.value.slug] || HEADDRESS.minang)
+
+// ---- Musik latar (opsional, per suku; letakkan file di /public/audio) ----
+const MUSIC = {
+  minang: '/audio/adat-minang.mp3', jawa: '/audio/adat-jawa.mp3',
+  sunda: '/audio/adat-sunda.mp3', bugis: '/audio/adat-bugis.mp3',
+}
+const musicSrc = computed(() => MUSIC[cfg.value.slug] || '/audio/adat.mp3')
+const audioEl = ref(null)
+const musicOn = ref(false)
+const musicReady = ref(false)
+
+// Ambience gamelan orisinal (Web Audio) sebagai fallback bila file mp3 tak ada.
+const gamelan = useGamelan(() => cfg.value.slug)
+
+async function startMusic() {
+  const a = audioEl.value
+  // Coba file mp3 dulu (bila vendor mengganti dengan track sendiri).
+  if (a) {
+    try {
+      await a.play()
+      musicOn.value = true
+      return
+    } catch { /* file tak ada / diblokir → pakai gamelan */ }
+  }
+  const ok = await gamelan.start()
+  musicOn.value = ok
+}
+function stopMusic() {
+  const a = audioEl.value
+  if (a && !a.paused) a.pause()
+  gamelan.stop()
+  musicOn.value = false
+}
+function toggleMusic() {
+  if (musicOn.value) stopMusic()
+  else startMusic()
+}
+
+// ---- Kelopak bunga berjatuhan (deterministik, tanpa Math.random) ----
+const petals = Array.from({ length: 16 }, (_, i) => ({
+  left: (i * 6.3 + (i % 4) * 4) % 100,
+  delay: -((i % 8) * 1.4),
+  dur: 11 + (i % 5) * 2.6,
+  size: 9 + (i % 4) * 5,
+  sway: (i % 2 ? 1 : -1) * (18 + (i % 3) * 12),
+  op: 0.35 + (i % 4) * 0.12,
+}))
+
 // Back to top
 const showTop = ref(false)
 function onScroll() { if (typeof window !== 'undefined') showTop.value = window.scrollY > 700 }
@@ -79,8 +138,11 @@ function onKey(e) {
 }
 
 onMounted(() => {
-  const q = new URLSearchParams(location.search).get('to')
+  const params = new URLSearchParams(location.search)
+  const q = params.get('to')
   if (q) guest.value = decodeURIComponent(q.replace(/\+/g, ' '))
+  // Tautan pratinjau langsung-isi (mis. untuk showcase). Musik tetap butuh gesture.
+  if (params.get('preview') === '1') opened.value = true
   tick(); timer = setInterval(tick, 1000)
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll()
   document.addEventListener('keydown', onKey)
@@ -90,6 +152,7 @@ onUnmounted(() => {
   clearInterval(timer)
   window.removeEventListener('scroll', onScroll)
   document.removeEventListener('keydown', onKey)
+  gamelan.dispose()
 })
 </script>
 
@@ -112,6 +175,18 @@ onUnmounted(() => {
         <pattern v-else-if="cfg.motif === 'megamendung'" id="adatMotif" width="80" height="44" patternUnits="userSpaceOnUse">
           <path d="M2 40 q 8 -16 18 -6 q 6 -14 18 -4 q 8 -14 18 -2 q 8 -12 20 -2" fill="none" stroke="var(--gold)" stroke-width="1.3" opacity=".45" />
           <path d="M-20 22 q 8 -16 18 -6 q 6 -14 18 -4 q 8 -14 18 -2 q 8 -12 20 -2" fill="none" stroke="var(--gold)" stroke-width="1.3" opacity=".3" />
+        </pattern>
+        <pattern v-else-if="cfg.motif === 'lipasabbe'" id="adatMotif" width="60" height="60" patternUnits="userSpaceOnUse">
+          <!-- Bugis lipa sabbe: tenun sutra kotak (balo renni) + wajik di persilangan -->
+          <path d="M0 20 H60 M0 40 H60 M20 0 V60 M40 0 V60" stroke="var(--gold)" stroke-width="1" opacity=".3" />
+          <path d="M0 0 H60 M0 60 H60 M0 0 V60 M60 0 V60" stroke="var(--gold-soft)" stroke-width="2" opacity=".22" />
+          <path d="M30 12 L48 30 L30 48 L12 30 Z" fill="none" stroke="var(--gold)" stroke-width="1.2" opacity=".5" />
+          <path d="M30 22 L38 30 L30 38 L22 30 Z" fill="var(--gold)" opacity=".18" />
+          <circle cx="30" cy="30" r="1.7" fill="var(--gold)" opacity=".7" />
+          <circle cx="0" cy="0" r="1.5" fill="var(--gold-soft)" opacity=".5" />
+          <circle cx="60" cy="0" r="1.5" fill="var(--gold-soft)" opacity=".5" />
+          <circle cx="0" cy="60" r="1.5" fill="var(--gold-soft)" opacity=".5" />
+          <circle cx="60" cy="60" r="1.5" fill="var(--gold-soft)" opacity=".5" />
         </pattern>
         <pattern v-else id="adatMotif" width="46" height="46" patternUnits="userSpaceOnUse">
           <path d="M11 0 V46 M35 0 V46 M0 11 H46 M0 35 H46" stroke="var(--gold)" stroke-width="1" opacity=".28" />
@@ -140,6 +215,23 @@ onUnmounted(() => {
 
     <!-- watermark motif tetap di latar -->
     <svg class="a-motif-fixed" aria-hidden="true"><rect width="100%" height="100%" fill="url(#adatMotif)" /></svg>
+
+    <!-- Musik latar + kelopak bunga (undangan "hidup") -->
+    <audio ref="audioEl" :src="musicSrc" loop preload="none"
+           @canplay="musicReady = true" @play="musicOn = true" @pause="musicOn = false"></audio>
+    <transition name="fade">
+      <button v-if="opened" class="a-music" :class="{ 'is-on': musicOn }" @click="toggleMusic"
+              :aria-label="musicOn ? 'Jeda musik' : 'Putar musik'">
+        <span class="a-music__disc"><i :class="musicOn ? 'fa-solid fa-music' : 'fa-solid fa-volume-xmark'"></i></span>
+        <span class="a-music__wave"><i></i><i></i><i></i><i></i></span>
+      </button>
+    </transition>
+    <div v-if="opened" class="a-petals" aria-hidden="true">
+      <span v-for="(pt, i) in petals" :key="i" class="a-petal"
+            :style="{ left: pt.left + '%', width: pt.size + 'px', height: pt.size + 'px',
+                      animationDelay: pt.delay + 's', animationDuration: pt.dur + 's',
+                      '--sway': pt.sway + 'px', '--op': pt.op }"></span>
+    </div>
 
     <!-- ================= COVER ================= -->
     <transition name="cover">
@@ -198,8 +290,43 @@ onUnmounted(() => {
                 <svg class="orn-c orn-c--br sm"><use href="#ornCorner" /></svg>
                 <img v-if="cfg.caricatureBride" :src="cfg.caricatureBride" :alt="cfg.bride">
                 <div v-else class="a-slot">
-                  <i class="fa-solid fa-user-tie"></i>
-                  <span>Karikatur<br>{{ cfg.suku }}</span>
+                  <svg class="a-carico" viewBox="0 0 200 262" role="img" :aria-label="`Karikatur ${cfg.suku} — mempelai wanita`">
+                    <g fill="none" stroke="var(--gold)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M50 258 q6 -62 50 -62 q44 0 50 62" />
+                      <path d="M84 176 q16 14 32 0" />
+                      <circle cx="100" cy="140" r="30" fill="var(--gold-soft)" fill-opacity=".07" />
+                      <path d="M70 136 q-6 34 12 54 M130 136 q6 34 -12 54" />
+                      <!-- Wajah mempelai wanita (senyum) -->
+                      <path d="M85 133 q6 -5 12 0 M103 133 q6 -5 12 0" stroke-width="1.7" />
+                      <path d="M87 140 q3 3.4 6 0 M107 140 q3 3.4 6 0" stroke-width="1.8" />
+                      <path d="M92 151 q8 7 16 0" stroke-width="1.9" />
+                      <circle cx="83" cy="147" r="3.4" fill="var(--gold)" stroke="none" fill-opacity=".22" />
+                      <circle cx="117" cy="147" r="3.4" fill="var(--gold)" stroke="none" fill-opacity=".22" />
+                      <!-- Suntiang (Minangkabau) -->
+                      <g v-if="dress.bride === 'suntiang'">
+                        <path d="M64 104 q36 -28 72 0" /><path d="M60 90 q40 -32 80 0" /><path d="M56 76 q44 -36 88 0" />
+                        <path d="M72 104 V62 M86 100 V54 M100 98 V48 M114 100 V54 M128 104 V62" />
+                      </g>
+                      <!-- Paes Ageng (Jawa) -->
+                      <g v-else-if="dress.bride === 'paes'">
+                        <path d="M76 116 q24 -30 48 0" /><path d="M100 116 V94" />
+                        <path d="M88 116 v-10 M112 116 v-10" /><circle cx="100" cy="88" r="4" />
+                        <circle cx="86" cy="96" r="3" /><circle cx="114" cy="96" r="3" />
+                      </g>
+                      <!-- Siger (Sunda) -->
+                      <g v-else-if="dress.bride === 'siger'">
+                        <path d="M58 108 H142 l-10 -40 -14 24 -18 -38 -18 38 -14 -24 z" />
+                        <circle cx="100" cy="74" r="3" /><circle cx="78" cy="92" r="2.6" /><circle cx="122" cy="92" r="2.6" />
+                      </g>
+                      <!-- Bunga Simpolong (Bugis) -->
+                      <g v-else>
+                        <circle cx="100" cy="96" r="13" fill="var(--gold-soft)" fill-opacity=".12" />
+                        <path d="M100 83 v-16 M88 88 l-8 -13 M112 88 l8 -13" />
+                        <circle cx="100" cy="63" r="3" /><circle cx="79" cy="73" r="2.6" /><circle cx="121" cy="73" r="2.6" />
+                      </g>
+                    </g>
+                  </svg>
+                  <span>{{ dress.label.split(' & ')[0] }}</span>
                 </div>
               </div>
               <h3>{{ cfg.brideFull }}</h3>
@@ -212,8 +339,39 @@ onUnmounted(() => {
                 <svg class="orn-c orn-c--br sm"><use href="#ornCorner" /></svg>
                 <img v-if="cfg.caricatureGroom" :src="cfg.caricatureGroom" :alt="cfg.groom">
                 <div v-else class="a-slot">
-                  <i class="fa-solid fa-user"></i>
-                  <span>Karikatur<br>{{ cfg.suku }}</span>
+                  <svg class="a-carico" viewBox="0 0 200 262" role="img" :aria-label="`Karikatur ${cfg.suku} — mempelai pria`">
+                    <g fill="none" stroke="var(--gold)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M48 258 q4 -60 52 -60 q48 0 52 60" />
+                      <path d="M100 198 l-14 20 M100 198 l14 20" />
+                      <circle cx="100" cy="146" r="30" fill="var(--gold-soft)" fill-opacity=".07" />
+                      <!-- Wajah mempelai pria (senyum + kumis) -->
+                      <path d="M85 139 q6 -4 12 0 M103 139 q6 -4 12 0" stroke-width="1.7" />
+                      <path d="M87 146 q3 3.4 6 0 M107 146 q3 3.4 6 0" stroke-width="1.8" />
+                      <path d="M90 158 q10 5 20 0" stroke-width="1.9" />
+                      <path d="M94 154 q6 3 12 0" stroke-width="1.6" opacity=".7" />
+                      <!-- Saluak (Minangkabau) -->
+                      <g v-if="dress.groom === 'saluak'">
+                        <path d="M70 124 q30 -24 60 0 q-4 -18 -30 -18 q-26 0 -30 18 z" fill="var(--gold-soft)" fill-opacity=".1" />
+                        <path d="M78 118 q22 -8 44 0 M82 110 q18 -6 36 0" />
+                      </g>
+                      <!-- Blangkon (Jawa) -->
+                      <g v-else-if="dress.groom === 'blangkon'">
+                        <path d="M70 122 q30 -28 60 0 z" fill="var(--gold-soft)" fill-opacity=".1" />
+                        <path d="M126 112 q16 3 11 20" /><path d="M84 116 q16 -10 32 0" />
+                      </g>
+                      <!-- Bendo (Sunda) -->
+                      <g v-else-if="dress.groom === 'bendo'">
+                        <path d="M70 124 q30 -22 60 0 l-10 -16 -20 8 -20 -8 z" fill="var(--gold-soft)" fill-opacity=".1" />
+                        <path d="M84 118 q16 -8 32 0" />
+                      </g>
+                      <!-- Songkok recca (Bugis) -->
+                      <g v-else>
+                        <path d="M74 120 h52 v-30 q-26 -8 -52 0 z" fill="var(--gold-soft)" fill-opacity=".1" />
+                        <path d="M74 104 h52" stroke-width="3" />
+                      </g>
+                    </g>
+                  </svg>
+                  <span>{{ dress.label.split(' & ')[1] }}</span>
                 </div>
               </div>
               <h3>{{ cfg.groomFull }}</h3>
@@ -433,9 +591,12 @@ onUnmounted(() => {
   border-radius: 130px 130px 10px 10px; overflow: hidden; background: linear-gradient(160deg, var(--paper), var(--cream)); box-shadow: 0 20px 44px -24px rgba(0, 0, 0, .45); }
 .a-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .a-portrait .orn-c { z-index: 2; }
-.a-slot { position: absolute; inset: 0; display: grid; place-content: center; gap: .5rem; text-align: center; color: var(--gold2); }
+.a-slot { position: absolute; inset: 0; display: grid; place-content: center; gap: .4rem; text-align: center; color: var(--gold2); padding: .8rem; }
 .a-slot i { font-size: 2.6rem; opacity: .5; }
-.a-slot span { font-size: .68rem; letter-spacing: .18em; text-transform: uppercase; opacity: .7; line-height: 1.5; }
+.a-slot span { font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; opacity: .75; line-height: 1.5; }
+.a-carico { width: 74%; max-width: 150px; height: auto; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .18)); }
+.a-carico circle, .a-carico path { animation: caricoDraw 1.4s ease both; }
+@keyframes caricoDraw { from { opacity: 0; } to { opacity: 1; } }
 .a-amp { font-family: var(--script); font-size: 3rem; color: var(--gold2); }
 
 /* ---------- Prosesi ---------- */
@@ -498,6 +659,37 @@ onUnmounted(() => {
 .a-lb-prev { left: 3vw; top: 50%; transform: translateY(-50%); }
 .a-lb-next { right: 3vw; top: 50%; transform: translateY(-50%); }
 
+/* ---------- Musik latar ---------- */
+.a-music { position: fixed; bottom: 24px; left: 24px; z-index: 70; display: flex; align-items: center; gap: .5rem;
+  padding: .4rem .8rem .4rem .4rem; border-radius: 50px; border: 1px solid var(--gold2);
+  background: rgba(0, 0, 0, .35); backdrop-filter: blur(6px); cursor: pointer; box-shadow: 0 12px 30px -14px rgba(0, 0, 0, .7); }
+.a-music__disc { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: var(--deep);
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold2)); font-size: .95rem; box-shadow: 0 0 0 3px rgba(255, 255, 255, .08); }
+.a-music.is-on .a-music__disc { animation: discSpin 3.6s linear infinite; }
+@keyframes discSpin { to { transform: rotate(360deg); } }
+.a-music__wave { display: flex; align-items: flex-end; gap: 2px; height: 16px; }
+.a-music__wave i { width: 3px; height: 6px; border-radius: 2px; background: var(--gold-soft); opacity: .5; }
+.a-music.is-on .a-music__wave i { animation: eq .9s ease-in-out infinite; opacity: 1; }
+.a-music.is-on .a-music__wave i:nth-child(2) { animation-delay: .18s; }
+.a-music.is-on .a-music__wave i:nth-child(3) { animation-delay: .36s; }
+.a-music.is-on .a-music__wave i:nth-child(4) { animation-delay: .54s; }
+@keyframes eq { 0%, 100% { height: 5px; } 50% { height: 16px; } }
+
+/* ---------- Kelopak bunga berjatuhan ---------- */
+.a-petals { position: fixed; inset: 0; z-index: 40; pointer-events: none; overflow: hidden; }
+.a-petal { position: absolute; top: -6%; border-radius: 78% 22% 70% 30% / 60% 42% 58% 40%;
+  background: radial-gradient(120% 120% at 30% 20%, var(--gold-soft), var(--gold2));
+  opacity: var(--op, .5); animation-name: petalFall; animation-timing-function: linear; animation-iteration-count: infinite; }
+@keyframes petalFall {
+  0% { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: var(--op, .5); }
+  90% { opacity: var(--op, .5); }
+  100% { transform: translate3d(var(--sway, 20px), 108vh, 0) rotate(320deg); opacity: 0; }
+}
+
+/* ---------- Kilau emas ---------- */
+.a-names span, .a-crest__mono, .a-title--light { background-size: 200% auto; }
+
 /* ---------- Back to top ---------- */
 .a-top { position: fixed; bottom: 24px; right: 24px; z-index: 70; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--gold2); background: var(--primary); color: var(--gold-soft); cursor: pointer; display: grid; place-items: center; box-shadow: 0 12px 30px -12px rgba(0, 0, 0, .6); }
 
@@ -521,5 +713,8 @@ onUnmounted(() => {
 }
 @media (prefers-reduced-motion: reduce) {
   .a-reveal { opacity: 1; transform: none; transition: none; }
+  .a-petals { display: none; }
+  .a-music.is-on .a-music__disc, .a-music.is-on .a-music__wave i { animation: none; }
+  .a-carico circle, .a-carico path { animation: none; }
 }
 </style>
