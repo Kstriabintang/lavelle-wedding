@@ -5,8 +5,8 @@ export const royale = {
     kicker: 'The Wedding Of',
     bride: 'Anindya',
     groom: 'Rizky',
-    date: '2026-02-15',
-    dateText: 'Minggu, 15 Februari 2026',
+    date: '2027-02-20',
+    dateText: 'Sabtu, 20 Februari 2027',
     photo: 'pasangan-utama',
   },
   quote: {
@@ -34,8 +34,8 @@ export const royale = {
     { year: '2026', title: 'Hari Bahagia', desc: 'Kini kami siap melangkah bersama menuju babak baru sebagai suami dan istri.', photo: 'pasangan-bukit-sunset' },
   ],
   events: [
-    { tag: 'Akad Nikah', date: 'Minggu, 15 Februari 2026', time: '08.00 – 10.00 WIB', place: 'Grha Cakrawala, Jl. Merdeka No. 10, Jakarta', dress: 'Formal · Earth Tone' },
-    { tag: 'Resepsi', date: 'Minggu, 15 Februari 2026', time: '11.00 – 14.00 WIB', place: 'Grha Cakrawala, Jl. Merdeka No. 10, Jakarta', dress: 'Formal · Earth Tone' },
+    { tag: 'Akad Nikah', date: 'Sabtu, 20 Februari 2027', time: '08.00 – 10.00 WIB', place: 'Grha Cakrawala, Jl. Merdeka No. 10, Jakarta', dress: 'Formal · Earth Tone' },
+    { tag: 'Resepsi', date: 'Sabtu, 20 Februari 2027', time: '11.00 – 14.00 WIB', place: 'Grha Cakrawala, Jl. Merdeka No. 10, Jakarta', dress: 'Formal · Earth Tone' },
   ],
   mapsQuery: 'Monas Jakarta',
   liveStream: { youtube: '', zoom: '' },
