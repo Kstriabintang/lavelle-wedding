@@ -52,6 +52,32 @@ const closeLb = () => { lb.value = -1 }
 const nextLb = () => { lb.value = (lb.value + 1) % gallery.length }
 const prevLb = () => { lb.value = (lb.value - 1 + gallery.length) % gallery.length }
 
+// Galeri slider (scroll-snap, tanpa dependensi)
+const sliderEl = ref(null)
+const slideIdx = ref(0)
+function slideTo(i) {
+  const el = sliderEl.value
+  if (!el || !el.children.length) return
+  const n = gallery.length
+  const idx = (i + n) % n
+  const child = el.children[idx]
+  if (child) el.scrollTo({ left: child.offsetLeft - el.offsetLeft, behavior: 'smooth' })
+}
+function onSliderScroll() {
+  const el = sliderEl.value
+  if (!el || !el.children.length) return
+  const cw = el.children[0].getBoundingClientRect().width + 12
+  slideIdx.value = Math.min(gallery.length - 1, Math.max(0, Math.round(el.scrollLeft / cw)))
+}
+
+// Protokol kesehatan (opsional, ditampilkan sebagai imbauan acara)
+const protokol = [
+  { icon: 'fa-clock', title: 'Datang Tepat Waktu', desc: 'Mohon hadir sesuai jam yang tertera agar acara berjalan khidmat.' },
+  { icon: 'fa-hand-sparkles', title: 'Jaga Kebersihan', desc: 'Cuci tangan atau gunakan hand sanitizer yang tersedia di lokasi.' },
+  { icon: 'fa-heart-pulse', title: 'Jaga Kesehatan', desc: 'Pastikan kondisi tubuh sehat sebelum menghadiri acara.' },
+  { icon: 'fa-camera-retro', title: 'Abadikan Momen', desc: 'Silakan berbagi kebahagiaan dengan tagar undangan kami.' },
+]
+
 // RSVP → WhatsApp
 const form = ref({ nama: '', hadir: 'Hadir, Insya Allah', jumlah: 1, ucapan: '' })
 function sendRsvp() {
@@ -321,7 +347,11 @@ onUnmounted(() => {
 
     <!-- ================= COVER ================= -->
     <transition name="cover">
-      <section v-if="!opened" class="a-cover">
+      <section v-if="!opened" class="a-cover" :class="{ 'a-cover--photo': cfg.coverPhoto }">
+        <template v-if="cfg.coverPhoto">
+          <div class="a-cover__photo" :style="{ backgroundImage: `url(/img/mentahan/${cfg.coverPhoto}.jpeg)` }"></div>
+          <div class="a-cover__scrim"></div>
+        </template>
         <AdatScene :suku="cfg.slug" variant="cover" class="a-cover__scene" />
         <svg class="a-motif" aria-hidden="true"><rect width="100%" height="100%" fill="url(#adatMotif)" /></svg>
         <div class="a-cover__frame">
@@ -468,6 +498,19 @@ onUnmounted(() => {
         </div>
       </section>
 
+      <!-- Turut Mengundang -->
+      <section v-if="cfg.turutMengundang" class="a-sec a-sec--deep">
+        <svg class="a-motif" aria-hidden="true"><rect width="100%" height="100%" fill="url(#adatMotif)" /></svg>
+        <div class="a-wrap a-center">
+          <p class="a-kicker a-kicker--light a-reveal">Turut Mengundang</p>
+          <h2 class="a-title a-title--light a-reveal">Keluarga &amp; Kerabat</h2>
+          <svg class="a-div a-div--light a-reveal" viewBox="0 0 260 28"><use href="#ornDivider" /></svg>
+          <ul class="a-invitees a-reveal">
+            <li v-for="(n, i) in cfg.turutMengundang" :key="i">{{ n }}</li>
+          </ul>
+        </div>
+      </section>
+
       <!-- Kisah Cinta / Love Story -->
       <section v-if="cfg.loveStory" class="a-sec a-sec--paper">
         <div class="a-wrap a-center">
@@ -578,11 +621,34 @@ onUnmounted(() => {
           <p class="a-kicker a-reveal">Momen Kami</p>
           <h2 class="a-title a-reveal">Galeri</h2>
           <svg class="a-div a-reveal" viewBox="0 0 260 28"><use href="#ornDivider" /></svg>
-          <div class="a-gallery a-reveal">
-            <button v-for="(g, i) in gallery" :key="g" class="a-shot" @click="openLb(i)" aria-label="Perbesar foto">
-              <img :src="`/img/mentahan/${g}.jpeg`" :alt="`Momen ${i + 1}`" loading="lazy">
-              <span class="a-shot__zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
-            </button>
+          <div class="a-slider-wrap a-reveal">
+            <button class="a-slider__nav a-slider__nav--prev" type="button" @click="slideTo(slideIdx - 1)" aria-label="Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="a-slider" ref="sliderEl" @scroll.passive="onSliderScroll">
+              <button v-for="(g, i) in gallery" :key="g" class="a-slide" type="button" @click="openLb(i)" aria-label="Perbesar foto">
+                <img :src="`/img/mentahan/${g}.jpeg`" :alt="`Momen ${i + 1}`" loading="lazy">
+                <span class="a-shot__zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
+              </button>
+            </div>
+            <button class="a-slider__nav a-slider__nav--next" type="button" @click="slideTo(slideIdx + 1)" aria-label="Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="a-dots">
+              <button v-for="(g, i) in gallery" :key="i" class="a-dot" :class="{ 'is-on': i === slideIdx }" type="button" @click="slideTo(i)" :aria-label="`Foto ${i + 1}`"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Protokol / Imbauan Acara -->
+      <section class="a-sec a-sec--paper">
+        <div class="a-wrap a-center">
+          <p class="a-kicker a-reveal">Imbauan</p>
+          <h2 class="a-title a-reveal">Protokol Acara</h2>
+          <svg class="a-div a-reveal" viewBox="0 0 260 28"><use href="#ornDivider" /></svg>
+          <div class="a-protokol">
+            <article v-for="pr in protokol" :key="pr.title" class="a-prot a-reveal">
+              <span class="a-prot__icon"><i :class="`fa-solid ${pr.icon}`"></i></span>
+              <h3>{{ pr.title }}</h3>
+              <p>{{ pr.desc }}</p>
+            </article>
           </div>
         </div>
       </section>
@@ -872,6 +938,39 @@ onUnmounted(() => {
 /* ---------- Kilau emas ---------- */
 .a-names span, .a-crest__mono, .a-title--light { background-size: 200% auto; }
 
+/* ---------- Cover foto full-bleed ---------- */
+.a-cover__photo { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; transform: scale(1.06); animation: coverZoom 14s ease-out both; }
+@keyframes coverZoom { from { transform: scale(1.16); } to { transform: scale(1.06); } }
+.a-cover__scrim { position: absolute; inset: 0; z-index: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .45) 0%, rgba(0, 0, 0, .28) 38%, var(--deep) 100%); opacity: .92; }
+.a-cover--photo .a-cover__scene { opacity: .55; }
+.a-cover--photo .a-cover__frame { background: rgba(0, 0, 0, .22); }
+
+/* ---------- Galeri slider ---------- */
+.a-slider-wrap { position: relative; margin-top: 1rem; }
+.a-slider { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: .3rem .2rem 1rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.a-slider::-webkit-scrollbar { display: none; }
+.a-slide { flex: 0 0 82%; scroll-snap-align: center; position: relative; aspect-ratio: 4/5; border: none; padding: 0; border-radius: 14px; overflow: hidden; cursor: zoom-in; box-shadow: 0 22px 46px -26px rgba(0, 0, 0, .6); }
+.a-slide img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
+.a-slide:hover img { transform: scale(1.05); }
+.a-slider__nav { position: absolute; top: 44%; transform: translateY(-50%); z-index: 3; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--gold2); background: var(--paper); color: var(--gold2); cursor: pointer; display: grid; place-items: center; box-shadow: 0 10px 24px -12px rgba(0, 0, 0, .5); transition: background .3s; }
+.a-slider__nav:hover { background: var(--gold2); color: var(--paper); }
+.a-slider__nav--prev { left: -6px; }
+.a-slider__nav--next { right: -6px; }
+.a-dots { display: flex; justify-content: center; gap: .5rem; margin-top: .2rem; }
+.a-dot { width: 9px; height: 9px; border-radius: 50%; border: none; background: var(--gold2); opacity: .3; cursor: pointer; transition: opacity .3s, transform .3s; }
+.a-dot.is-on { opacity: 1; transform: scale(1.3); }
+
+/* ---------- Turut mengundang ---------- */
+.a-invitees { list-style: none; margin: 1.4rem auto 0; padding: 0; max-width: 520px; display: grid; grid-template-columns: repeat(2, 1fr); gap: .7rem; }
+.a-invitees li { font-family: var(--serif2); font-size: 1rem; color: rgba(255, 255, 255, .9); padding: .7rem .9rem; border: 1px solid rgba(230, 197, 101, .28); border-radius: 10px; background: rgba(255, 255, 255, .04); }
+
+/* ---------- Protokol ---------- */
+.a-protokol { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1.4rem; }
+.a-prot { border: 1px solid var(--gold2); border-radius: 14px; padding: 1.5rem 1rem; background: var(--paper); box-shadow: 0 16px 34px -28px rgba(0, 0, 0, .4); }
+.a-prot__icon { width: 52px; height: 52px; margin: 0 auto .8rem; display: grid; place-items: center; border-radius: 50%; background: linear-gradient(135deg, var(--gold-soft), var(--gold2)); color: var(--deep); font-size: 1.2rem; box-shadow: 0 10px 24px -12px rgba(0, 0, 0, .5); }
+.a-prot h3 { font-family: var(--serif); font-size: 1.02rem; font-weight: 600; color: var(--primary); margin-bottom: .35rem; }
+.a-prot p { font-size: .82rem; color: var(--ink-soft); line-height: 1.5; }
+
 /* ---------- Kisah Cinta (timeline) ---------- */
 .a-story { list-style: none; margin: 1.8rem auto 0; padding: 0; max-width: 620px; position: relative; }
 .a-story::before { content: ""; position: absolute; top: 6px; bottom: 6px; left: 50%; width: 2px; transform: translateX(-50%); background: linear-gradient(var(--gold2), transparent); opacity: .5; }
@@ -948,6 +1047,9 @@ onUnmounted(() => {
   .a-story::before { left: 13px; }
   .a-story__item, .a-story__item.is-right { width: 100%; margin-left: 0; padding: 0 0 1.6rem 2.4rem; text-align: left; }
   .a-story__dot, .a-story__item.is-right .a-story__dot { left: 0; right: auto; }
+  .a-protokol { grid-template-columns: repeat(2, 1fr); }
+  .a-invitees { grid-template-columns: 1fr; }
+  .a-slide { flex-basis: 88%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .a-reveal { opacity: 1; transform: none; transition: none; }
@@ -955,5 +1057,6 @@ onUnmounted(() => {
   .a-music.is-on .a-music__disc, .a-music.is-on .a-music__wave i { animation: none; }
   .a-carico circle, .a-carico path { animation: none; }
   .a-stream__play { animation: none; }
+  .a-cover__photo { animation: none; transform: none; }
 }
 </style>

@@ -42,6 +42,11 @@ export const adat = {
       { year: '2027', title: 'Menuju Janji Suci', desc: 'Kini kami melangkah menyempurnakan separuh agama.' },
     ],
     liveStream: { youtube: '', zoom: '' },
+    coverPhoto: 'pasangan-utama',
+    turutMengundang: [
+      'Ninik Mamak & Bundo Kanduang', 'Keluarga Besar Suku Koto', 'Keluarga Besar Suku Piliang',
+      'Bapak H. Zainal Abidin & Ibu Hj. Syamsidar', 'Bapak H. Marlis Datuk & Ibu Hj. Rosnida', 'Segenap Sanak Saudara',
+    ],
     accent: 'Marawa · Suntiang · Songket',
   },
 
@@ -79,6 +84,11 @@ export const adat = {
       { year: '2027', title: 'Dhauping Panganten', desc: 'Kini kami siap bersanding dalam ikatan yang suci.' },
     ],
     liveStream: { youtube: '', zoom: '' },
+    coverPhoto: 'pasangan-pose-romantis',
+    turutMengundang: [
+      'Eyang Kakung & Eyang Putri', 'Keluarga Besar Adiningrat', 'Keluarga Besar Wibowo',
+      'Bapak R. Suryo Wibowo & Ibu R.Ay. Sumarni', 'Bapak R. Hadi Susanto & Ibu R.Ay. Wulandari', 'Sedaya Kadang Kadeyan',
+    ],
     accent: 'Blangkon · Kebaya · Batik Parang',
   },
 
@@ -116,6 +126,11 @@ export const adat = {
       { year: '2027', title: 'Nuju Janji Suci', desc: 'Ayeuna kami sumping kana poé nu pangbagjana.' },
     ],
     liveStream: { youtube: '', zoom: '' },
+    coverPhoto: 'pasangan-outdoor-3',
+    turutMengundang: [
+      'Sesepuh & Karuhun', 'Kulawarga Ageung Suherman', 'Kulawarga Ageung Suryana',
+      'Bapa H. Dadang Suherman & Ibu Hj. Euis Komariah', 'Bapa H. Ujang Suryana & Ibu Hj. Nining Yuningsih', 'Sadaya Baraya',
+    ],
     accent: 'Siger · Kebaya · Mega Mendung',
   },
 
@@ -153,6 +168,11 @@ export const adat = {
       { year: '2027', title: 'Menuju Botting', desc: 'Kini kami melangkah menuju hari yang penuh berkah.' },
     ],
     liveStream: { youtube: '', zoom: '' },
+    coverPhoto: 'pasangan-pelukan-1',
+    turutMengundang: [
+      'Puang & Petta ri Bola', 'Keluarga Besar Andi Yusuf', 'Keluarga Besar Andi Pangeran',
+      'Bapak Andi Muh. Yusuf & Ibu Andi Besse', 'Bapak H. Andi Pangeran & Ibu Hj. Andi Sitti', 'Sikamma Sumpulolo',
+    ],
     accent: 'Baju Bodo · Songkok · Lipa Sabbe',
   },
 }
