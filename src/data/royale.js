@@ -1,0 +1,77 @@
+// Data undangan flagship /demo/royale/ (placeholder sesuai brief).
+// Foto memakai aset yang sudah ada di /public/img/mentahan.
+export const royale = {
+  hero: {
+    kicker: 'The Wedding Of',
+    bride: 'Anindya',
+    groom: 'Rizky',
+    date: '2026-02-15',
+    dateText: 'Minggu, 15 Februari 2026',
+    photo: 'pasangan-utama',
+  },
+  quote: {
+    text: 'Cinta bukan tentang menemukan seseorang yang sempurna, melainkan belajar melihat orang yang tidak sempurna dengan sempurna.',
+    ref: '— Sam Keen',
+  },
+  bride: {
+    name: 'Anindya Paramita',
+    role: 'Putri',
+    parents: 'Putri pertama dari Bapak Hendra Wijaya & Ibu Ratna Sari',
+    photo: 'pasangan-tatapan-dekat',
+    ig: 'anindya.p',
+  },
+  groom: {
+    name: 'Rizky Ananda',
+    role: 'Putra',
+    parents: 'Putra kedua dari Bapak Surya Ananda & Ibu Melati Kusuma',
+    photo: 'pasangan-candid',
+    ig: 'rizky.ananda',
+  },
+  story: [
+    { year: '2019', title: 'Pertama Bertemu', desc: 'Kami dipertemukan di sebuah acara kampus, dan sebuah percakapan singkat mengubah segalanya.', photo: 'pasangan-jalan' },
+    { year: '2021', title: 'Kencan Pertama', desc: 'Senja di tepi pantai menjadi saksi awal kisah yang kami rajut perlahan.', photo: 'pasangan-pantai-senja' },
+    { year: '2024', title: 'Lamaran', desc: 'Di hadapan keluarga, sebuah janji diucapkan dengan penuh keyakinan dan doa.', photo: 'pasangan-romantis' },
+    { year: '2026', title: 'Hari Bahagia', desc: 'Kini kami siap melangkah bersama menuju babak baru sebagai suami dan istri.', photo: 'pasangan-bukit-sunset' },
+  ],
+  events: [
+    { tag: 'Akad Nikah', date: 'Minggu, 15 Februari 2026', time: '08.00 – 10.00 WIB', place: 'Grha Cakrawala, Jl. Merdeka No. 10, Jakarta', dress: 'Formal · Earth Tone' },
+    { tag: 'Resepsi', date: 'Minggu, 15 Februari 2026', time: '11.00 – 14.00 WIB', place: 'Grha Cakrawala, Jl. Merdeka No. 10, Jakarta', dress: 'Formal · Earth Tone' },
+  ],
+  mapsQuery: 'Monas Jakarta',
+  liveStream: { youtube: '', zoom: '' },
+  gallery: [
+    { src: 'pasangan-utama', cat: 'Prewedding' },
+    { src: 'pasangan-pose-romantis', cat: 'Prewedding' },
+    { src: 'pasangan-pelukan-1', cat: 'Prewedding' },
+    { src: 'pasangan-tatapan-dekat', cat: 'Candid' },
+    { src: 'pasangan-outdoor-3', cat: 'Prewedding' },
+    { src: 'pasangan-candid', cat: 'Candid' },
+    { src: 'pasangan-bukit-sunset', cat: 'Prewedding' },
+    { src: 'pasangan-duduk', cat: 'Candid' },
+    { src: 'pasangan-romantis', cat: 'Prewedding' },
+  ],
+  galleryCats: ['Semua', 'Prewedding', 'Candid'],
+  gifts: [
+    { kind: 'bank', label: 'BCA', no: '1 2 3 4 5 6 7 8 9 0', raw: '1234567890', an: 'Anindya Paramita', icon: 'fa-building-columns' },
+    { kind: 'bank', label: 'Mandiri', no: '0 9 8 7 6 5 4 3 2 1', raw: '0987654321', an: 'Rizky Ananda', icon: 'fa-building-columns' },
+    { kind: 'ewallet', label: 'GoPay', no: '0812 3456 7890', raw: '081234567890', an: 'Anindya P.', icon: 'fa-wallet' },
+    { kind: 'ewallet', label: 'OVO', no: '0812 3456 7890', raw: '081234567890', an: 'Rizky A.', icon: 'fa-wallet' },
+  ],
+  wishesSeed: [
+    { name: 'Dinda & Reza', hadir: 'Hadir', msg: 'Selamat menempuh hidup baru! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah.' },
+    { name: 'Keluarga Wijaya', hadir: 'Hadir', msg: 'Bahagia selalu untuk kalian berdua. Kami turut berbahagia menyambut hari istimewa ini.' },
+    { name: 'Bagas Pratama', hadir: 'Insya Allah Hadir', msg: 'Akhirnya! Selamat ya, semoga langgeng sampai kakek nenek. 🤍' },
+    { name: 'Sarah Amelia', hadir: 'Hadir', msg: 'Dua insan terbaik akhirnya bersatu. Selamat berbahagia, teman-temanku sayang!' },
+    { name: 'Om Budi & Tante Rina', hadir: 'Berhalangan', msg: 'Maaf belum bisa hadir, namun doa terbaik selalu menyertai perjalanan kalian.' },
+    { name: 'Geng Kuliah', hadir: 'Hadir', msg: 'Dari yang dulu bareng ngerjain tugas, sekarang mau nikah. Bahagia terus ya!' },
+    { name: 'Nadia Putri', hadir: 'Insya Allah Hadir', msg: 'Semoga menjadi pasangan yang saling menguatkan dalam suka dan duka. Aamiin.' },
+    { name: 'Fajar Nugroho', hadir: 'Hadir', msg: 'Selamat menempuh hidup baru, semoga cintanya abadi selamanya!' },
+    { name: 'Tante Melati', hadir: 'Hadir', msg: 'Cucu tante sudah besar dan menikah. Bahagia selalu, nak.' },
+    { name: 'Rian & Sasa', hadir: 'Berhalangan', msg: 'Congrats you two! Doa kami menyertai dari jauh. Sampai ketemu nanti!' },
+  ],
+  closing: {
+    quote: 'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri.',
+    ref: 'QS. Ar-Rum : 21',
+    signoff: 'Anindya & Rizky',
+  },
+}

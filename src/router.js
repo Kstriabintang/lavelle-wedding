@@ -10,4 +10,5 @@ export const routes = [
   { path: '/demo/', name: 'demo-gallery', component: () => import('./pages/DemoGallery.vue') },
   { path: '/demo/luxe/', name: 'demo-luxe', component: () => import('./pages/DemoLuxe.vue') },
   { path: '/demo/adat/:suku/', name: 'demo-adat', component: () => import('./pages/DemoAdat.vue') },
+  { path: '/demo/royale/', name: 'demo-royale', component: () => import('./pages/DemoRoyale.vue') },
 ]
