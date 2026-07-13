@@ -7,6 +7,7 @@ import { royale } from '../data/royale'
 import '../assets/royale.css'
 
 import EnvelopeGate from '../components/royale/EnvelopeGate.vue'
+import ScrollProgress from '../components/royale/ScrollProgress.vue'
 import ThemeSwitcher from '../components/royale/ThemeSwitcher.vue'
 import MusicPlayer from '../components/royale/MusicPlayer.vue'
 import HeroCover from '../components/royale/HeroCover.vue'
@@ -40,15 +41,30 @@ function onRsvp(entry) {
   if (wishesRef.value) wishesRef.value.addWish(entry, true)
 }
 
+// ---- OG/meta per-undangan (data-driven, siap multi-klien per slug) ----
+const SITE = 'https://lavelle.my.id'
+const ogTitle = computed(() => `The Wedding of ${r.hero.bride} & ${r.hero.groom}`)
+const ogDesc = computed(() => `Undangan pernikahan ${r.hero.bride} & ${r.hero.groom} — ${r.hero.dateText}. Undangan digital premium oleh Lavelle.`)
+const ogImage = computed(() => `${SITE}${r.share?.ogImage || `/img/mentahan/${r.hero.photo}.jpeg`}`)
+const pageUrl = `${SITE}/demo/royale/`
+
 useHead({
-  title: 'Royale — Undangan Premium Multi-Tema | Lavelle',
+  title: () => `${ogTitle.value} | Lavelle`,
   meta: [
     { name: 'robots', content: 'noindex' },
-    { name: 'description', content: 'Undangan pernikahan digital premium dengan 6 tema yang bisa diganti seketika — Anindya & Rizky.' },
-    { property: 'og:title', content: 'The Wedding of Anindya & Rizky' },
-    { property: 'og:description', content: 'Undangan pernikahan digital premium Lavelle — 6 tema, foto, musik, dan RSVP.' },
+    { name: 'description', content: () => ogDesc.value },
     { property: 'og:type', content: 'website' },
-    { property: 'og:image', content: 'https://lavelle.my.id/img/mentahan/pasangan-utama.jpeg' },
+    { property: 'og:site_name', content: 'Lavelle' },
+    { property: 'og:title', content: () => ogTitle.value },
+    { property: 'og:description', content: () => ogDesc.value },
+    { property: 'og:image', content: () => ogImage.value },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:url', content: pageUrl },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: () => ogTitle.value },
+    { name: 'twitter:description', content: () => ogDesc.value },
+    { name: 'twitter:image', content: () => ogImage.value },
   ],
 })
 
@@ -69,6 +85,7 @@ onMounted(() => {
     <EnvelopeGate :bride="r.hero.bride" :groom="r.hero.groom" :date-text="r.hero.dateText"
                   :guest="guest" :initials="initials" @opened="onOpened" />
 
+    <ScrollProgress />
     <ThemeSwitcher />
     <MusicPlayer ref="musicRef" :src="musicSrc" />
 

@@ -9,6 +9,11 @@ export const royale = {
     dateText: 'Sabtu, 20 Februari 2027',
     photo: 'pasangan-utama',
   },
+  // Kartu share 1200×630 (landscape 1.91:1) → preview besar di WhatsApp/Twitter.
+  // Dibuat per-undangan oleh scripts/make-og-card.py; fallback ke foto hero bila kosong.
+  share: {
+    ogImage: '/demo/royale/og.jpg',
+  },
   quote: {
     text: 'Cinta bukan tentang menemukan seseorang yang sempurna, melainkan belajar melihat orang yang tidak sempurna dengan sempurna.',
     ref: '— Sam Keen',
