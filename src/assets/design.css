@@ -201,8 +201,8 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
 /* Kartu Klasik (cream) — beri border & shadow agar menonjol dari latar cream */
 .demo--klasik { border: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
 .demo__thumb { height: 330px; position: relative; display: grid; place-items: center; padding: 1.6rem; overflow: hidden; }
-.demo__thumb--klasik { background: radial-gradient(120% 90% at 50% 0%, #faf5ec, #efe7d6 75%); }
-.demo__thumb--modern { background: radial-gradient(120% 90% at 50% 0%, #18223c, #0a0e1a 70%); }
+.demo__thumb--klasik { background: linear-gradient(rgba(250, 245, 236, .60), rgba(239, 231, 214, .82)), url('/img/mentahan/pasangan-duduk.jpeg') center/cover; }
+.demo__thumb--modern { background: linear-gradient(rgba(24, 34, 60, .66), rgba(10, 14, 26, .86)), url('/img/mentahan/pasangan-hitam-putih.jpeg') center/cover; }
 .mk { text-align: center; padding: 1.8rem 1.6rem; max-width: 280px; }
 .mk--frame { border: 1px solid rgba(168, 119, 47, .5); background: rgba(255, 255, 255, .45); }
 .mk--frame-d { border: 1px solid rgba(212, 175, 106, .5); }
@@ -231,7 +231,7 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
 .demo__thumb--3d .mk__date { color: #efe2c4; }
 .demo__thumb--3d .mk__btn { background: linear-gradient(135deg, #e9cd8c, #b08f48); color: #2a210f; }
 /* Rose Gold — ivory & mawar (demo Vue baru) */
-.demo__thumb--luxe { background: radial-gradient(120% 90% at 50% 0%, #fbf1ea, #f1dad0 80%); }
+.demo__thumb--luxe { background: linear-gradient(rgba(251, 241, 234, .58), rgba(241, 218, 208, .82)), url('/img/mentahan/pasangan-romantis.jpeg') center/cover; }
 .demo__thumb--luxe .mk { border-color: rgba(184, 130, 95, .45); background: rgba(255, 255, 255, .5); }
 .demo__thumb--luxe .mk__kicker { color: #b0836b; }
 .demo__thumb--luxe .mk__names { font-family: var(--script-1); color: #c17a72; }
@@ -243,10 +243,10 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
 .demo__thumb--minang .mk__kicker, .demo__thumb--jawa .mk__kicker, .demo__thumb--sunda .mk__kicker, .demo__thumb--bugis .mk__kicker { color: #e6c565; }
 .demo__thumb--minang .mk__date, .demo__thumb--jawa .mk__date, .demo__thumb--sunda .mk__date, .demo__thumb--bugis .mk__date { color: #efe2c4; }
 .demo__thumb--minang .mk__btn, .demo__thumb--jawa .mk__btn, .demo__thumb--sunda .mk__btn, .demo__thumb--bugis .mk__btn { background: linear-gradient(135deg, #efd07a, #a8801a); color: #2a0d12; }
-.demo__thumb--minang { background: linear-gradient(160deg, #6e1423, #3a0c14); }
-.demo__thumb--jawa { background: linear-gradient(160deg, #6b4423, #241609); }
-.demo__thumb--sunda { background: linear-gradient(160deg, #1f5d50, #0d2b26); }
-.demo__thumb--bugis { background: linear-gradient(160deg, #7a1420, #2a0810); }
+.demo__thumb--minang { background: linear-gradient(160deg, rgba(110, 20, 35, .70), rgba(58, 12, 20, .88)), url('/img/mentahan/pasangan-utama.jpeg') center/cover; }
+.demo__thumb--jawa { background: linear-gradient(160deg, rgba(107, 68, 35, .70), rgba(36, 22, 9, .88)), url('/img/mentahan/pasangan-pose-romantis.jpeg') center/cover; }
+.demo__thumb--sunda { background: linear-gradient(160deg, rgba(31, 93, 80, .70), rgba(13, 43, 38, .88)), url('/img/mentahan/pasangan-outdoor-3.jpeg') center/cover; }
+.demo__thumb--bugis { background: linear-gradient(160deg, rgba(122, 20, 32, .70), rgba(42, 8, 16, .88)), url('/img/mentahan/pasangan-pelukan-1.jpeg') center/cover; }
 /* label kecil "Eksklusif" di judul demo */
 .demo__flag { display: inline-block; vertical-align: middle; margin-left: .5em; font-family: var(--sans); font-style: normal; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; padding: .35em .8em; border-radius: 50px; background: var(--grad); color: #fff; }
 .demo__tag { position: absolute; top: 1rem; right: 1rem; background: rgba(255, 250, 240, .92); color: var(--ink); font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; padding: .45em 1em; border-radius: 50px; font-weight: 500; }

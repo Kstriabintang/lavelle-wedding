@@ -178,12 +178,14 @@ const HEADDRESS = {
 }
 const dress = computed(() => HEADDRESS[cfg.value.slug] || HEADDRESS.minang)
 
-// ---- Musik latar (opsional, per suku; letakkan file di /public/audio) ----
+// ---- Musik latar per suku (mp3 instrumental nyata; ganti dgn lagu daerah bila ada) ----
 const MUSIC = {
-  minang: '/audio/adat-minang.mp3', jawa: '/audio/adat-jawa.mp3',
-  sunda: '/audio/adat-sunda.mp3', bugis: '/audio/adat-bugis.mp3',
+  minang: '/demo/klasik/audio/until-i-found-you-violin.mp3',
+  jawa: '/demo/sinema/audio/risk-it-all-piano.mp3',
+  sunda: '/demo/modern/audio/marry-you-violin.mp3',
+  bugis: '/demo/klasik/audio/until-i-found-you-violin.mp3',
 }
-const musicSrc = computed(() => MUSIC[cfg.value.slug] || '/audio/adat.mp3')
+const musicSrc = computed(() => MUSIC[cfg.value.slug] || '/demo/sinema/audio/risk-it-all-piano.mp3')
 const audioEl = ref(null)
 const musicOn = ref(false)
 const musicReady = ref(false)
@@ -327,6 +329,8 @@ onUnmounted(() => {
     <svg class="a-motif-fixed" aria-hidden="true"><rect width="100%" height="100%" fill="url(#adatMotif)" /></svg>
     <!-- diorama adat redup sebagai latar isi undangan -->
     <AdatScene v-if="opened" :suku="cfg.slug" variant="ambient" class="a-scene-fixed" />
+    <!-- latar foto buram (desktop): kolom undangan mengambang di atasnya -->
+    <div v-if="cfg.coverPhoto" class="a-deskbg" :style="{ backgroundImage: `url(/img/mentahan/${cfg.coverPhoto}.jpeg)` }"></div>
 
     <!-- Musik latar + kelopak bunga (undangan "hidup") -->
     <audio ref="audioEl" :src="musicSrc" loop preload="none"
@@ -400,6 +404,10 @@ onUnmounted(() => {
           <p class="a-kicker a-reveal">Bismillahirrahmanirrahim</p>
           <h2 class="a-title a-reveal">Kedua Mempelai</h2>
           <svg class="a-div a-reveal" viewBox="0 0 260 28"><use href="#ornDivider" /></svg>
+          <figure v-if="cfg.coverPhoto" class="a-couple-hero a-reveal">
+            <img :src="`/img/mentahan/${cfg.coverPhoto}.jpeg`" :alt="`${cfg.bride} & ${cfg.groom}`" loading="lazy">
+            <figcaption><span class="a-script">{{ cfg.bride }} &amp; {{ cfg.groom }}</span></figcaption>
+          </figure>
           <div class="a-couple">
             <figure class="a-person a-reveal">
               <div class="a-portrait">
@@ -527,6 +535,15 @@ onUnmounted(() => {
               </div>
             </li>
           </ol>
+        </div>
+      </section>
+
+      <!-- Photo break (parallax) -->
+      <section class="a-photobreak" :style="{ backgroundImage: `url(/img/mentahan/pasangan-bukit-sunset.jpeg)` }">
+        <div class="a-photobreak__scrim"></div>
+        <div class="a-photobreak__cap a-reveal">
+          <span class="a-script">{{ cfg.bride }} &amp; {{ cfg.groom }}</span>
+          <p>{{ cfg.dateText }}</p>
         </div>
       </section>
 
@@ -831,6 +848,19 @@ onUnmounted(() => {
 .a-quote-ref { margin-top: 1rem; letter-spacing: .16em; font-size: .74rem; text-transform: uppercase; color: var(--gold-soft); }
 .a-note { color: inherit; opacity: .9; max-width: 560px; margin: 0 auto 1.6rem; font-family: var(--serif2); font-size: 1.14rem; line-height: 1.6; }
 
+/* ---------- Foto pasangan (hero + break) ---------- */
+.a-script { font-family: var(--script); }
+.a-couple-hero { position: relative; margin: 1.6rem auto .4rem; max-width: 420px; border-radius: 200px 200px 18px 18px; overflow: hidden; border: 1px solid var(--gold2); box-shadow: 0 28px 60px -30px rgba(0, 0, 0, .55); }
+.a-couple-hero img { display: block; width: 100%; aspect-ratio: 4/5; object-fit: cover; }
+.a-couple-hero figcaption { position: absolute; inset: auto 0 0 0; padding: 2.6rem 1rem 1.1rem; background: linear-gradient(transparent, rgba(0, 0, 0, .6)); text-align: center; }
+.a-couple-hero figcaption .a-script { color: #fff; font-size: 2rem; line-height: 1; text-shadow: 0 2px 10px rgba(0, 0, 0, .5); }
+
+.a-photobreak { position: relative; min-height: 62vh; background-size: cover; background-position: center; display: grid; place-items: center; overflow: hidden; }
+.a-photobreak__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .35), rgba(0, 0, 0, .55)); }
+.a-photobreak__cap { position: relative; z-index: 1; text-align: center; color: #fff; padding: 1rem; }
+.a-photobreak__cap .a-script { display: block; font-size: clamp(2.6rem, 8vw, 4rem); line-height: 1.05; color: var(--gold-soft); text-shadow: 0 3px 16px rgba(0, 0, 0, .55); }
+.a-photobreak__cap p { margin-top: .5rem; font-family: var(--serif); font-style: italic; letter-spacing: .08em; font-size: 1.05rem; text-shadow: 0 2px 10px rgba(0, 0, 0, .6); }
+
 /* ---------- Mempelai ---------- */
 .a-couple { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; margin-top: 1.4rem; }
 .a-person h3 { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; margin: 1rem 0 .3rem; }
@@ -1036,6 +1066,37 @@ onUnmounted(() => {
 .cover-leave-to { opacity: 0; transform: scale(1.04); }
 .lb-enter-active, .lb-leave-active, .fade-enter-active, .fade-leave-active { transition: opacity .3s ease; }
 .lb-enter-from, .lb-leave-to, .fade-enter-from, .fade-leave-to { opacity: 0; }
+
+/* ================= LAYOUT DESKTOP: kolom "device" + latar foto ================= */
+.a-deskbg { display: none; }
+@media (min-width: 1024px) {
+  .adat { background: transparent; }
+  .a-deskbg {
+    display: block; position: fixed; inset: -6%; z-index: 0;
+    background-size: cover; background-position: center;
+    filter: blur(18px) brightness(.4) saturate(1.15); transform: scale(1.14);
+  }
+  .a-deskbg::after { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 80% at 50% 22%, transparent, var(--deep) 78%); opacity: .85; }
+  .a-motif-fixed, .a-scene-fixed { display: none; }
+
+  /* Isi undangan dibingkai jadi kolom tengah seperti pratinjau perangkat */
+  .a-main { max-width: 560px; margin: 0 auto; position: relative; z-index: 2; background: var(--paper); box-shadow: 0 50px 130px -30px rgba(0, 0, 0, .85), 0 0 0 1px rgba(230, 197, 101, .16); }
+
+  /* Cover jadi split-screen sinematik: foto kiri, panel konten kanan */
+  .a-cover { padding: 0; }
+  .a-cover__photo { background-position: center left; }
+  .a-cover--photo .a-cover__scrim { background: linear-gradient(90deg, rgba(0, 0, 0, .28) 0%, transparent 34%, rgba(10, 4, 8, .5) 60%, var(--deep) 100%); opacity: 1; }
+  .a-cover--photo .a-cover__frame {
+    margin: 0 0 0 auto; max-width: 44%; width: 44%; min-height: 100vh; border: none; border-radius: 0;
+    display: flex; flex-direction: column; justify-content: center; background: transparent; backdrop-filter: none;
+    padding: 6vh clamp(2.4rem, 4vw, 4rem);
+  }
+  .a-cover--photo .a-cover__frame .orn-c { display: none; }
+
+  /* kontrol mengambang menempel ke tepi kolom */
+  .a-music { left: calc(50% - 288px); }
+  .a-top { right: calc(50% - 288px); }
+}
 
 @media (max-width: 640px) {
   .a-couple { grid-template-columns: 1fr; gap: 1.6rem; }
