@@ -207,23 +207,27 @@ onUnmounted(() => document.removeEventListener('keydown', onKey))
   <SiteNav />
 
   <!-- HERO -->
-  <section class="hero" id="home" style="background-image:url('/img/mentahan/pasangan-bukit-sunset.jpeg')">
+  <section class="hero" id="home">
+    <div class="hero__bg" style="background-image:url('/img/mentahan/pasangan-bukit-sunset.jpeg')"></div>
     <div class="hero__scrim"></div>
     <div class="container hero__inner">
       <p class="eyebrow reveal"><span></span> Undangan Pernikahan Digital <span></span></p>
-      <h1 class="hero__title reveal">Undangan pernikahan digital<br>yang <em>elegan</em>.</h1>
-      <p class="hero__sub reveal">Lavelle membuat undangan pernikahan digital yang mewah, personal, dan berkelas —
+      <h1 class="hero__title reveal">Rangkai kisah cintamu<br>dalam undangan yang <em>elegan</em>.</h1>
+      <p class="hero__sub reveal">Undangan pernikahan digital yang mewah, personal, dan berkelas —
         lengkap dengan RSVP, buku ucapan, galeri, hingga amplop digital. Cukup satu link untuk seluruh tamu undanganmu.</p>
       <div class="hero__cta reveal">
-        <a href="#paket" class="btn btn--gold">Lihat Paket &amp; Harga</a>
-        <a href="#demo" class="btn btn--ghost">Lihat Demo</a>
+        <a href="#tema" class="btn btn--gold">Lihat Tema</a>
+        <a href="#paket" class="btn btn--ghost">Paket &amp; Harga</a>
       </div>
       <div class="hero__meta reveal">
-        <div><strong>3</strong><span>Pilihan Paket</span></div>
+        <div><strong>6</strong><span>Tema Premium</span></div>
+        <div class="hero__meta-sep" aria-hidden="true"></div>
         <div><strong>&infin;</strong><span>Tamu Undangan</span></div>
+        <div class="hero__meta-sep" aria-hidden="true"></div>
         <div><strong>1&ndash;3</strong><span>Hari Pengerjaan</span></div>
       </div>
     </div>
+    <a class="hero__scroll" href="#tema" aria-label="Gulir ke bawah"><span></span></a>
   </section>
 
   <!-- TRUST STRIP -->

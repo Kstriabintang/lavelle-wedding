@@ -146,12 +146,14 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
 .nav .btn--gold:hover { background: #243d33; color: #fff; }
 
 /* ---------- Hero (foto golden hour) ---------- */
-.hero { position: relative; min-height: 100vh; display: grid; place-items: center; text-align: center; padding: 150px 0 90px; overflow: hidden; background-size: cover; background-position: center; }
-.hero__scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(42, 49, 32, .55) 0%, rgba(42, 49, 32, .28) 38%, rgba(42, 49, 32, .82) 100%); }
+.hero { position: relative; min-height: 100svh; display: grid; place-items: center; text-align: center; padding: 150px 0 112px; overflow: hidden; }
+.hero__bg { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; transform: scale(1.04); animation: heroKen 22s ease-in-out infinite alternate both; will-change: transform; }
+@keyframes heroKen { from { transform: scale(1.04); } to { transform: scale(1.12); } }
+.hero__scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(28, 33, 20, .5) 0%, rgba(28, 33, 20, .22) 40%, rgba(20, 24, 14, .86) 100%); }
 .hero__inner { position: relative; z-index: 2; max-width: 880px; color: var(--cream); }
 .hero .eyebrow { color: #f0dcae; }
 .hero .eyebrow span { background: #f0dcae; }
-.hero__title { font-family: var(--serif); font-weight: 600; font-size: clamp(2.6rem, 7vw, 5rem); line-height: 1.08; letter-spacing: .5px; margin-bottom: 1.4rem; color: #fff; text-shadow: 0 2px 30px rgba(0, 0, 0, .3); }
+.hero__title { font-family: var(--serif); font-weight: 600; font-size: clamp(2.8rem, 8vw, 6rem); line-height: 1.04; letter-spacing: .5px; margin-bottom: 1.5rem; color: #fff; text-shadow: 0 2px 30px rgba(0, 0, 0, .35); }
 .hero__title em { color: #f0cf94; }
 .hero__title em::after { content: ""; position: absolute; left: 0; right: 0; bottom: .06em; height: 2px; background: #f0cf94; }
 .hero__sub { font-size: 1.12rem; color: rgba(255, 250, 240, .92); max-width: 620px; margin: 0 auto 2.4rem; }
@@ -162,6 +164,12 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
 .hero__meta div { display: flex; flex-direction: column; }
 .hero__meta strong { font-family: var(--serif); font-size: 2.6rem; font-weight: 600; line-height: 1; color: #f0cf94; }
 .hero__meta span { font-size: .8rem; letter-spacing: .18em; text-transform: uppercase; color: rgba(255, 250, 240, .8); margin-top: .4rem; }
+.hero__meta-sep { width: 1px; align-self: stretch; min-height: 44px; background: rgba(255, 250, 240, .28); }
+.hero__scroll { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 2; width: 26px; height: 42px; border: 1.5px solid rgba(255, 255, 255, .5); border-radius: 20px; }
+.hero__scroll span { position: absolute; top: 8px; left: 50%; width: 4px; height: 8px; margin-left: -2px; border-radius: 3px; background: #fff; animation: heroScroll 1.9s ease-in-out infinite; }
+@keyframes heroScroll { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(15px); opacity: 0; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .hero__bg { animation: none; } .hero__scroll span { animation: none; } }
+@media (max-width: 560px) { .hero__meta-sep { display: none; } }
 
 /* ---------- Trust strip ---------- */
 .strip { background: var(--green-deep); overflow: hidden; padding: 16px 0; }
