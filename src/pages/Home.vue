@@ -27,6 +27,8 @@ function countTo(target, refVar, dur = 1300) {
   }
   requestAnimationFrame(step)
 }
+let priceIO = null
+let priceTimer = null
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -181,26 +183,36 @@ const onKey = (e) => {
 }
 onMounted(() => {
   document.addEventListener('keydown', onKey)
-  // Count-up harga saat section #paket terlihat
-  if (typeof IntersectionObserver !== 'undefined') {
-    const el = document.getElementById('paket')
-    if (el) {
-      pBasic.value = 0; pPrem.value = 0; pEks.value = 0
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            countTo(99, pBasic, 1200)
-            countTo(249, pPrem, 1450)
-            countTo(549, pEks, 1650)
-            io.disconnect()
-          }
-        })
-      }, { threshold: 0.35 })
-      io.observe(el)
+  // Count-up harga saat section #paket terlihat.
+  // threshold:0 + rootMargin dipakai agar tetap memicu di layar mana pun —
+  // di HP section #paket jauh lebih tinggi dari viewport, jadi threshold besar
+  // takkan pernah tercapai dan harga akan macet di "Rp 0".
+  const el = document.getElementById('paket')
+  if (el && typeof IntersectionObserver !== 'undefined') {
+    pBasic.value = 0; pPrem.value = 0; pEks.value = 0
+    let fired = false
+    const runCount = () => {
+      if (fired) return
+      fired = true
+      if (priceTimer) { clearTimeout(priceTimer); priceTimer = null }
+      if (priceIO) { priceIO.disconnect(); priceIO = null }
+      countTo(99, pBasic, 1200)
+      countTo(249, pPrem, 1450)
+      countTo(549, pEks, 1650)
     }
+    priceIO = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) runCount()
+    }, { threshold: 0, rootMargin: '0px 0px -15% 0px' })
+    priceIO.observe(el)
+    // Jaring pengaman: bila observer gagal memicu, harga tetap terisi (tak pernah macet di 0).
+    priceTimer = setTimeout(runCount, 8000)
   }
 })
-onUnmounted(() => document.removeEventListener('keydown', onKey))
+onUnmounted(() => {
+  document.removeEventListener('keydown', onKey)
+  if (priceIO) priceIO.disconnect()
+  if (priceTimer) clearTimeout(priceTimer)
+})
 </script>
 
 <template>

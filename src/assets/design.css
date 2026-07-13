@@ -204,11 +204,11 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
 .shot--tall { grid-row: span 2; aspect-ratio: 3/5; }
 
 /* ---------- Demo (preview mockup) ---------- */
-.demo { background: var(--glass); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: 0 16px 36px -28px rgba(74, 60, 25, .4); transition: transform .35s, box-shadow .35s; }
+.demo { display: flex; flex-direction: column; background: var(--glass); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: 0 16px 36px -28px rgba(74, 60, 25, .4); transition: transform .35s, box-shadow .35s; }
 .demo:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
 /* Kartu Klasik (cream) — beri border & shadow agar menonjol dari latar cream */
 .demo--klasik { border: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
-.demo__thumb { height: 330px; position: relative; display: grid; place-items: center; padding: 1.6rem; overflow: hidden; }
+.demo__thumb { flex: 0 0 auto; height: 330px; position: relative; display: grid; place-items: center; padding: 1.6rem; overflow: hidden; }
 .demo__thumb--klasik { background: linear-gradient(rgba(250, 245, 236, .60), rgba(239, 231, 214, .82)), url('/img/mentahan/pasangan-duduk.jpeg') center/cover; }
 .demo__thumb--modern { background: linear-gradient(rgba(24, 34, 60, .66), rgba(10, 14, 26, .86)), url('/img/mentahan/pasangan-hitam-putih.jpeg') center/cover; }
 .mk { text-align: center; padding: 1.8rem 1.6rem; max-width: 280px; }
@@ -258,9 +258,10 @@ em { font-style: italic; color: var(--gold-deep); position: relative; }
 /* label kecil "Eksklusif" di judul demo */
 .demo__flag { display: inline-block; vertical-align: middle; margin-left: .5em; font-family: var(--sans); font-style: normal; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; padding: .35em .8em; border-radius: 50px; background: var(--grad); color: #fff; }
 .demo__tag { position: absolute; top: 1rem; right: 1rem; background: rgba(255, 250, 240, .92); color: var(--ink); font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; padding: .45em 1em; border-radius: 50px; font-weight: 500; }
-.demo__body { padding: 1.8rem; }
+.demo__body { flex: 1 1 auto; display: flex; flex-direction: column; padding: 1.8rem; }
 .demo__body h3 { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; margin-bottom: .5rem; }
 .demo__body p { color: var(--ink-soft); margin-bottom: 1.2rem; }
+.demo__body .link { margin-top: auto; align-self: flex-start; }
 .link { font-weight: 500; letter-spacing: .04em; display: inline-flex; align-items: center; gap: .5em; transition: gap .3s; color: var(--gold-deep); }
 .link i { color: var(--gold-deep); }
 .link:hover { gap: .9em; }
