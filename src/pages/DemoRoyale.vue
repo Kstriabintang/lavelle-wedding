@@ -15,11 +15,15 @@ import OpeningSection from '../components/royale/OpeningSection.vue'
 import CoupleProfile from '../components/royale/CoupleProfile.vue'
 import LoveStory from '../components/royale/LoveStory.vue'
 import EventDetails from '../components/royale/EventDetails.vue'
+import DressCode from '../components/royale/DressCode.vue'
+import LiveStream from '../components/royale/LiveStream.vue'
 import GallerySection from '../components/royale/GallerySection.vue'
 import RsvpForm from '../components/royale/RsvpForm.vue'
 import DigitalEnvelope from '../components/royale/DigitalEnvelope.vue'
 import WishesFeed from '../components/royale/WishesFeed.vue'
+import FamilySection from '../components/royale/FamilySection.vue'
 import ClosingSection from '../components/royale/ClosingSection.vue'
+import QuickNav from '../components/royale/QuickNav.vue'
 
 const { theme, styleVars, initTheme } = useTheme()
 const r = royale
@@ -95,11 +99,16 @@ onMounted(() => {
     <CoupleProfile :bride="r.bride" :groom="r.groom" />
     <LoveStory :story="r.story" />
     <EventDetails :events="r.events" :maps-query="r.mapsQuery" :date="r.hero.date" :couple-title="coupleTitle" />
+    <DressCode :dress="r.dressCode" />
+    <LiveStream :live="r.liveStream" />
     <GallerySection :items="r.gallery" :cats="r.galleryCats" />
+    <DigitalEnvelope :gifts="r.gifts" :qris="r.qris" :wa-confirm="r.giftConfirmWa" />
     <RsvpForm @submitted="onRsvp" />
-    <DigitalEnvelope :gifts="r.gifts" />
     <WishesFeed ref="wishesRef" :seed="r.wishesSeed" />
+    <FamilySection :family="r.family" />
     <ClosingSection :closing="r.closing" :photo="r.hero.photo" :names="namesText" :date-text="r.hero.dateText" />
+
+    <QuickNav />
   </div>
 </template>
 

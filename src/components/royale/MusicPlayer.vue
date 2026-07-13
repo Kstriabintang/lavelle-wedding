@@ -35,6 +35,8 @@ defineExpose({ play })
 
 <style scoped>
 .mp { position: fixed; left: 20px; bottom: 20px; z-index: 88; }
+/* Mobile: naik di atas quick-nav (bar bawah) agar tak bertabrakan */
+@media (max-width: 1023px) { .mp { bottom: 80px; left: 14px; } }
 .mp__btn { display: flex; align-items: center; gap: .5rem; padding: .35rem .8rem .35rem .35rem; border-radius: 50px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; box-shadow: 0 12px 30px -14px rgba(0, 0, 0, .6); }
 .mp__disc { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: var(--accent-ink); background: linear-gradient(135deg, var(--accent), var(--accent-2)); font-size: .9rem; }
 .mp__btn.is-on .mp__disc { animation: mpSpin 3.6s linear infinite; }

@@ -34,6 +34,8 @@ const open = ref(false)
 
 <style scoped>
 .ts { position: fixed; right: 20px; bottom: 20px; z-index: 90; display: flex; flex-direction: column; align-items: flex-end; gap: .8rem; }
+/* Mobile: naik di atas quick-nav (bar bawah) agar tak bertabrakan */
+@media (max-width: 1023px) { .ts { bottom: 80px; right: 14px; } }
 .ts__toggle {
   width: 54px; height: 54px; border-radius: 50%; border: 1px solid var(--line, rgba(0,0,0,.2));
   background: var(--accent, #b8912f); color: var(--accent-ink, #fff); font-size: 1.2rem; cursor: pointer;

@@ -25,14 +25,20 @@ export const royale = {
     role: 'Putri',
     parents: 'Putri pertama dari Bapak Hendra Wijaya & Ibu Ratna Sari',
     photo: 'pasangan-tatapan-dekat',
-    ig: 'anindya.p',
+    socials: [
+      { icon: 'fa-instagram', url: 'https://instagram.com/anindya.p', label: '@anindya.p' },
+      { icon: 'fa-tiktok', url: 'https://tiktok.com/@anindya', label: '@anindya' },
+    ],
   },
   groom: {
     name: 'Rizky Ananda',
     role: 'Putra',
     parents: 'Putra kedua dari Bapak Surya Ananda & Ibu Melati Kusuma',
     photo: 'pasangan-candid',
-    ig: 'rizky.ananda',
+    socials: [
+      { icon: 'fa-instagram', url: 'https://instagram.com/rizky.ananda', label: '@rizky.ananda' },
+      { icon: 'fa-x-twitter', url: 'https://x.com/rizkyananda', label: '@rizkyananda' },
+    ],
   },
   story: [
     { year: '2019', title: 'Pertama Bertemu', desc: 'Kami dipertemukan di sebuah acara kampus, dan sebuah percakapan singkat mengubah segalanya.', photo: 'pasangan-jalan' },
@@ -43,9 +49,29 @@ export const royale = {
   events: [
     { tag: 'Akad Nikah', date: 'Sabtu, 20 Februari 2027', time: '08.00 – 10.00 WIB', place: 'Grha Cakrawala, Jl. Merdeka No. 10, Jakarta', dress: 'Formal · Earth Tone' },
     { tag: 'Resepsi', date: 'Sabtu, 20 Februari 2027', time: '11.00 – 14.00 WIB', place: 'Grha Cakrawala, Jl. Merdeka No. 10, Jakarta', dress: 'Formal · Earth Tone' },
+    { tag: 'Ngunduh Mantu', date: 'Minggu, 21 Februari 2027', time: '10.00 – 13.00 WIB', place: 'Kediaman Mempelai Pria, Jl. Kenanga No. 4, Bandung', dress: 'Batik · Kasual' },
   ],
   mapsQuery: 'Monas Jakarta',
-  liveStream: { youtube: '', zoom: '' },
+  dressCode: {
+    note: 'Kami akan senang bila Anda mengenakan busana dengan nuansa warna berikut.',
+    colors: [
+      { name: 'Sage', hex: '#8a9a7b' },
+      { name: 'Terracotta', hex: '#b7714f' },
+      { name: 'Cream', hex: '#ece3d2' },
+      { name: 'Dusty Brown', hex: '#7a5c47' },
+    ],
+  },
+  liveStream: {
+    note: 'Bagi keluarga & sahabat yang berhalangan hadir, acara dapat disaksikan secara langsung.',
+    youtube: 'https://youtube.com/@lavelle',
+    zoom: '',
+  },
+  family: {
+    note: 'Merupakan suatu kebahagiaan & kehormatan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir & memberikan doa restu.',
+    bride: ['Bapak Hendra Wijaya', 'Ibu Ratna Sari'],
+    groom: ['Bapak Surya Ananda', 'Ibu Melati Kusuma'],
+    alsoInviting: ['Keluarga Besar Wijaya', 'Keluarga Besar Ananda', 'Bapak/Ibu H. Soleh Mahmud', 'Rekan Alumni Universitas Indonesia'],
+  },
   gallery: [
     { src: 'pasangan-utama', cat: 'Prewedding' },
     { src: 'pasangan-pose-romantis', cat: 'Prewedding' },
@@ -59,11 +85,13 @@ export const royale = {
   ],
   galleryCats: ['Semua', 'Prewedding', 'Candid'],
   gifts: [
-    { kind: 'bank', label: 'BCA', no: '1 2 3 4 5 6 7 8 9 0', raw: '1234567890', an: 'Anindya Paramita', icon: 'fa-building-columns' },
-    { kind: 'bank', label: 'Mandiri', no: '0 9 8 7 6 5 4 3 2 1', raw: '0987654321', an: 'Rizky Ananda', icon: 'fa-building-columns' },
-    { kind: 'ewallet', label: 'GoPay', no: '0812 3456 7890', raw: '081234567890', an: 'Anindya P.', icon: 'fa-wallet' },
-    { kind: 'ewallet', label: 'OVO', no: '0812 3456 7890', raw: '081234567890', an: 'Rizky A.', icon: 'fa-wallet' },
+    { kind: 'bank', label: 'BCA', no: '1234 5678 90', raw: '1234567890', an: 'Anindya Paramita', brand: 'fa-cc-visa' },
+    { kind: 'bank', label: 'Mandiri', no: '0987 6543 21', raw: '0987654321', an: 'Rizky Ananda', brand: 'fa-cc-mastercard' },
+    { kind: 'ewallet', label: 'GoPay', no: '0812 3456 7890', raw: '081234567890', an: 'Anindya P.', brand: 'fa-wallet' },
+    { kind: 'ewallet', label: 'OVO', no: '0812 3456 7890', raw: '081234567890', an: 'Rizky A.', brand: 'fa-wallet' },
   ],
+  qris: { img: '/demo/royale/qris.png', merchant: 'Anindya & Rizky', nmid: 'ID10243178XXXX' },
+  giftConfirmWa: '6281234567890',
   wishesSeed: [
     { name: 'Dinda & Reza', hadir: 'Hadir', msg: 'Selamat menempuh hidup baru! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah.' },
     { name: 'Keluarga Wijaya', hadir: 'Hadir', msg: 'Bahagia selalu untuk kalian berdua. Kami turut berbahagia menyambut hari istimewa ini.' },
