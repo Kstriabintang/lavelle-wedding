@@ -11,6 +11,7 @@ import ScrollProgress from '../components/royale/ScrollProgress.vue'
 import ThemeSwitcher from '../components/royale/ThemeSwitcher.vue'
 import MusicPlayer from '../components/royale/MusicPlayer.vue'
 import HeroCover from '../components/royale/HeroCover.vue'
+import OpeningSection from '../components/royale/OpeningSection.vue'
 import CoupleProfile from '../components/royale/CoupleProfile.vue'
 import LoveStory from '../components/royale/LoveStory.vue'
 import EventDetails from '../components/royale/EventDetails.vue'
@@ -90,6 +91,7 @@ onMounted(() => {
     <MusicPlayer ref="musicRef" :src="musicSrc" />
 
     <HeroCover v-bind="r.hero" />
+    <OpeningSection :date="r.hero.date" :quote="r.quote" :photo="r.opening.photo" />
     <CoupleProfile :bride="r.bride" :groom="r.groom" />
     <LoveStory :story="r.story" />
     <EventDetails :events="r.events" :maps-query="r.mapsQuery" :date="r.hero.date" :couple-title="coupleTitle" />

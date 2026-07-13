@@ -18,6 +18,8 @@ export const royale = {
     text: 'Cinta bukan tentang menemukan seseorang yang sempurna, melainkan belajar melihat orang yang tidak sempurna dengan sempurna.',
     ref: '— Sam Keen',
   },
+  // Foto untuk section Pembuka (beda dari foto hero, satu grading).
+  opening: { photo: 'pasangan-romantis' },
   bride: {
     name: 'Anindya Paramita',
     role: 'Putri',
