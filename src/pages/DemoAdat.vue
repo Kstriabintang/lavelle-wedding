@@ -5,6 +5,7 @@ import { useHead } from '@unhead/vue'
 import { adat, adatGallery } from '../data/adat'
 import { WA_1 } from '../data/site'
 import { useGamelan } from '../composables/useGamelan'
+import AdatScene from '../components/AdatScene.vue'
 
 const route = useRoute()
 const cfg = computed(() => adat[route.params.suku] || adat.minang)
@@ -215,6 +216,8 @@ onUnmounted(() => {
 
     <!-- watermark motif tetap di latar -->
     <svg class="a-motif-fixed" aria-hidden="true"><rect width="100%" height="100%" fill="url(#adatMotif)" /></svg>
+    <!-- diorama adat redup sebagai latar isi undangan -->
+    <AdatScene v-if="opened" :suku="cfg.slug" variant="ambient" class="a-scene-fixed" />
 
     <!-- Musik latar + kelopak bunga (undangan "hidup") -->
     <audio ref="audioEl" :src="musicSrc" loop preload="none"
@@ -236,6 +239,7 @@ onUnmounted(() => {
     <!-- ================= COVER ================= -->
     <transition name="cover">
       <section v-if="!opened" class="a-cover">
+        <AdatScene :suku="cfg.slug" variant="cover" class="a-cover__scene" />
         <svg class="a-motif" aria-hidden="true"><rect width="100%" height="100%" fill="url(#adatMotif)" /></svg>
         <div class="a-cover__frame">
           <svg class="orn-c orn-c--tl"><use href="#ornCorner" /></svg>
@@ -526,6 +530,8 @@ onUnmounted(() => {
 }
 .a-defs { position: absolute; }
 .a-motif-fixed { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: .05; pointer-events: none; color: var(--gold); }
+.a-scene-fixed { position: fixed; inset: 0; z-index: 0; opacity: .32; }
+.a-cover__scene { z-index: 1; }
 .a-motif { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .09; pointer-events: none; }
 .a-sec--deep .a-motif { opacity: .13; }
 
