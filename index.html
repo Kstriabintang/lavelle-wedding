@@ -37,6 +37,18 @@
             } catch (e) {}
         })();
     </script>
+
+    <!-- Tandai motion-on sebelum paint: aktifkan orkestrasi GSAP hero
+         hanya bila JS jalan & user TIDAK meminta reduced-motion (anti-flash). -->
+    <script>
+        (function () {
+            try {
+                if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    document.documentElement.classList.add('motion-on');
+                }
+            } catch (e) {}
+        })();
+    </script>
 </head>
 
 <body>

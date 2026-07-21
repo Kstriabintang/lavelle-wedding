@@ -9,6 +9,7 @@ import SiteNav from '../components/SiteNav.vue'
 import SiteFooter from '../components/SiteFooter.vue'
 import WhatsappFloat from '../components/WhatsappFloat.vue'
 import HomeThemeCatalog from '../components/HomeThemeCatalog.vue'
+import { useCinematic } from '../composables/useCinematic'
 
 const openPlan = (plan) => window.open(waPlan(plan), '_blank')
 
@@ -29,6 +30,7 @@ function countTo(target, refVar, dur = 1300) {
 }
 let priceIO = null
 let priceTimer = null
+let stopCinematic = () => {}
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -183,6 +185,8 @@ const onKey = (e) => {
 }
 onMounted(() => {
   document.addEventListener('keydown', onKey)
+  // Orkestrasi sinematik hero (GSAP) — client-only, reduced-motion-safe.
+  stopCinematic = useCinematic()
   // Count-up harga saat section #paket terlihat.
   // threshold:0 + rootMargin dipakai agar tetap memicu di layar mana pun —
   // di HP section #paket jauh lebih tinggi dari viewport, jadi threshold besar
@@ -212,6 +216,7 @@ onUnmounted(() => {
   document.removeEventListener('keydown', onKey)
   if (priceIO) priceIO.disconnect()
   if (priceTimer) clearTimeout(priceTimer)
+  stopCinematic()
 })
 </script>
 
@@ -225,15 +230,15 @@ onUnmounted(() => {
     <div class="hero__bg" style="background-image:url('/img/mentahan/pasangan-bukit-sunset.jpeg')"></div>
     <div class="hero__scrim"></div>
     <div class="container hero__inner">
-      <p class="eyebrow reveal"><span></span> Undangan Pernikahan Digital <span></span></p>
-      <h1 class="hero__title reveal">Rangkai kisah cintamu<br>dalam undangan yang <em>elegan</em>.</h1>
-      <p class="hero__sub reveal">Undangan pernikahan digital yang mewah, personal, dan berkelas —
+      <p class="eyebrow hero__rise"><span></span> Undangan Pernikahan Digital <span></span></p>
+      <h1 class="hero__title hero__rise">Rangkai kisah cintamu<br>dalam undangan yang <em>elegan</em>.</h1>
+      <p class="hero__sub hero__rise">Undangan pernikahan digital yang mewah, personal, dan berkelas —
         lengkap dengan RSVP, buku ucapan, galeri, hingga amplop digital. Cukup satu link untuk seluruh tamu undanganmu.</p>
-      <div class="hero__cta reveal">
+      <div class="hero__cta hero__rise">
         <a href="#tema" class="btn btn--gold">Lihat Tema</a>
         <a href="#paket" class="btn btn--ghost">Paket &amp; Harga</a>
       </div>
-      <div class="hero__meta reveal">
+      <div class="hero__meta hero__rise">
         <div><strong>6</strong><span>Tema Premium</span></div>
         <div class="hero__meta-sep" aria-hidden="true"></div>
         <div><strong>&infin;</strong><span>Tamu Undangan</span></div>
