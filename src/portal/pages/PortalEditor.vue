@@ -4,7 +4,8 @@
 import { reactive, ref, watch, onMounted, onUnmounted, provide, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { session, initSession } from '../lib/session.js'
-import { getInvite, saveInvite } from '../lib/invites.js'
+import { getInvite, saveInvite, slugTaken } from '../lib/invites.js'
+import { slugify, validateSlug } from '../lib/slug.js'
 import { activateDomain } from '../lib/publishDomain.js'
 import { mergeInvite } from '../data/schema.js'
 import BuilderShell from '../components/builder/BuilderShell.vue'
@@ -18,6 +19,9 @@ const invite = reactive(mergeInvite({}))
 const theme = ref('marun-emas')
 const status = ref('draft')
 const slug = ref('')
+const slugInput = ref('')
+const slugErr = ref('')
+const slugSaving = ref(false)
 const loaded = ref(false)
 const saveState = ref('saved')     // saved|saving
 const publishing = ref(false)
@@ -31,7 +35,7 @@ onMounted(async () => {
     const inv = await getInvite(id)
     Object.assign(invite, mergeInvite(inv.data || {}))
     theme.value = inv.theme || 'marun-emas'
-    status.value = inv.status; slug.value = inv.slug
+    status.value = inv.status; slug.value = inv.slug; slugInput.value = inv.slug
     loaded.value = true
   } catch { router.replace('/portal/'); return }
   window.addEventListener('message', onReady)
@@ -55,8 +59,25 @@ watch([invite, theme], () => {
   pushPreview(); saveState.value = 'saving'; clearTimeout(t); t = setTimeout(doSave, 900)
 }, { deep: true })
 
+// Simpan alamat (slug/domain) — diatur di editor, bukan saat buat.
+async function saveSlug() {
+  slugErr.value = ''
+  const s = slugify(slugInput.value || '')
+  slugInput.value = s
+  if (s === slug.value) return true
+  const v = validateSlug(s)
+  if (!v.ok) { slugErr.value = v.error; return false }
+  slugSaving.value = true
+  try {
+    if (await slugTaken(s, id)) { slugErr.value = 'Alamat sudah dipakai, pilih yang lain.'; return false }
+    await saveInvite(id, { slug: s }); slug.value = s; return true
+  } catch { slugErr.value = 'Gagal menyimpan alamat.'; return false }
+  finally { slugSaving.value = false }
+}
+
 async function publish() {
   if (publishing.value) return
+  if (!(await saveSlug())) return   // alamat belum valid → jangan terbit
   publishing.value = true; pubMsg.value = 'Menyimpan…'
   await doSave()
   try {
@@ -84,10 +105,20 @@ const liveUrl = computed(() => `https://${slug.value}.lavelle.my.id`)
 
       <div class="bshell__scroll">
         <div class="pe__intro">
-          <p class="pe__slug">{{ slug }}.lavelle.my.id
+          <p class="pe__names">Undangan <b>{{ invite.hero.bride || '—' }} &amp; {{ invite.hero.groom || '—' }}</b>
             <span class="pe__badge" :class="status">{{ status === 'published' ? 'Terbit' : 'Draft' }}</span>
           </p>
-          <p class="pe__names">Undangan <b>{{ invite.hero.bride || '—' }} &amp; {{ invite.hero.groom || '—' }}</b></p>
+          <label class="pe__slug-label">Alamat undangan (domain)</label>
+          <div v-if="status !== 'published'" class="pe__slug-row">
+            <div class="pe__slug-box">
+              <input class="pe__slug-input" v-model="slugInput" @blur="saveSlug" @keyup.enter="saveSlug" placeholder="mis. dina-agus">
+              <span class="pe__slug-suffix">.lavelle.my.id</span>
+            </div>
+            <span v-if="slugSaving" class="pe__slug-msg">menyimpan…</span>
+          </div>
+          <p v-else class="pe__slug"><a :href="liveUrl" target="_blank" rel="noopener">{{ slug }}.lavelle.my.id ↗</a></p>
+          <p v-if="slugErr" class="pe__slug-err">{{ slugErr }}</p>
+          <p v-else-if="status !== 'published'" class="pe__slug-hint">Boleh diubah kapan saja sebelum diterbitkan — ini jadi link undangannya.</p>
         </div>
         <BuilderForm :invite="invite" :theme="theme" @update:theme="theme = $event" />
       </div>
@@ -123,11 +154,22 @@ const liveUrl = computed(() => `https://${slug.value}.lavelle.my.id`)
 .pe__save.saving { color: #b7893a; }
 .pe__save.error { color: #b0483f; }
 .pe__intro { padding: 1.3rem 1.5rem .3rem; }
-.pe__slug { font-size: .78rem; color: #a89a80; display: flex; align-items: center; gap: .5rem; }
+.pe__names { font-family: 'Fraunces', serif; font-size: 1.35rem; color: #2a231b; display: flex; align-items: center; gap: .6rem; }
+.pe__names b { font-style: italic; font-weight: 600; }
 .pe__badge { font-size: .6rem; letter-spacing: .06em; text-transform: uppercase; padding: .1rem .5rem; border-radius: 40px; background: #e7dcc3; color: #8a7c5f; }
 .pe__badge.published { background: #d8ecdd; color: #2f7d46; }
-.pe__names { margin-top: .35rem; font-family: 'Fraunces', serif; font-size: 1.35rem; color: #2a231b; }
-.pe__names b { font-style: italic; font-weight: 600; }
+.pe__slug-label { display: block; margin-top: .9rem; font-size: .64rem; text-transform: uppercase; letter-spacing: .1em; color: #a08e6f; }
+.pe__slug-row { display: flex; align-items: center; gap: .6rem; margin-top: .35rem; }
+.pe__slug-box { flex: 1; display: flex; align-items: center; border: 1px solid #e0d5be; border-radius: 9px; background: #fff; overflow: hidden; }
+.pe__slug-input { flex: 1; min-width: 0; border: none; background: transparent; padding: .5rem .7rem; font-family: 'Jost', sans-serif; font-size: .88rem; color: #2a231b; }
+.pe__slug-input:focus { outline: none; }
+.pe__slug-suffix { padding: 0 .65rem; color: #a89a80; font-size: .8rem; white-space: nowrap; }
+.pe__slug-msg { font-size: .74rem; color: #b7893a; white-space: nowrap; }
+.pe__slug-err { margin-top: .35rem; font-size: .76rem; color: #b0483f; }
+.pe__slug-hint { margin-top: .35rem; font-size: .74rem; color: #a89a80; }
+.pe__slug { margin-top: .35rem; font-size: .84rem; }
+.pe__slug a { color: #2f7d46; text-decoration: none; font-weight: 500; }
+.pe__slug a:hover { text-decoration: underline; }
 .pe__foot { padding: 1rem 1.5rem 1.3rem; border-top: 1px solid #ece3d2; background: #fcf9f2; display: flex; align-items: center; gap: 1rem; }
 .pe__pub { flex: 1; background: #2f7d46; color: #fff; border: none; border-radius: 11px; padding: .8rem 1rem; font-family: 'Jost', sans-serif; font-size: .92rem; cursor: pointer; transition: background-color .2s; }
 .pe__pub:hover:not(:disabled) { background: #276b3b; }

@@ -39,17 +39,18 @@ async function refresh() {
   loading.value = false
 }
 function openNew() { showNew.value = true }
-function onSlugInput() { newSlug.value = slugify(newSlug.value); newErr.value = '' }
+// Alamat (slug) TIDAK diminta di awal — dibuat otomatis sementara, diatur nanti di editor
+// sebelum terbit. Jadi karyawan bisa langsung edit foto/kata dulu.
+function genSlug() { return `undangan-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}` }
 async function create() {
   if (creating.value) return
-  const v = validateSlug(newSlug.value)
-  if (!v.ok) { newErr.value = v.error; return }
-  creating.value = true
+  creating.value = true; newErr.value = ''
   try {
-    if (await slugTaken(newSlug.value)) { newErr.value = 'Slug sudah dipakai, pilih yang lain.'; creating.value = false; return }
+    let s = genSlug()
+    if (await slugTaken(s)) s = genSlug() + Math.random().toString(36).slice(2, 4)
     const init = defaultInvite(); init.template = newTemplate.value
     if (newTemplate.value === 'adat') init.adat = { suku: newSuku.value }
-    const inv = await createInvite(newSlug.value, profile.value.id, init, profile.value && profile.value.themePref)
+    const inv = await createInvite(s, profile.value.id, init, profile.value && profile.value.themePref)
     router.push(`/portal/edit/${inv.id}`)
   } catch { newErr.value = 'Gagal membuat undangan. Coba lagi.'; creating.value = false }
 }
@@ -127,14 +128,12 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
             </div>
           </transition>
 
-          <label class="db__form-label db__form-label--mt">Alamat undangan (slug)</label>
-          <div class="db__form-row">
-            <div class="db__slug"><input v-model="newSlug" @input="onSlugInput" placeholder="dina-agus" @keyup.enter="create"><span class="db__slug-suffix">.lavelle.my.id</span></div>
-            <button class="db__create" type="button" :disabled="creating" @click="create">{{ creating ? 'Membuat…' : 'Buat' }}</button>
+          <div class="db__form-row db__form-row--go">
+            <button class="db__create" type="button" :disabled="creating" @click="create">{{ creating ? 'Membuat…' : 'Buat & Mulai Edit →' }}</button>
             <button class="db__cancel" type="button" @click="showNew = false">Batal</button>
           </div>
           <p v-if="newErr" class="db__form-err">{{ newErr }}</p>
-          <p v-else class="db__form-hint">Contoh: <b>dina-agus</b> → hidup di <b>dina-agus.lavelle.my.id</b></p>
+          <p v-else class="db__form-hint">Pilih template, lalu edit foto &amp; kata-katanya dulu. Alamat undangan (domain) diatur nanti di editor sebelum diterbitkan.</p>
         </div>
       </transition>
 
@@ -209,7 +208,9 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 .db__slug input:focus { outline: none; }
 .db__slug input::placeholder { color: var(--pa-mut); opacity: .7; }
 .db__slug-suffix { padding: 0 .7rem; color: var(--pa-mut); font-size: .82rem; white-space: nowrap; }
-.db__create { background: var(--pa-acc); color: var(--pa-ink); border: none; border-radius: 10px; padding: 0 1.3rem; font-family: inherit; font-weight: 600; font-size: .88rem; cursor: pointer; }
+.db__form-row--go { margin-top: 1.1rem; align-items: center; }
+.db__create { background: var(--pa-acc); color: var(--pa-ink); border: none; border-radius: 11px; padding: .72rem 1.6rem; font-family: inherit; font-weight: 600; font-size: .92rem; cursor: pointer; box-shadow: 0 12px 26px -12px var(--pa-glow); transition: filter .2s, transform .15s; }
+.db__create:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
 .db__create:disabled { opacity: .5; }
 .db__cancel { background: rgba(255, 255, 255, .03); border: 1px solid var(--pa-bd); border-radius: 10px; padding: .5rem 1rem; color: var(--pa-mut); font-family: inherit; font-size: .85rem; cursor: pointer; }
 .db__form-err { margin-top: .5rem; color: #e0776b; font-size: .8rem; }
