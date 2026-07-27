@@ -143,12 +143,14 @@
 
 /* ---------- Tema swatches ---------- */
 .f-themes { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
-.f-theme { display: flex; align-items: center; gap: .3rem; padding: .65rem .75rem; cursor: pointer; border: 1px solid var(--pb-line-2); border-radius: 12px; background: var(--pb-white); font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.f-theme { display: flex; align-items: center; gap: .5rem; padding: .6rem .7rem; cursor: pointer; text-align: left; border: 1px solid var(--pb-line-2); border-radius: 12px; background: var(--pb-white); font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
 .f-theme:hover { transform: translateY(-2px); border-color: var(--pb-gold-lite); }
 .f-theme.is-on { border-color: var(--pb-gold); box-shadow: 0 0 0 2px rgba(183, 137, 58, .28); }
-.f-sw { width: 17px; height: 17px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); }
-.f-sw + .f-sw { margin-left: -9px; }
-.f-theme-label { margin-left: .5rem; font-size: .84rem; color: var(--pb-ink-2); }
+.f-sw { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); flex: none; }
+.f-sw + .f-sw { margin-left: -8px; }
+.f-theme-text { display: flex; flex-direction: column; line-height: 1.2; margin-left: .3rem; min-width: 0; }
+.f-theme-name { font-size: .82rem; color: var(--pb-ink); font-weight: 500; }
+.f-theme-desc { font-size: .66rem; color: var(--pb-muted); margin-top: .12rem; }
 
 /* ---------- Galeri form ---------- */
 .gal-item { display: flex; flex-direction: column; gap: .3rem; }

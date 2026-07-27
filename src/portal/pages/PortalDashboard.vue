@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { session, profile, initSession } from '../lib/session.js'
 import { signOut } from '../lib/auth.js'
@@ -16,6 +16,9 @@ const newSlug = ref('')
 const newErr = ref('')
 const creating = ref(false)
 
+const published = computed(() => invites.value.filter((i) => i.status === 'published').length)
+const drafts = computed(() => invites.value.filter((i) => i.status !== 'published').length)
+
 onMounted(async () => {
   await initSession()
   if (!session.value) { router.replace('/portal/login'); return }
@@ -24,9 +27,10 @@ onMounted(async () => {
 
 async function refresh() {
   loading.value = true
-  try { invites.value = await listInvites() } catch { /* diabaikan */ }
+  try { invites.value = await listInvites(profile.value && profile.value.id, profile.value && profile.value.role === 'admin') } catch { /* diabaikan */ }
   loading.value = false
 }
+function openNew() { showNew.value = true }
 function onSlugInput() { newSlug.value = slugify(newSlug.value); newErr.value = '' }
 async function create() {
   if (creating.value) return
@@ -51,10 +55,26 @@ function coupleName(inv) {
 }
 function heroPhoto(inv) { return inv.data && inv.data.hero && inv.data.hero.photo }
 function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
+
+function dustStyle(n) {
+  const x = (n * 41) % 100
+  const size = 1.5 + (n % 3)
+  const delay = (n % 8) * 2.2
+  const dur = 22 + (n % 6) * 3
+  const drift = ((n % 5) - 2) * 12
+  return { left: x + '%', width: size + 'px', height: size + 'px', animationDelay: delay + 's', animationDuration: dur + 's', '--drift': drift + 'px' }
+}
 </script>
 
 <template>
   <div class="db">
+    <div class="db__bg" aria-hidden="true">
+      <span class="db__aurora db__aurora--1"></span>
+      <span class="db__aurora db__aurora--2"></span>
+      <span class="db__aurora db__aurora--3"></span>
+      <span v-for="n in 14" :key="n" class="db__dust" :style="dustStyle(n)"></span>
+    </div>
+
     <header class="db__top">
       <div class="db__brand"><LavelleLogo wordmark class="db__logo" /><span class="db__eyebrow">Studio Undangan</span></div>
       <div class="db__user">
@@ -67,32 +87,47 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
     </header>
 
     <main class="db__main">
-      <div class="db__head">
+      <div class="db__hero">
         <div>
-          <h1 class="db__title">Undangan</h1>
-          <p class="db__count">{{ invites.length }} undangan{{ profile?.role === 'admin' ? ' (semua karyawan)' : '' }}</p>
+          <p class="db__kicker">Beranda</p>
+          <h1 class="db__title">Undangan{{ profile?.role === 'admin' ? ' Studio' : ' Saya' }}</h1>
+          <div class="db__stats">
+            <span class="db__stat"><b>{{ invites.length }}</b> total</span>
+            <span class="db__dot"></span>
+            <span class="db__stat db__stat--pub"><b>{{ published }}</b> terbit</span>
+            <span class="db__dot"></span>
+            <span class="db__stat"><b>{{ drafts }}</b> draft</span>
+          </div>
         </div>
-        <button class="db__new" type="button" @click="showNew = !showNew">＋ Buat Undangan Baru</button>
+        <button class="db__new" type="button" @click="openNew">＋ Buat Undangan Baru</button>
       </div>
 
-      <div v-if="showNew" class="db__form">
-        <label class="db__form-label">Alamat undangan (slug)</label>
-        <div class="db__form-row">
-          <div class="db__slug"><input v-model="newSlug" @input="onSlugInput" placeholder="dina-agus" @keyup.enter="create"><span class="db__slug-suffix">.lavelle.my.id</span></div>
-          <button class="db__create" type="button" :disabled="creating" @click="create">{{ creating ? 'Membuat…' : 'Buat' }}</button>
+      <transition name="db-form">
+        <div v-if="showNew" class="db__form">
+          <label class="db__form-label">Alamat undangan (slug)</label>
+          <div class="db__form-row">
+            <div class="db__slug"><input v-model="newSlug" @input="onSlugInput" placeholder="dina-agus" @keyup.enter="create"><span class="db__slug-suffix">.lavelle.my.id</span></div>
+            <button class="db__create" type="button" :disabled="creating" @click="create">{{ creating ? 'Membuat…' : 'Buat' }}</button>
+            <button class="db__cancel" type="button" @click="showNew = false">Batal</button>
+          </div>
+          <p v-if="newErr" class="db__form-err">{{ newErr }}</p>
+          <p v-else class="db__form-hint">Contoh: <b>dina-agus</b> → hidup di <b>dina-agus.lavelle.my.id</b></p>
         </div>
-        <p v-if="newErr" class="db__form-err">{{ newErr }}</p>
-        <p v-else class="db__form-hint">Contoh: <b>dina-agus</b> → undangan akan hidup di <b>dina-agus.lavelle.my.id</b></p>
-      </div>
+      </transition>
 
       <p v-if="loading" class="db__loading">Memuat…</p>
-      <p v-else-if="!invites.length" class="db__empty">Belum ada undangan. Klik <b>Buat Undangan Baru</b> untuk mulai. 🤍</p>
 
       <div v-else class="db__grid">
+        <button class="db__addcard" type="button" @click="openNew">
+          <span class="db__addicon">＋</span>
+          <span class="db__addtext">Buat Undangan Baru</span>
+        </button>
+
         <article v-for="inv in invites" :key="inv.id" class="db__card">
           <button class="db__thumb" type="button" @click="router.push(`/portal/edit/${inv.id}`)">
             <img v-if="heroPhoto(inv)" :src="heroPhoto(inv)" alt="">
-            <span v-else class="db__thumb-ph">Lavelle</span>
+            <span v-else class="db__thumb-ph"><LavelleLogo /></span>
+            <span class="db__thumb-scrim"></span>
             <span class="db__badge" :class="inv.status">{{ inv.status === 'published' ? 'Terbit' : 'Draft' }}</span>
           </button>
           <div class="db__body">
@@ -111,8 +146,21 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 </template>
 
 <style scoped>
-.db { min-height: 100vh; min-height: 100svh; background: linear-gradient(180deg, #f7f3ea, #f2ebdc); font-family: 'Jost', system-ui, sans-serif; color: #2a231b; }
-.db__top { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.8rem; background: #fffdf9; border-bottom: 1px solid #ece3d2; position: sticky; top: 0; z-index: 5; }
+.db { position: relative; min-height: 100vh; min-height: 100svh; font-family: 'Jost', system-ui, sans-serif; color: #2a231b; background: linear-gradient(180deg, #f8f4ec, #f1e9d9); overflow-x: hidden; }
+
+/* ---------- Background live (halus, profesional) ---------- */
+.db__bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.db__aurora { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .22; will-change: transform; }
+.db__aurora--1 { width: 40vw; height: 40vw; left: -8%; top: -10%; background: radial-gradient(circle, rgba(201, 162, 75, .6), transparent 70%); animation: dbAur1 24s ease-in-out infinite; }
+.db__aurora--2 { width: 34vw; height: 34vw; right: -6%; top: 20%; background: radial-gradient(circle, rgba(183, 137, 58, .5), transparent 70%); animation: dbAur2 30s ease-in-out infinite; }
+.db__aurora--3 { width: 30vw; height: 30vw; left: 40%; bottom: -14%; background: radial-gradient(circle, rgba(226, 195, 124, .45), transparent 70%); animation: dbAur1 34s ease-in-out infinite reverse; }
+@keyframes dbAur1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(5%, 4%) scale(1.12); } }
+@keyframes dbAur2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-5%, -5%) scale(1.1); } }
+.db__dust { position: absolute; bottom: -8px; border-radius: 50%; background: rgba(201, 162, 75, .5); box-shadow: 0 0 5px rgba(201, 162, 75, .4); opacity: 0; animation-name: dbDust; animation-timing-function: linear; animation-iteration-count: infinite; }
+@keyframes dbDust { 0% { transform: translateY(0) translateX(0); opacity: 0; } 15% { opacity: .55; } 85% { opacity: .3; } 100% { transform: translateY(-102vh) translateX(var(--drift, 0)); opacity: 0; } }
+
+/* ---------- Header ---------- */
+.db__top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.8rem; background: rgba(255, 253, 249, .82); backdrop-filter: blur(10px); border-bottom: 1px solid #ece3d2; }
 .db__brand { display: flex; align-items: center; gap: .7rem; }
 .db__logo { color: #2a231b; font-size: 1.3rem; }
 .db__brand :deep(.llg__mark) { color: #b7893a; }
@@ -127,41 +175,67 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 .db__logout { background: none; border: 1px solid #e0d5be; border-radius: 8px; padding: .35rem .8rem; font-size: .78rem; color: #8b7e6a; cursor: pointer; font-family: inherit; }
 .db__logout:hover { border-color: #b7893a; color: #2a231b; }
 
-.db__main { max-width: 1080px; margin: 0 auto; padding: 2.2rem 1.8rem 4rem; }
-.db__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; }
-.db__title { font-family: 'Fraunces', serif; font-size: 2.1rem; line-height: 1; }
-.db__count { margin-top: .4rem; color: #90836d; font-size: .88rem; }
-.db__new { background: #2a231b; color: #f4ead6; border: none; border-radius: 11px; padding: .7rem 1.15rem; font-family: inherit; font-size: .88rem; cursor: pointer; transition: background-color .2s, transform .15s; white-space: nowrap; }
-.db__new:hover { background: #3d3226; transform: translateY(-1px); }
+/* ---------- Main ---------- */
+.db__main { position: relative; z-index: 1; max-width: 1120px; margin: 0 auto; padding: 2.6rem 1.8rem 4rem; }
+.db__hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.2rem; margin-bottom: 1.8rem; }
+.db__kicker { font-size: .66rem; text-transform: uppercase; letter-spacing: .24em; color: #b7893a; }
+.db__title { font-family: 'Fraunces', serif; font-size: clamp(2.1rem, 4vw, 2.8rem); line-height: 1; margin-top: .3rem; }
+.db__stats { display: flex; align-items: center; gap: .7rem; margin-top: .8rem; color: #90836d; font-size: .86rem; }
+.db__stat b { color: #2a231b; font-family: 'Fraunces', serif; font-weight: 600; }
+.db__stat--pub b { color: #2f7d46; }
+.db__dot { width: 3px; height: 3px; border-radius: 50%; background: #cbb98f; }
+.db__new { background: linear-gradient(180deg, #2f271d, #211b13); color: #f4ead6; border: none; border-radius: 12px; padding: .8rem 1.3rem; font-family: inherit; font-size: .9rem; cursor: pointer; box-shadow: 0 14px 30px -14px rgba(40, 30, 12, .55); transition: transform .15s, box-shadow .2s; white-space: nowrap; }
+.db__new:hover { transform: translateY(-1px); box-shadow: 0 18px 36px -14px rgba(40, 30, 12, .65); }
 
-.db__form { background: #fffdf9; border: 1px solid #ece3d2; border-radius: 14px; padding: 1.2rem 1.3rem; margin-bottom: 1.8rem; }
+.db__form { background: rgba(255, 253, 249, .9); border: 1px solid #ece3d2; border-radius: 14px; padding: 1.2rem 1.3rem; margin-bottom: 1.8rem; }
 .db__form-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; color: #90836d; }
-.db__form-row { display: flex; gap: .6rem; margin-top: .5rem; }
-.db__slug { flex: 1; display: flex; align-items: center; border: 1px solid #e0d5be; border-radius: 10px; background: #fff; overflow: hidden; }
+.db__form-row { display: flex; gap: .6rem; margin-top: .5rem; flex-wrap: wrap; }
+.db__slug { flex: 1; min-width: 200px; display: flex; align-items: center; border: 1px solid #e0d5be; border-radius: 10px; background: #fff; overflow: hidden; }
 .db__slug input { flex: 1; min-width: 0; border: none; padding: .65rem .8rem; font-family: inherit; font-size: .92rem; color: #2a231b; background: transparent; }
 .db__slug input:focus { outline: none; }
 .db__slug-suffix { padding: 0 .7rem; color: #a89a80; font-size: .82rem; white-space: nowrap; }
 .db__create { background: #b7893a; color: #fff; border: none; border-radius: 10px; padding: 0 1.3rem; font-family: inherit; font-size: .88rem; cursor: pointer; }
 .db__create:disabled { opacity: .6; }
+.db__cancel { background: none; border: 1px solid #e0d5be; border-radius: 10px; padding: .5rem 1rem; color: #8b7e6a; font-family: inherit; font-size: .85rem; cursor: pointer; }
 .db__form-err { margin-top: .5rem; color: #b0483f; font-size: .8rem; }
 .db__form-hint { margin-top: .5rem; color: #a89a80; font-size: .8rem; }
+.db-form-enter-active, .db-form-leave-active { transition: opacity .3s, transform .3s; }
+.db-form-enter-from, .db-form-leave-to { opacity: 0; transform: translateY(-8px); }
 
-.db__loading, .db__empty { text-align: center; color: #90836d; padding: 3rem 1rem; font-style: italic; }
-.db__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.2rem; }
-.db__card { background: #fffdf9; border: 1px solid #ece3d2; border-radius: 15px; overflow: hidden; transition: transform .2s, box-shadow .2s; }
-.db__card:hover { transform: translateY(-3px); box-shadow: 0 24px 44px -26px rgba(80, 60, 20, .35); }
+.db__loading { text-align: center; color: #90836d; padding: 3rem 1rem; font-style: italic; }
+.db__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 1.3rem; }
+
+.db__addcard { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem; min-height: 260px; border: 1.5px dashed #d8cba9; border-radius: 16px; background: rgba(255, 253, 249, .5); cursor: pointer; font-family: inherit; color: #a08e6f; transition: border-color .2s, color .2s, background-color .2s, transform .2s; }
+.db__addcard:hover { border-color: #b7893a; color: #3d3428; background: rgba(255, 253, 249, .9); transform: translateY(-3px); }
+.db__addicon { font-size: 1.9rem; font-weight: 300; }
+.db__addtext { font-size: .88rem; }
+
+.db__card { background: #fffdf9; border: 1px solid #ece3d2; border-radius: 16px; overflow: hidden; transition: transform .2s, box-shadow .2s; }
+.db__card:hover { transform: translateY(-3px); box-shadow: 0 26px 48px -26px rgba(80, 60, 20, .38); }
 .db__thumb { position: relative; display: block; width: 100%; aspect-ratio: 4/5; border: none; padding: 0; cursor: pointer; background: #efe7d6; overflow: hidden; }
-.db__thumb img { width: 100%; height: 100%; object-fit: cover; }
-.db__thumb-ph { position: absolute; inset: 0; display: grid; place-items: center; font-family: 'Fraunces', serif; font-style: italic; color: #cbb98f; font-size: 1.4rem; }
-.db__badge { position: absolute; top: .6rem; left: .6rem; font-size: .64rem; letter-spacing: .06em; text-transform: uppercase; padding: .2rem .6rem; border-radius: 40px; background: rgba(0, 0, 0, .5); color: #fff; }
-.db__badge.published { background: #2f7d46; }
-.db__body { padding: .9rem 1rem 1.1rem; }
-.db__names { font-family: 'Fraunces', serif; font-size: 1.12rem; line-height: 1.2; }
-.db__slug-txt { margin-top: .2rem; font-size: .76rem; color: #a89a80; }
-.db__actions { display: flex; align-items: center; gap: .5rem; margin-top: .9rem; }
-.db__edit { background: #2a231b; color: #f4ead6; border: none; border-radius: 8px; padding: .4rem .9rem; font-family: inherit; font-size: .8rem; cursor: pointer; }
-.db__live { font-size: .8rem; color: #b7893a; text-decoration: none; }
+.db__thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.db__card:hover .db__thumb img { transform: scale(1.05); }
+.db__thumb-ph { position: absolute; inset: 0; display: grid; place-items: center; color: #cbb98f; font-size: 2rem; }
+.db__thumb-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(20, 14, 6, .28)); }
+.db__badge { position: absolute; top: .7rem; left: .7rem; font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; padding: .22rem .65rem; border-radius: 40px; background: rgba(20, 14, 6, .6); color: #fff; backdrop-filter: blur(4px); }
+.db__badge.published { background: rgba(47, 125, 70, .92); }
+.db__body { padding: 1rem 1.1rem 1.15rem; }
+.db__names { font-family: 'Fraunces', serif; font-size: 1.16rem; line-height: 1.2; }
+.db__slug-txt { margin-top: .25rem; font-size: .76rem; color: #a89a80; }
+.db__actions { display: flex; align-items: center; gap: .6rem; margin-top: 1rem; }
+.db__edit { background: #2a231b; color: #f4ead6; border: none; border-radius: 8px; padding: .42rem .95rem; font-family: inherit; font-size: .8rem; cursor: pointer; transition: background-color .2s; }
+.db__edit:hover { background: #3d3226; }
+.db__live { font-size: .8rem; color: #b7893a; text-decoration: none; font-weight: 500; }
 .db__live:hover { text-decoration: underline; }
 .db__del { margin-left: auto; background: none; border: none; color: #bb7b7b; font-size: .76rem; cursor: pointer; }
 .db__del:hover { color: #a03d3d; text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .db__hero { flex-direction: column; align-items: flex-start; }
+  .db__new { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .db__aurora, .db__dust { animation: none !important; }
+  .db__dust { display: none; }
+}
 </style>

@@ -1,10 +1,13 @@
 import { supabase } from './supabase.js'
 
-// Daftar undangan (RLS: staff → miliknya, admin → semua)
-export async function listInvites() {
-  const { data, error } = await supabase
-    .from('invites').select('id,slug,status,theme,data,updated_at')
+// Daftar undangan: staff → HANYA miliknya (filter owner), admin → semua.
+// (RLS mengizinkan baca published utk renderer publik, jadi filter owner wajib
+//  di query dashboard agar staff tak lihat undangan published milik orang lain.)
+export async function listInvites(ownerId, isAdmin) {
+  let q = supabase.from('invites').select('id,slug,status,theme,data,updated_at,owner_id')
     .order('updated_at', { ascending: false })
+  if (!isAdmin) q = q.eq('owner_id', ownerId)
+  const { data, error } = await q
   if (error) throw error
   return data || []
 }

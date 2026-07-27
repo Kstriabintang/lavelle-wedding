@@ -12,7 +12,10 @@ defineEmits(['update:theme'])
               :class="{ 'is-on': theme === id }" @click="$emit('update:theme', id)">
         <span class="f-sw" :style="{ background: THEMES[id].swatch[0] }"></span>
         <span class="f-sw" :style="{ background: THEMES[id].swatch[1] }"></span>
-        <span class="f-theme-label">{{ THEMES[id].label }}</span>
+        <span class="f-theme-text">
+          <span class="f-theme-name">{{ THEMES[id].label }}</span>
+          <span class="f-theme-desc">{{ THEMES[id].desc }}</span>
+        </span>
       </button>
     </div>
   </div>

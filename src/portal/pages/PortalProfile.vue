@@ -90,7 +90,10 @@ async function savePw() {
           <button v-for="id in THEME_IDS" :key="id" type="button" class="pf__theme" :class="{ 'is-on': form.theme_pref === id }" @click="form.theme_pref = id">
             <span class="pf__sw" :style="{ background: THEMES[id].swatch[0] }"></span>
             <span class="pf__sw" :style="{ background: THEMES[id].swatch[1] }"></span>
-            <span class="pf__theme-label">{{ THEMES[id].label }}</span>
+            <span class="pf__theme-text">
+              <span class="pf__theme-name">{{ THEMES[id].label }}</span>
+              <span class="pf__theme-desc">{{ THEMES[id].desc }}</span>
+            </span>
           </button>
         </div>
       </section>
@@ -145,12 +148,14 @@ async function savePw() {
 .pf__hint { font-size: .76rem; color: #a89a80; line-height: 1.5; margin-top: -.2rem; }
 
 .pf__themes { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: .8rem; }
-.pf__theme { display: flex; align-items: center; gap: .3rem; padding: .6rem .7rem; cursor: pointer; border: 1px solid #e4dac7; border-radius: 12px; background: #fff; font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.pf__theme { display: flex; align-items: center; gap: .5rem; padding: .6rem .7rem; cursor: pointer; text-align: left; border: 1px solid #e4dac7; border-radius: 12px; background: #fff; font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
 .pf__theme:hover { transform: translateY(-1px); }
 .pf__theme.is-on { border-color: #b7893a; box-shadow: 0 0 0 2px rgba(183, 137, 58, .28); }
-.pf__sw { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1); }
-.pf__sw + .pf__sw { margin-left: -9px; }
-.pf__theme-label { margin-left: .45rem; font-size: .82rem; color: #3d3428; }
+.pf__sw { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1); flex: none; }
+.pf__sw + .pf__sw { margin-left: -8px; }
+.pf__theme-text { display: flex; flex-direction: column; line-height: 1.2; margin-left: .35rem; min-width: 0; }
+.pf__theme-name { font-size: .82rem; color: #2a231b; font-weight: 500; }
+.pf__theme-desc { font-size: .66rem; color: #a08e6f; margin-top: .1rem; }
 
 .pf__saverow { display: flex; align-items: center; gap: 1rem; margin-top: 1.3rem; }
 .pf__save { background: #2a231b; color: #f4ead6; border: none; border-radius: 11px; padding: .75rem 1.3rem; font-family: inherit; font-size: .9rem; cursor: pointer; transition: background-color .2s, transform .15s; }
