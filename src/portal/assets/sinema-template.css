@@ -102,12 +102,12 @@ html.motion-on .invite-sinema .sn-hero__meta {
 
 .sn-story.sn-on { height: 100vh; padding: 0; overflow: hidden; position: relative; }
 .sn-story.sn-on .sn-story__head { position: absolute; top: 5vh; left: 0; right: 0; margin: 0; z-index: 3; }
-.sn-story.sn-on .sn-story__track { position: absolute; top: 19vh; bottom: 7vh; left: 0; right: 0; display: flex; flex-direction: row; align-items: stretch; gap: clamp(1.4rem, 4vw, 3rem); padding: 0 max(8vw, calc(50vw - 190px)); will-change: transform; }
+.sn-story.sn-on .sn-story__track { position: absolute; top: 17vh; bottom: 13vh; left: 0; right: 0; display: flex; flex-direction: row; align-items: stretch; gap: clamp(1.4rem, 4vw, 3rem); padding: 0 max(8vw, calc(50vw - 190px)); will-change: transform; }
 .sn-story.sn-on .sn-story__panel { flex: 0 0 min(76vw, 380px); width: auto; height: 100%; display: flex; flex-direction: column; }
 .sn-story.sn-on .sn-story__ph { flex: 1 1 auto; min-height: 0; aspect-ratio: auto; height: auto; margin: 0 0 .9rem; }
 .sn-story.sn-on .sn-story__ph img { height: 100%; }
 .sn-story.sn-on .sn-story__year { margin-top: 0; }
-.sn-story.sn-on .sn-story__hint { display: block; position: absolute; bottom: 2.5vh; left: 0; right: 0; text-align: center; z-index: 2; font-size: .62rem; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-soft); }
+.sn-story.sn-on .sn-story__hint { display: block; position: absolute; bottom: 8.5vh; left: 0; right: 0; text-align: center; z-index: 2; font-size: .62rem; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-soft); }
 
 /* ============================================================ CLOSING ============================================================ */
 .sn-closing { position: relative; min-height: 92vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 6rem 6vw; }

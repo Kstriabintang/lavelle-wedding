@@ -163,6 +163,6 @@ onUnmounted(() => { clearInterval(timer); stopSinema() })
       </div>
     </section>
 
-    <QuickNav />
+    <QuickNav :auto-hide="true" />
   </div>
 </template>
