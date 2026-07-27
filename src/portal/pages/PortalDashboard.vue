@@ -6,13 +6,16 @@ import { signOut } from '../lib/auth.js'
 import { listInvites, createInvite, deleteInvite, slugTaken } from '../lib/invites.js'
 import { slugify, validateSlug } from '../lib/slug.js'
 import { defaultInvite } from '../data/schema.js'
+import { TEMPLATES, TEMPLATE_IDS, DEFAULT_TEMPLATE } from '../data/templates.js'
 import LavelleLogo from '../components/LavelleLogo.vue'
+import PortalBackground from '../components/PortalBackground.vue'
 
 const router = useRouter()
 const invites = ref([])
 const loading = ref(true)
 const showNew = ref(false)
 const newSlug = ref('')
+const newTemplate = ref(DEFAULT_TEMPLATE)
 const newErr = ref('')
 const creating = ref(false)
 
@@ -39,7 +42,8 @@ async function create() {
   creating.value = true
   try {
     if (await slugTaken(newSlug.value)) { newErr.value = 'Slug sudah dipakai, pilih yang lain.'; creating.value = false; return }
-    const inv = await createInvite(newSlug.value, profile.value.id, defaultInvite(), profile.value && profile.value.themePref)
+    const init = defaultInvite(); init.template = newTemplate.value
+    const inv = await createInvite(newSlug.value, profile.value.id, init, profile.value && profile.value.themePref)
     router.push(`/portal/edit/${inv.id}`)
   } catch { newErr.value = 'Gagal membuat undangan. Coba lagi.'; creating.value = false }
 }
@@ -55,25 +59,11 @@ function coupleName(inv) {
 }
 function heroPhoto(inv) { return inv.data && inv.data.hero && inv.data.hero.photo }
 function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
-
-function dustStyle(n) {
-  const x = (n * 41) % 100
-  const size = 1.5 + (n % 3)
-  const delay = (n % 8) * 2.2
-  const dur = 22 + (n % 6) * 3
-  const drift = ((n % 5) - 2) * 12
-  return { left: x + '%', width: size + 'px', height: size + 'px', animationDelay: delay + 's', animationDuration: dur + 's', '--drift': drift + 'px' }
-}
 </script>
 
 <template>
   <div class="db">
-    <div class="db__bg" aria-hidden="true">
-      <span class="db__aurora db__aurora--1"></span>
-      <span class="db__aurora db__aurora--2"></span>
-      <span class="db__aurora db__aurora--3"></span>
-      <span v-for="n in 14" :key="n" class="db__dust" :style="dustStyle(n)"></span>
-    </div>
+    <PortalBackground />
 
     <header class="db__top">
       <div class="db__brand"><LavelleLogo wordmark class="db__logo" /><span class="db__eyebrow">Studio Undangan</span></div>
@@ -104,7 +94,14 @@ function dustStyle(n) {
 
       <transition name="db-form">
         <div v-if="showNew" class="db__form">
-          <label class="db__form-label">Alamat undangan (slug)</label>
+          <label class="db__form-label">Pilih Template</label>
+          <div class="db__templates">
+            <button v-for="tid in TEMPLATE_IDS" :key="tid" type="button" class="db__template" :class="{ 'is-on': newTemplate === tid }" @click="newTemplate = tid">
+              <span class="db__template-head"><span class="db__template-name">{{ TEMPLATES[tid].name }}</span><span class="db__template-tag">{{ TEMPLATES[tid].tag }}</span></span>
+              <span class="db__template-desc">{{ TEMPLATES[tid].desc }}</span>
+            </button>
+          </div>
+          <label class="db__form-label db__form-label--mt">Alamat undangan (slug)</label>
           <div class="db__form-row">
             <div class="db__slug"><input v-model="newSlug" @input="onSlugInput" placeholder="dina-agus" @keyup.enter="create"><span class="db__slug-suffix">.lavelle.my.id</span></div>
             <button class="db__create" type="button" :disabled="creating" @click="create">{{ creating ? 'Membuat…' : 'Buat' }}</button>
@@ -146,18 +143,7 @@ function dustStyle(n) {
 </template>
 
 <style scoped>
-.db { position: relative; min-height: 100vh; min-height: 100svh; font-family: 'Jost', system-ui, sans-serif; color: #2a231b; background: linear-gradient(180deg, #f8f4ec, #f1e9d9); overflow-x: hidden; }
-
-/* ---------- Background live (halus, profesional) ---------- */
-.db__bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.db__aurora { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .22; will-change: transform; }
-.db__aurora--1 { width: 40vw; height: 40vw; left: -8%; top: -10%; background: radial-gradient(circle, rgba(201, 162, 75, .6), transparent 70%); animation: dbAur1 24s ease-in-out infinite; }
-.db__aurora--2 { width: 34vw; height: 34vw; right: -6%; top: 20%; background: radial-gradient(circle, rgba(183, 137, 58, .5), transparent 70%); animation: dbAur2 30s ease-in-out infinite; }
-.db__aurora--3 { width: 30vw; height: 30vw; left: 40%; bottom: -14%; background: radial-gradient(circle, rgba(226, 195, 124, .45), transparent 70%); animation: dbAur1 34s ease-in-out infinite reverse; }
-@keyframes dbAur1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(5%, 4%) scale(1.12); } }
-@keyframes dbAur2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-5%, -5%) scale(1.1); } }
-.db__dust { position: absolute; bottom: -8px; border-radius: 50%; background: rgba(201, 162, 75, .5); box-shadow: 0 0 5px rgba(201, 162, 75, .4); opacity: 0; animation-name: dbDust; animation-timing-function: linear; animation-iteration-count: infinite; }
-@keyframes dbDust { 0% { transform: translateY(0) translateX(0); opacity: 0; } 15% { opacity: .55; } 85% { opacity: .3; } 100% { transform: translateY(-102vh) translateX(var(--drift, 0)); opacity: 0; } }
+.db { position: relative; min-height: 100vh; min-height: 100svh; font-family: 'Jost', system-ui, sans-serif; color: #2a231b; background: #ece1cb; overflow-x: hidden; }
 
 /* ---------- Header ---------- */
 .db__top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.8rem; background: rgba(255, 253, 249, .82); backdrop-filter: blur(10px); border-bottom: 1px solid #ece3d2; }
@@ -199,6 +185,16 @@ function dustStyle(n) {
 .db__cancel { background: none; border: 1px solid #e0d5be; border-radius: 10px; padding: .5rem 1rem; color: #8b7e6a; font-family: inherit; font-size: .85rem; cursor: pointer; }
 .db__form-err { margin-top: .5rem; color: #b0483f; font-size: .8rem; }
 .db__form-hint { margin-top: .5rem; color: #a89a80; font-size: .8rem; }
+.db__templates { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin-top: .5rem; }
+.db__template { text-align: left; padding: .8rem .9rem; border: 1.5px solid #e0d5be; border-radius: 12px; background: #fff; cursor: pointer; font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.db__template:hover { transform: translateY(-2px); }
+.db__template.is-on { border-color: #b7893a; box-shadow: 0 0 0 2px rgba(183, 137, 58, .25); }
+.db__template-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.db__template-name { font-family: 'Fraunces', serif; font-size: 1.05rem; color: #2a231b; }
+.db__template-tag { font-size: .58rem; text-transform: uppercase; letter-spacing: .08em; color: #b7893a; border: 1px solid #e6d7b3; border-radius: 40px; padding: .12rem .5rem; white-space: nowrap; }
+.db__template-desc { display: block; margin-top: .4rem; font-size: .73rem; color: #90836d; line-height: 1.45; }
+.db__form-label--mt { display: block; margin-top: 1.1rem; }
+@media (max-width: 560px) { .db__templates { grid-template-columns: 1fr; } }
 .db-form-enter-active, .db-form-leave-active { transition: opacity .3s, transform .3s; }
 .db-form-enter-from, .db-form-leave-to { opacity: 0; transform: translateY(-8px); }
 

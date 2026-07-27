@@ -48,7 +48,7 @@ let t = null
 async function doSave() {
   saveState.value = 'saving'
   try { await saveInvite(id, { data: JSON.parse(JSON.stringify(invite)), theme: theme.value }); saveState.value = 'saved' }
-  catch { saveState.value = 'saving' }
+  catch { saveState.value = 'error' }
 }
 watch([invite, theme], () => {
   if (!loaded.value) return
@@ -79,7 +79,7 @@ const liveUrl = computed(() => `https://${slug.value}.lavelle.my.id`)
     <template #form>
       <header class="pe__top">
         <button class="pe__back" type="button" @click="router.push('/portal/')">← Semua undangan</button>
-        <span class="pe__save" :class="saveState">{{ saveState === 'saving' ? 'Menyimpan…' : 'Tersimpan ✓' }}</span>
+        <span class="pe__save" :class="saveState">{{ saveState === 'saving' ? 'Menyimpan…' : saveState === 'error' ? 'Gagal simpan ✕' : 'Tersimpan ✓' }}</span>
       </header>
 
       <div class="bshell__scroll">
@@ -121,6 +121,7 @@ const liveUrl = computed(() => `https://${slug.value}.lavelle.my.id`)
 .pe__back:hover { color: #2a231b; }
 .pe__save { font-size: .74rem; color: #9a8b6f; font-family: 'Jost', sans-serif; }
 .pe__save.saving { color: #b7893a; }
+.pe__save.error { color: #b0483f; }
 .pe__intro { padding: 1.3rem 1.5rem .3rem; }
 .pe__slug { font-size: .78rem; color: #a89a80; display: flex; align-items: center; gap: .5rem; }
 .pe__badge { font-size: .6rem; letter-spacing: .06em; text-transform: uppercase; padding: .1rem .5rem; border-radius: 40px; background: #e7dcc3; color: #8a7c5f; }

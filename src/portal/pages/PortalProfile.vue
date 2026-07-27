@@ -5,6 +5,7 @@ import { session, profile, initSession, refreshProfile } from '../lib/session.js
 import { updateProfileMeta, changePassword, uploadAvatar } from '../lib/profile.js'
 import { THEMES, THEME_IDS } from '../data/themes.js'
 import LavelleLogo from '../components/LavelleLogo.vue'
+import PortalBackground from '../components/PortalBackground.vue'
 
 const router = useRouter()
 const form = reactive({ name: '', contact: '', avatar: '', theme_pref: 'marun-emas' })
@@ -50,6 +51,7 @@ async function savePw() {
 
 <template>
   <div class="pf">
+    <PortalBackground />
     <header class="pf__top">
       <div class="pf__brand"><LavelleLogo wordmark /></div>
       <button class="pf__back" type="button" @click="router.push('/portal/')">← Undangan</button>
@@ -118,15 +120,16 @@ async function savePw() {
 </template>
 
 <style scoped>
-.pf { min-height: 100vh; min-height: 100svh; background: linear-gradient(180deg, #f7f3ea, #f1e9da); font-family: 'Jost', system-ui, sans-serif; color: #2a231b; }
-.pf__top { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.8rem; background: #fffdf9; border-bottom: 1px solid #ece3d2; }
+.pf { position: relative; min-height: 100vh; min-height: 100svh; background: #ece1cb; font-family: 'Jost', system-ui, sans-serif; color: #2a231b; overflow-x: hidden; }
+.pf__top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.8rem; background: rgba(255, 253, 249, .82); backdrop-filter: blur(10px); border-bottom: 1px solid #ece3d2; }
 .pf__brand { color: #2a231b; }
 .pf__brand :deep(.llg__mark) { color: #b7893a; }
 .pf__back { background: none; border: 1px solid #e0d5be; border-radius: 8px; padding: .4rem .85rem; font-size: .8rem; color: #8b7e6a; cursor: pointer; font-family: inherit; }
 .pf__back:hover { border-color: #b7893a; color: #2a231b; }
 
-.pf__loading { display: grid; place-items: center; min-height: 60vh; font-family: 'Fraunces', serif; font-style: italic; color: #90836d; }
-.pf__main { max-width: 560px; margin: 0 auto; padding: 2.2rem 1.6rem 4rem; }
+.pf__loading { position: relative; z-index: 1; display: grid; place-items: center; min-height: 60vh; font-family: 'Fraunces', serif; font-style: italic; color: #90836d; }
+.pf__main { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; padding: 2.2rem 1.6rem 4rem; }
+.pf__card { position: relative; }
 .pf__h1 { font-family: 'Fraunces', serif; font-size: 2.1rem; line-height: 1; }
 .pf__lead { margin-top: .5rem; color: #90836d; font-size: .92rem; }
 

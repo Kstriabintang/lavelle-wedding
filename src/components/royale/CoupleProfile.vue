@@ -3,6 +3,7 @@
 // di tengah. Mobile: tab (bride/groom) — layout beda, bukan sekadar mengecil.
 // Sosmed per mempelai. Foto arched, whitespace lega, scroll reveal.
 import { ref, computed } from 'vue'
+import { imgSrc } from './imgSrc.js'
 
 const props = defineProps({
   bride: { type: Object, required: true },
@@ -31,7 +32,7 @@ const active = ref(0)
           <div v-if="i === 1" class="cp__amp" aria-hidden="true"><span>&amp;</span></div>
           <figure class="cp__person r-reveal" :class="[{ 'is-hidden': active !== i }, i === 1 ? 'd1' : '']">
             <div class="cp__photo">
-              <img :src="`/img/mentahan/${p.photo}.jpeg`" :alt="p.name" class="r-photo" loading="lazy">
+              <img :src="imgSrc(p.photo)" :alt="p.name" class="r-photo" loading="lazy">
             </div>
             <figcaption>
               <p class="cp__role">{{ p.role }}</p>

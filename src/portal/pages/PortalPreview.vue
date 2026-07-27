@@ -6,7 +6,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { sampleInvite } from '../data/sampleInvite.js'
 import { mergeInvite } from '../data/schema.js'
 import { getInvite } from '../lib/invites.js'
-import InviteSinema from '../components/InviteSinema.vue'
+import InviteRenderer from '../components/InviteRenderer.vue'
 
 const data = ref(structuredClone(sampleInvite))
 const theme = ref('marun-emas')
@@ -39,7 +39,7 @@ onUnmounted(() => window.removeEventListener('message', onMsg))
 </script>
 
 <template>
-  <InviteSinema :data="data" :theme="theme" preview />
+  <InviteRenderer :template="data.template" :data="data" :theme="theme" preview />
 </template>
 
 <style>

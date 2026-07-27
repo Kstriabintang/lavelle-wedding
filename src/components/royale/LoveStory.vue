@@ -1,6 +1,7 @@
 <script setup>
 // 3.4 — Love story timeline dengan foto per milestone.
 // Desktop: zig-zag kiri/kanan. Mobile: satu rel di kiri.
+import { imgSrc } from './imgSrc.js'
 defineProps({ story: { type: Array, default: () => [] } })
 </script>
 
@@ -13,7 +14,7 @@ defineProps({ story: { type: Array, default: () => [] } })
 
       <ol class="ls__list">
         <li v-for="(s, i) in story" :key="i" class="ls__item r-reveal" :class="i % 2 ? 'is-right' : 'is-left'">
-          <div class="ls__photo"><img :src="`/img/mentahan/${s.photo}.jpeg`" :alt="s.title" class="r-photo" loading="lazy"></div>
+          <div class="ls__photo"><img :src="imgSrc(s.photo)" :alt="s.title" class="r-photo" loading="lazy"></div>
           <span class="ls__node"></span>
           <div class="ls__card">
             <span class="ls__year">{{ s.year }}</span>

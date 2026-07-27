@@ -3,6 +3,7 @@
 // scroll, nama skala dramatis, countdown dengan angka roll/flip. Layout beda
 // per breakpoint. Motion transform/opacity saja (60fps), hormati reduced-motion.
 import { ref, onMounted, onUnmounted } from 'vue'
+import { imgSrc } from './imgSrc.js'
 
 const props = defineProps({
   kicker: { type: String, default: 'The Wedding Of' },
@@ -52,7 +53,7 @@ onUnmounted(() => {
 <template>
   <section class="rh">
     <div ref="parallax" class="rh__parallax">
-      <div class="rh__photo r-photo" :style="{ backgroundImage: `url(/img/mentahan/${photo}.jpeg)` }"></div>
+      <div class="rh__photo r-photo" :style="{ backgroundImage: `url(${imgSrc(photo)})` }"></div>
     </div>
     <div class="rh__overlay"></div>
 

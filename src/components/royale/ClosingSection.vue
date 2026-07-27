@@ -2,6 +2,7 @@
 // 3.11 — Penutup: kutipan/ayat, foto latar, tanda tangan, share WhatsApp.
 import { computed } from 'vue'
 import { useInviteActions } from '../../composables/useInviteActions'
+import { imgSrc } from './imgSrc.js'
 
 const props = defineProps({
   closing: { type: Object, required: true },
@@ -16,7 +17,7 @@ function doWa() { shareWa(`Undangan Pernikahan ${props.names} — ${props.dateTe
 
 <template>
   <section class="cl">
-    <div class="cl__photo r-photo" :style="{ backgroundImage: `url(/img/mentahan/${photo}.jpeg)` }"></div>
+    <div class="cl__photo r-photo" :style="{ backgroundImage: `url(${imgSrc(photo)})` }"></div>
     <div class="cl__overlay"></div>
     <div class="cl__inner r-container r-container--narrow">
       <i class="fa-solid fa-dove cl__icon r-reveal"></i>

@@ -6,7 +6,7 @@ import { useRoute } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { getInviteBySlug } from '../lib/invites.js'
 import { mergeInvite } from '../data/schema.js'
-import InviteSinema from '../components/InviteSinema.vue'
+import InviteRenderer from '../components/InviteRenderer.vue'
 
 const route = useRoute()
 const slug = route.params.slug
@@ -51,7 +51,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <InviteSinema v-if="state === 'ok'" :data="data" :theme="theme" />
+  <InviteRenderer v-if="state === 'ok'" :template="data.template" :data="data" :theme="theme" />
   <div v-else class="ir">
     <div class="ir__box">
       <span class="ir__logo">Lavelle</span>

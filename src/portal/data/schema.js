@@ -25,6 +25,7 @@ export function defaultInvite() {
     gifts: [], qris: null, giftConfirmWa: '',
     music: { src: '', start: 0 },
     closing: { quote: '', ref: '', signoff: '', photo: '' },
+    template: 'sinema',
   }
 }
 

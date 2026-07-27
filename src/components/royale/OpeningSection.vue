@@ -3,6 +3,7 @@
 // dan kutipan/ayat. Whitespace lega, foto grading via --photo-filter, scroll
 // reveal. Layout beda desktop (dua kolom) vs mobile (tumpuk terpusat).
 import { computed } from 'vue'
+import { imgSrc } from './imgSrc.js'
 
 const props = defineProps({
   date: { type: String, default: '' }, // YYYY-MM-DD
@@ -23,7 +24,7 @@ const parts = computed(() => {
     weekday: DAYS[wd] || '',
   }
 })
-const bg = computed(() => ({ backgroundImage: `url(/img/mentahan/${props.photo}.jpeg)` }))
+const bg = computed(() => ({ backgroundImage: `url(${imgSrc(props.photo)})` }))
 </script>
 
 <template>
