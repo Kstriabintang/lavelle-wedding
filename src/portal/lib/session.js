@@ -1,9 +1,13 @@
 import { ref } from 'vue'
 import { supabase } from './supabase.js'
+import { DEFAULT_PORTAL_BG } from '../data/portalBackgrounds.js'
 
 // session: undefined = belum dicek, null = belum login, object = login.
 export const session = ref(undefined)
 export const profile = ref(null)
+// Wallpaper latar portal aktif (reaktif → PortalBackground ikut; live-preview di Pengaturan).
+export const portalBg = ref(DEFAULT_PORTAL_BG)
+export function setPortalBg(id) { portalBg.value = id }
 
 async function loadProfile() {
   const { data: { user } } = await supabase.auth.getUser()
@@ -18,7 +22,9 @@ async function loadProfile() {
     contact: m.contact || '',
     avatar: m.avatar || '',
     themePref: m.theme_pref || 'marun-emas',
+    portalBg: m.bg_pref || DEFAULT_PORTAL_BG,
   }
+  portalBg.value = profile.value.portalBg
 }
 
 // Muat ulang profil (dipanggil setelah simpan pengaturan)

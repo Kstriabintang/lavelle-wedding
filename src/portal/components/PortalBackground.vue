@@ -1,8 +1,12 @@
 <script setup>
-// Latar DARK cinematic portal — deep charcoal + aurora emas/amber/marun yang hidup,
-// drift lambat + sheen halus + parallax mouse. Ringan (murni transform/opacity GPU).
-// Dipakai bersama di dashboard/pengaturan (login punya latarnya sendiri). Reduced-motion aman.
-import { ref, onMounted, onUnmounted } from 'vue'
+// Latar DARK cinematic portal — deep charcoal + aurora yang hidup (warna sesuai preset
+// wallpaper pilihan karyawan), drift lambat + sheen halus + parallax mouse. Ringan
+// (murni transform/opacity GPU). Reduced-motion aman. Preset dari session.portalBg.
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { portalBg } from '../lib/session.js'
+import { portalBgVars } from '../data/portalBackgrounds.js'
+
+const bgVars = computed(() => portalBgVars(portalBg.value))
 
 const px = ref(0)
 const py = ref(0)
@@ -19,7 +23,7 @@ onUnmounted(() => { if (typeof window !== 'undefined') window.removeEventListene
 </script>
 
 <template>
-  <div class="pbg" aria-hidden="true">
+  <div class="pbg" aria-hidden="true" :style="bgVars">
     <div class="pbg__base"></div>
     <div class="pbg__layer" :style="{ transform: `translate3d(${px * -22}px, ${py * -22}px, 0)` }">
       <span class="pbg__orb pbg__orb--gold"></span>
@@ -37,23 +41,22 @@ onUnmounted(() => { if (typeof window !== 'undefined') window.removeEventListene
 
 <style scoped>
 .pbg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.pbg__base { position: absolute; inset: -2%; background:
-    radial-gradient(130% 120% at 20% 6%, #1a140c 0%, #120d08 46%, #0a0705 100%); }
+.pbg__base { position: absolute; inset: -2%; background: var(--pb-base, radial-gradient(130% 120% at 20% 6%, #1a140c 0%, #120d08 46%, #0a0705 100%)); transition: background .6s ease; }
 .pbg__layer { position: absolute; inset: -8%; will-change: transform; transition: transform .7s cubic-bezier(.22, .8, .2, 1); }
-.pbg__orb { position: absolute; border-radius: 50%; filter: blur(90px); will-change: transform, opacity; }
+.pbg__orb { position: absolute; border-radius: 50%; filter: blur(90px); will-change: transform, opacity; transition: background .6s ease; }
 
-/* aurora hangat di kegelapan — cukup terlihat tapi tidak menyilaukan */
-.pbg__orb--gold  { width: 46vw; height: 46vw; left: -8%;  top: -14%;  background: radial-gradient(circle at 50% 50%, rgba(201, 162, 75, .30), transparent 68%); animation: drift1 30s ease-in-out infinite; }
-.pbg__orb--amber { width: 40vw; height: 40vw; right: -10%; top: -4%;   background: radial-gradient(circle at 50% 50%, rgba(158, 104, 44, .30), transparent 68%); animation: drift2 38s ease-in-out infinite; }
-.pbg__orb--marun { width: 48vw; height: 48vw; left: -6%;  bottom: -22%; background: radial-gradient(circle at 50% 50%, rgba(122, 36, 44, .24), transparent 70%); animation: drift1 34s ease-in-out infinite reverse; }
-.pbg__orb--champ { width: 42vw; height: 42vw; right: -6%; bottom: -16%; background: radial-gradient(circle at 50% 50%, rgba(236, 201, 127, .18), transparent 68%); animation: drift2 42s ease-in-out infinite reverse; }
+/* aurora — warna dari preset wallpaper (var), posisi/ukuran/animasi tetap */
+.pbg__orb--gold  { width: 46vw; height: 46vw; left: -8%;  top: -14%;  background: var(--pb-o1); animation: drift1 30s ease-in-out infinite; }
+.pbg__orb--amber { width: 40vw; height: 40vw; right: -10%; top: -4%;   background: var(--pb-o2); animation: drift2 38s ease-in-out infinite; }
+.pbg__orb--marun { width: 48vw; height: 48vw; left: -6%;  bottom: -22%; background: var(--pb-o3); animation: drift1 34s ease-in-out infinite reverse; }
+.pbg__orb--champ { width: 42vw; height: 42vw; right: -6%; bottom: -16%; background: var(--pb-o4); animation: drift2 42s ease-in-out infinite reverse; }
 
 @keyframes drift1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(5%, 4%) scale(1.1); } }
 @keyframes drift2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-5%, -3%) scale(1.08); } }
 
 /* sapuan cahaya diagonal sangat halus */
 .pbg__sheen { position: absolute; top: -60%; left: -60%; width: 220%; height: 220%;
-  background: linear-gradient(115deg, transparent 43%, rgba(236, 201, 127, .06) 50%, transparent 57%);
+  background: linear-gradient(115deg, transparent 43%, var(--pb-sheen, rgba(236, 201, 127, .06)) 50%, transparent 57%);
   animation: sheen 24s ease-in-out infinite; }
 @keyframes sheen { 0%, 100% { transform: translate(-8%, -8%); } 50% { transform: translate(8%, 8%); } }
 

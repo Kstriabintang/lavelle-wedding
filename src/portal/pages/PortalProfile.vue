@@ -1,14 +1,16 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { session, profile, initSession, refreshProfile } from '../lib/session.js'
+import { session, profile, initSession, refreshProfile, setPortalBg } from '../lib/session.js'
 import { updateProfileMeta, changePassword, uploadAvatar } from '../lib/profile.js'
 import { THEMES, THEME_IDS } from '../data/themes.js'
+import { PORTAL_BGS, PORTAL_BG_IDS, DEFAULT_PORTAL_BG } from '../data/portalBackgrounds.js'
 import LavelleLogo from '../components/LavelleLogo.vue'
 import PortalBackground from '../components/PortalBackground.vue'
 
 const router = useRouter()
-const form = reactive({ name: '', contact: '', avatar: '', theme_pref: 'marun-emas' })
+const form = reactive({ name: '', contact: '', avatar: '', theme_pref: 'marun-emas', bg_pref: DEFAULT_PORTAL_BG })
+function pickBg(id) { form.bg_pref = id; setPortalBg(id) } // live-preview seketika
 const pw = reactive({ a: '', b: '' })
 const savingProfile = ref(false)
 const savingPw = ref(false)
@@ -23,6 +25,7 @@ onMounted(async () => {
   await refreshProfile()
   const p = profile.value || {}
   form.name = p.name || ''; form.contact = p.contact || ''; form.avatar = p.avatar || ''; form.theme_pref = p.themePref || 'marun-emas'
+  form.bg_pref = p.portalBg || DEFAULT_PORTAL_BG
   loaded.value = true
 })
 
@@ -35,7 +38,7 @@ async function onAvatar(e) {
 async function saveProfile() {
   savingProfile.value = true; msg.value = ''
   try {
-    await updateProfileMeta({ name: form.name.trim(), contact: form.contact.trim(), avatar: form.avatar, theme_pref: form.theme_pref })
+    await updateProfileMeta({ name: form.name.trim(), contact: form.contact.trim(), avatar: form.avatar, theme_pref: form.theme_pref, bg_pref: form.bg_pref })
     await refreshProfile(); msg.value = 'Tersimpan ✓'
   } catch { msg.value = 'Gagal menyimpan.' } finally { savingProfile.value = false }
 }
@@ -63,6 +66,7 @@ async function savePw() {
       <p class="pf__lead">Kelola profil, tema favorit, & keamanan akunmu.</p>
 
       <div class="pf__grid">
+      <div class="pf__col">
       <!-- PROFIL -->
       <section class="pf__card pf__card--profil">
         <h2 class="pf__card-title">Profil</h2>
@@ -84,6 +88,22 @@ async function savePw() {
         <div class="pf__field"><label>Email login</label><input :value="profile?.email" class="pf__input" disabled></div>
         <div class="pf__field"><label>Peran</label><input :value="profile?.role === 'admin' ? 'Admin (lihat semua)' : 'Karyawan'" class="pf__input" disabled></div>
       </section>
+
+      <!-- LATAR PORTAL (wallpaper) -->
+      <section class="pf__card">
+        <h2 class="pf__card-title">Latar Portal</h2>
+        <p class="pf__hint pf__hint--blk">Pilih wallpaper latar portalmu — berubah seketika, biar tak bosan.</p>
+        <div class="pf__bgs">
+          <button v-for="id in PORTAL_BG_IDS" :key="id" type="button" class="pf__bg" :class="{ 'is-on': form.bg_pref === id }" @click="pickBg(id)">
+            <span class="pf__bg-prev" :style="{ background: PORTAL_BGS[id].preview }"></span>
+            <span class="pf__bg-text">
+              <span class="pf__bg-name">{{ PORTAL_BGS[id].label }}</span>
+              <span class="pf__bg-desc">{{ PORTAL_BGS[id].desc }}</span>
+            </span>
+          </button>
+        </div>
+      </section>
+      </div><!-- /pf__col -->
 
       <div class="pf__side">
       <!-- TEMA DEFAULT -->
@@ -136,7 +156,7 @@ async function savePw() {
 .pf__lead { margin-top: .55rem; color: #b1a688; font-size: .96rem; }
 
 .pf__grid { display: grid; grid-template-columns: 1.08fr 1fr; gap: 1.4rem; align-items: start; margin-top: 1.8rem; }
-.pf__side { display: flex; flex-direction: column; gap: 1.4rem; }
+.pf__side, .pf__col { display: flex; flex-direction: column; gap: 1.4rem; }
 .pf__card { position: relative; background: rgba(22, 17, 10, .7); border: 1px solid rgba(201, 162, 75, .18); border-radius: 18px; padding: 1.6rem 1.7rem; box-shadow: 0 20px 44px rgba(0, 0, 0, .45); backdrop-filter: blur(8px); }
 @media (max-width: 820px) { .pf__grid { grid-template-columns: 1fr; } .pf__main { padding: 2rem 1.3rem 3.5rem; } }
 .pf__card-title { font-family: 'Fraunces', serif; font-size: 1.2rem; margin-bottom: 1rem; color: #f4ecd9; }
@@ -154,7 +174,18 @@ async function savePw() {
 .pf__input::placeholder { color: #8a7f66; }
 .pf__input:focus { outline: none; border-color: #d3ad55; box-shadow: 0 0 0 3px rgba(211, 173, 85, .18); }
 .pf__input:disabled { background: rgba(0, 0, 0, .18); color: #9d906f; -webkit-text-fill-color: #9d906f; }
-.pf__hint { font-size: .78rem; color: #a99d80; line-height: 1.55; margin-top: -.15rem; }
+.pf__hint { font-size: .78rem; color: #a99d80; line-height: 1.55; margin-top: .3rem; }
+.pf__hint--blk { margin-top: 0; margin-bottom: .3rem; }
+
+/* pemilih wallpaper latar portal */
+.pf__bgs { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; margin-top: .5rem; }
+.pf__bg { display: flex; align-items: center; gap: .6rem; padding: .5rem .6rem; cursor: pointer; text-align: left; border: 1px solid rgba(201, 162, 75, .22); border-radius: 12px; background: rgba(20, 15, 9, .6); font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.pf__bg:hover { transform: translateY(-1px); border-color: rgba(201, 162, 75, .45); }
+.pf__bg.is-on { border-color: #d3ad55; box-shadow: 0 0 0 2px rgba(211, 173, 85, .35); }
+.pf__bg-prev { width: 36px; height: 36px; border-radius: 9px; flex: none; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
+.pf__bg-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.pf__bg-name { font-size: .8rem; color: #f4ecd9; font-weight: 500; }
+.pf__bg-desc { font-size: .64rem; color: #a99d80; margin-top: .1rem; }
 
 .pf__themes { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: .8rem; }
 .pf__theme { display: flex; align-items: center; gap: .5rem; padding: .6rem .7rem; cursor: pointer; text-align: left; border: 1px solid rgba(201, 162, 75, .22); border-radius: 12px; background: rgba(20, 15, 9, .6); font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
