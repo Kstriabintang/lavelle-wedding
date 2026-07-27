@@ -27,7 +27,7 @@ export function defaultInvite() {
     closing: { quote: '', ref: '', signoff: '', photo: '' },
     template: 'sinema',
     adat: { suku: 'minang' },   // khusus template Adat: pilihan suku (minang/jawa/sunda/bugis)
-    style: { font: 'default', size: 'sedang', accent: '', hide: {} },   // kustomisasi bebas (font/ukuran/aksen/sembunyi seksi)
+    style: { font: 'default', size: 'sedang', accent: '', hide: {}, motion: 'lembut' },   // kustomisasi bebas (font/ukuran/aksen/animasi/sembunyi seksi)
   }
 }
 

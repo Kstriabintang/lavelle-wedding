@@ -29,6 +29,13 @@ export const TEMPLATES = {
     tag: 'Tradisional',
     thumb: '/portal/thumbs/adat.jpg',
   },
+  modern: {
+    id: 'modern',
+    name: 'Modern',
+    desc: 'Minimalis kontemporer — tipografi bersih (Tenor Sans × Poppins), whitespace lega, ornamen halus, kesan profesional & clean.',
+    tag: 'Minimalis',
+    thumb: '/portal/thumbs/modern.jpg',
+  },
 }
 export const TEMPLATE_IDS = Object.keys(TEMPLATES)
 export const DEFAULT_TEMPLATE = 'sinema'

@@ -23,8 +23,18 @@ export const HIDEABLE = [
   { k: 'dress', label: 'Dress Code' },
 ]
 
+// Animasi transisi antar-seksi (reveal saat digulir).
+export const MOTIONS = {
+  lembut: { label: 'Lembut', desc: 'Muncul halus (bawaan)' },
+  naik:   { label: 'Naik',   desc: 'Terangkat dari bawah' },
+  geser:  { label: 'Geser',  desc: 'Meluncur dari samping' },
+  zoom:   { label: 'Zoom',   desc: 'Membesar lembut' },
+  mati:   { label: 'Tanpa Animasi', desc: 'Langsung tampil' },
+}
+export const MOTION_KEYS = Object.keys(MOTIONS)
+
 export function defaultStyle() {
-  return { font: 'default', size: 'sedang', accent: '', hide: {} }
+  return { font: 'default', size: 'sedang', accent: '', hide: {}, motion: 'lembut' }
 }
 
 // Font vars — kosong utk 'default' (pakai fallback asli template).

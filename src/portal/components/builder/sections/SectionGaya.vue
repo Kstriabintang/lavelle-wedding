@@ -1,7 +1,7 @@
 <script setup>
 // Seksi Kustomisasi — kebebasan kreatif: pasangan font, ukuran teks, warna aksen bebas,
 // & tampil/sembunyikan seksi. Mengedit invite.style (reaktif → pratinjau live).
-import { FONT_PAIRS, FONT_KEYS, SIZE_KEYS, SIZE_LABELS, HIDEABLE } from '../../../data/inviteStyle.js'
+import { FONT_PAIRS, FONT_KEYS, SIZE_KEYS, SIZE_LABELS, HIDEABLE, MOTIONS, MOTION_KEYS } from '../../../data/inviteStyle.js'
 const props = defineProps({ invite: { type: Object, required: true } })
 function toggleHide(k) {
   if (!props.invite.style.hide) props.invite.style.hide = {}
@@ -29,6 +29,18 @@ function toggleHide(k) {
       <label>Ukuran Teks</label>
       <div class="gaya__sizes">
         <button v-for="s in SIZE_KEYS" :key="s" type="button" class="gaya__size" :class="{ 'is-on': invite.style.size === s }" @click="invite.style.size = s">{{ SIZE_LABELS[s] }}</button>
+      </div>
+    </div>
+
+    <div class="f-field">
+      <label>Animasi Transisi (saat digulir)</label>
+      <div class="f-themes">
+        <button v-for="m in MOTION_KEYS" :key="m" type="button" class="f-theme" :class="{ 'is-on': (invite.style.motion || 'lembut') === m }" @click="invite.style.motion = m">
+          <span class="f-theme-text">
+            <span class="f-theme-name">{{ MOTIONS[m].label }}</span>
+            <span class="f-theme-desc">{{ MOTIONS[m].desc }}</span>
+          </span>
+        </button>
       </div>
     </div>
 
