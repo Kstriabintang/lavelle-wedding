@@ -7,6 +7,7 @@ import { listInvites, createInvite, deleteInvite, slugTaken } from '../lib/invit
 import { slugify, validateSlug } from '../lib/slug.js'
 import { defaultInvite } from '../data/schema.js'
 import { TEMPLATES, TEMPLATE_IDS, DEFAULT_TEMPLATE } from '../data/templates.js'
+import { adat, adatOrder } from '../../data/adat'
 import LavelleLogo from '../components/LavelleLogo.vue'
 import PortalBackground from '../components/PortalBackground.vue'
 
@@ -16,6 +17,8 @@ const loading = ref(true)
 const showNew = ref(false)
 const newSlug = ref('')
 const newTemplate = ref(DEFAULT_TEMPLATE)
+const newSuku = ref('minang')
+const SUKU_OPTS = adatOrder.map((s) => ({ id: s, label: adat[s].suku, accent: adat[s].tagline }))
 const newErr = ref('')
 const creating = ref(false)
 
@@ -43,6 +46,7 @@ async function create() {
   try {
     if (await slugTaken(newSlug.value)) { newErr.value = 'Slug sudah dipakai, pilih yang lain.'; creating.value = false; return }
     const init = defaultInvite(); init.template = newTemplate.value
+    if (newTemplate.value === 'adat') init.adat = { suku: newSuku.value }
     const inv = await createInvite(newSlug.value, profile.value.id, init, profile.value && profile.value.themePref)
     router.push(`/portal/edit/${inv.id}`)
   } catch { newErr.value = 'Gagal membuat undangan. Coba lagi.'; creating.value = false }
@@ -101,6 +105,19 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
               <span class="db__template-desc">{{ TEMPLATES[tid].desc }}</span>
             </button>
           </div>
+
+          <transition name="db-form">
+            <div v-if="newTemplate === 'adat'" class="db__suku-wrap">
+              <label class="db__form-label db__form-label--mt">Pilih Suku / Adat</label>
+              <div class="db__suku">
+                <button v-for="s in SUKU_OPTS" :key="s.id" type="button" class="db__suku-btn" :class="{ 'is-on': newSuku === s.id }" @click="newSuku = s.id">
+                  <span class="db__suku-name">{{ s.label }}</span>
+                  <span class="db__suku-accent">{{ s.accent }}</span>
+                </button>
+              </div>
+            </div>
+          </transition>
+
           <label class="db__form-label db__form-label--mt">Alamat undangan (slug)</label>
           <div class="db__form-row">
             <div class="db__slug"><input v-model="newSlug" @input="onSlugInput" placeholder="dina-agus" @keyup.enter="create"><span class="db__slug-suffix">.lavelle.my.id</span></div>
@@ -194,6 +211,12 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 .db__template-tag { font-size: .58rem; text-transform: uppercase; letter-spacing: .08em; color: #b7893a; border: 1px solid #e6d7b3; border-radius: 40px; padding: .12rem .5rem; white-space: nowrap; }
 .db__template-desc { display: block; margin-top: .4rem; font-size: .73rem; color: #90836d; line-height: 1.45; }
 .db__form-label--mt { display: block; margin-top: 1.1rem; }
+.db__suku { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; margin-top: .5rem; }
+.db__suku-btn { text-align: left; padding: .6rem .75rem; border: 1.5px solid #e0d5be; border-radius: 10px; background: #fff; cursor: pointer; font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.db__suku-btn:hover { transform: translateY(-2px); }
+.db__suku-btn.is-on { border-color: #b7893a; box-shadow: 0 0 0 2px rgba(183, 137, 58, .25); }
+.db__suku-name { display: block; font-family: 'Fraunces', serif; font-size: .95rem; color: #2a231b; }
+.db__suku-accent { display: block; margin-top: .15rem; font-size: .66rem; color: #90836d; letter-spacing: .02em; }
 @media (max-width: 560px) { .db__templates { grid-template-columns: 1fr; } }
 .db-form-enter-active, .db-form-leave-active { transition: opacity .3s, transform .3s; }
 .db-form-enter-from, .db-form-leave-to { opacity: 0; transform: translateY(-8px); }

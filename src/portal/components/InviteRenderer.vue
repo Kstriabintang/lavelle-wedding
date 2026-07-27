@@ -1,8 +1,10 @@
 <script setup>
-// Pemilih renderer dinamis berdasarkan template undangan (sinema / royale / …).
+// Pemilih renderer dinamis berdasarkan template undangan (sinema / royale / luxe / …).
 import { computed } from 'vue'
 import InviteSinema from './InviteSinema.vue'
 import InviteRoyale from './InviteRoyale.vue'
+import InviteLuxe from './InviteLuxe.vue'
+import InviteAdat from './InviteAdat.vue'
 
 const props = defineProps({
   template: { type: String, default: 'sinema' },
@@ -11,7 +13,8 @@ const props = defineProps({
   preview: { type: Boolean, default: false },
 })
 
-const comp = computed(() => (props.template === 'royale' ? InviteRoyale : InviteSinema))
+const REGISTRY = { sinema: InviteSinema, royale: InviteRoyale, luxe: InviteLuxe, adat: InviteAdat }
+const comp = computed(() => REGISTRY[props.template] || InviteSinema)
 </script>
 
 <template>

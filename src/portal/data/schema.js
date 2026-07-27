@@ -26,6 +26,7 @@ export function defaultInvite() {
     music: { src: '', start: 0 },
     closing: { quote: '', ref: '', signoff: '', photo: '' },
     template: 'sinema',
+    adat: { suku: 'minang' },   // khusus template Adat: pilihan suku (minang/jawa/sunda/bugis)
   }
 }
 
