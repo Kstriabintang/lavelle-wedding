@@ -76,8 +76,9 @@ create index if not exists rsvp_invite_idx on public.rsvp(invite_id);
 -- Profiles
 drop policy if exists "profiles read" on public.profiles;
 create policy "profiles read" on public.profiles for select using (id = auth.uid() or public.is_admin());
+-- SENGAJA tanpa policy UPDATE profiles dari klien → cegah eskalasi hak
+-- (user set role='admin' sendiri). Peran diatur admin via service_role (server).
 drop policy if exists "profiles update self" on public.profiles;
-create policy "profiles update self" on public.profiles for update using (id = auth.uid());
 
 -- Invites: published readable oleh siapa saja (renderer publik); draft hanya pemilik/admin
 drop policy if exists "invites read" on public.invites;
@@ -87,7 +88,8 @@ drop policy if exists "invites insert" on public.invites;
 create policy "invites insert" on public.invites for insert with check (owner_id = auth.uid());
 drop policy if exists "invites update" on public.invites;
 create policy "invites update" on public.invites for update
-  using (owner_id = auth.uid() or public.is_admin());
+  using (owner_id = auth.uid() or public.is_admin())
+  with check (owner_id = auth.uid() or public.is_admin());
 drop policy if exists "invites delete" on public.invites;
 create policy "invites delete" on public.invites for delete
   using (owner_id = auth.uid() or public.is_admin());
@@ -98,17 +100,20 @@ create policy "guestbook read" on public.guestbook for select
   using (show = true or public.is_admin()
          or exists(select 1 from public.invites i where i.id = invite_id and i.owner_id = auth.uid()));
 drop policy if exists "guestbook insert" on public.guestbook;
-create policy "guestbook insert" on public.guestbook for insert with check (true);
+create policy "guestbook insert" on public.guestbook for insert
+  with check (exists(select 1 from public.invites i where i.id = invite_id and i.status = 'published'));
 drop policy if exists "guestbook update" on public.guestbook;
 create policy "guestbook update" on public.guestbook for update
-  using (public.is_admin() or exists(select 1 from public.invites i where i.id = invite_id and i.owner_id = auth.uid()));
+  using (public.is_admin() or exists(select 1 from public.invites i where i.id = invite_id and i.owner_id = auth.uid()))
+  with check (public.is_admin() or exists(select 1 from public.invites i where i.id = invite_id and i.owner_id = auth.uid()));
 drop policy if exists "guestbook delete" on public.guestbook;
 create policy "guestbook delete" on public.guestbook for delete
   using (public.is_admin() or exists(select 1 from public.invites i where i.id = invite_id and i.owner_id = auth.uid()));
 
 -- RSVP: tamu boleh insert; hanya pemilik/admin baca
 drop policy if exists "rsvp insert" on public.rsvp;
-create policy "rsvp insert" on public.rsvp for insert with check (true);
+create policy "rsvp insert" on public.rsvp for insert
+  with check (exists(select 1 from public.invites i where i.id = invite_id and i.status = 'published'));
 drop policy if exists "rsvp read" on public.rsvp;
 create policy "rsvp read" on public.rsvp for select
   using (public.is_admin() or exists(select 1 from public.invites i where i.id = invite_id and i.owner_id = auth.uid()));
