@@ -243,6 +243,7 @@ const musicReady = ref(false)
 const gamelan = useGamelan(() => cfg.value.slug)
 
 async function startMusic() {
+  if (r.value.music && r.value.music.link) return   // pakai musik YouTube (PortalMusic), jangan gamelan
   const a = audioEl.value
   // Coba file mp3 dulu (bila vendor mengganti dengan track sendiri).
   if (a) {
@@ -385,7 +386,7 @@ onUnmounted(() => {
     <audio ref="audioEl" :src="musicSrc" loop preload="none"
            @canplay="musicReady = true" @play="musicOn = true" @pause="musicOn = false"></audio>
     <transition name="fade">
-      <button v-if="opened" class="a-music" :class="{ 'is-on': musicOn }" @click="toggleMusic"
+      <button v-if="opened && !(r.music && r.music.link)" class="a-music" :class="{ 'is-on': musicOn }" @click="toggleMusic"
               :aria-label="musicOn ? 'Jeda musik' : 'Putar musik'">
         <span class="a-music__disc"><i :class="musicOn ? 'fa-solid fa-music' : 'fa-solid fa-volume-xmark'"></i></span>
         <span class="a-music__wave"><i></i><i></i><i></i><i></i></span>

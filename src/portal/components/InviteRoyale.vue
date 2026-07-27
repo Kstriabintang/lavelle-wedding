@@ -52,7 +52,7 @@ onMounted(() => { nextTick(() => wireReveal(root.value || document)) })
     <EnvelopeGate v-if="!skipGate" :bride="r.hero.bride" :groom="r.hero.groom" :date-text="r.hero.dateText"
                   :guest="'Tamu Undangan'" :initials="initials" @opened="onOpened" />
     <ScrollProgress />
-    <MusicPlayer v-if="r.music.src" ref="musicRef" :src="r.music.src" :start="r.music.start" />
+    <MusicPlayer v-if="r.music.src && !r.music.link" ref="musicRef" :src="r.music.src" :start="r.music.start" />
 
     <HeroCover v-bind="r.hero" />
     <OpeningSection :date="r.hero.date" :quote="r.quote" :photo="r.opening.photo" />

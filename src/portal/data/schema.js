@@ -23,7 +23,7 @@ export function defaultInvite() {
     gallery: [], galleryCats: ['Semua'],
     galleryFull: [], galleryFullCats: ['Semua'],
     gifts: [], qris: null, giftConfirmWa: '',
-    music: { src: '', start: 0 },
+    music: { src: '', link: '', start: 0 },   // link = URL YouTube (auto-play latar); src = file audio
     closing: { quote: '', ref: '', signoff: '', photo: '' },
     template: 'sinema',
     adat: { suku: 'minang' },   // khusus template Adat: pilihan suku (minang/jawa/sunda/bugis)

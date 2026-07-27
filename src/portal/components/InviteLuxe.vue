@@ -16,7 +16,9 @@ const props = defineProps({
 const r = computed(() => mergeInvite(props.data))
 const accentVars = computed(() => {
   const tv = themeVars(props.theme)
-  return { '--rose': tv['--accent'], '--rose-soft': tv['--accent-2'], '--gold': tv['--accent-2'], '--gold-deep': tv['--accent'] }
+  // Warna utama Luxe (--rose) ikut --marun tiap tema (navy/burgundy/hijau/rosé) → jelas beda
+  // saat ganti tema; --gold tetap dari accent tema.
+  return { '--rose': tv['--marun'], '--rose-soft': tv['--accent'], '--gold': tv['--accent-2'], '--gold-deep': tv['--accent'] }
 })
 
 const hero = computed(() => r.value.hero)

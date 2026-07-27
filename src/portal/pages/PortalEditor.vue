@@ -147,37 +147,39 @@ const liveUrl = computed(() => `https://${slug.value}.lavelle.my.id`)
 </template>
 
 <style scoped>
-.pe__top { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid #ece3d2; background: #fcf9f2; }
-.pe__back { background: none; border: none; color: #6d6152; font-family: 'Jost', sans-serif; font-size: .84rem; cursor: pointer; padding: 0; }
-.pe__back:hover { color: #2a231b; }
-.pe__save { font-size: .74rem; color: #9a8b6f; font-family: 'Jost', sans-serif; }
-.pe__save.saving { color: #b7893a; }
-.pe__save.error { color: #b0483f; }
+.pe__top { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 1px solid rgba(201, 162, 75, .16); background: #14100b; }
+.pe__back { background: none; border: none; color: #a99d80; font-family: 'Jost', sans-serif; font-size: .84rem; cursor: pointer; padding: 0; }
+.pe__back:hover { color: #f1e7cf; }
+.pe__save { font-size: .74rem; color: #a99d80; font-family: 'Jost', sans-serif; }
+.pe__save.saving { color: #d8b25e; }
+.pe__save.error { color: #e0776b; }
 .pe__intro { padding: 1.3rem 1.5rem .3rem; }
-.pe__names { font-family: 'Fraunces', serif; font-size: 1.35rem; color: #2a231b; display: flex; align-items: center; gap: .6rem; }
+.pe__names { font-family: 'Fraunces', serif; font-size: 1.35rem; color: #f1e7cf; display: flex; align-items: center; gap: .6rem; }
 .pe__names b { font-style: italic; font-weight: 600; }
-.pe__badge { font-size: .6rem; letter-spacing: .06em; text-transform: uppercase; padding: .1rem .5rem; border-radius: 40px; background: #e7dcc3; color: #8a7c5f; }
-.pe__badge.published { background: #d8ecdd; color: #2f7d46; }
-.pe__slug-label { display: block; margin-top: .9rem; font-size: .64rem; text-transform: uppercase; letter-spacing: .1em; color: #a08e6f; }
+.pe__badge { font-size: .6rem; letter-spacing: .06em; text-transform: uppercase; padding: .1rem .5rem; border-radius: 40px; background: rgba(201, 162, 75, .18); color: #d8b25e; }
+.pe__badge.published { background: rgba(47, 125, 70, .25); color: #74c98c; }
+.pe__slug-label { display: block; margin-top: .9rem; font-size: .64rem; text-transform: uppercase; letter-spacing: .1em; color: #a99d80; }
 .pe__slug-row { display: flex; align-items: center; gap: .6rem; margin-top: .35rem; }
-.pe__slug-box { flex: 1; display: flex; align-items: center; border: 1px solid #e0d5be; border-radius: 9px; background: #fff; overflow: hidden; }
-.pe__slug-input { flex: 1; min-width: 0; border: none; background: transparent; padding: .5rem .7rem; font-family: 'Jost', sans-serif; font-size: .88rem; color: #2a231b; }
+.pe__slug-box { flex: 1; display: flex; align-items: center; border: 1px solid rgba(201, 162, 75, .3); border-radius: 9px; background: rgba(0, 0, 0, .28); overflow: hidden; }
+.pe__slug-box:focus-within { border-color: #d8b25e; }
+.pe__slug-input { flex: 1; min-width: 0; border: none; background: transparent; padding: .5rem .7rem; font-family: 'Jost', sans-serif; font-size: .88rem; color: #f1e7cf; }
+.pe__slug-input::placeholder { color: #8a7f66; }
 .pe__slug-input:focus { outline: none; }
-.pe__slug-suffix { padding: 0 .65rem; color: #a89a80; font-size: .8rem; white-space: nowrap; }
-.pe__slug-msg { font-size: .74rem; color: #b7893a; white-space: nowrap; }
-.pe__slug-err { margin-top: .35rem; font-size: .76rem; color: #b0483f; }
-.pe__slug-hint { margin-top: .35rem; font-size: .74rem; color: #a89a80; }
+.pe__slug-suffix { padding: 0 .65rem; color: #a99d80; font-size: .8rem; white-space: nowrap; }
+.pe__slug-msg { font-size: .74rem; color: #d8b25e; white-space: nowrap; }
+.pe__slug-err { margin-top: .35rem; font-size: .76rem; color: #e0776b; }
+.pe__slug-hint { margin-top: .35rem; font-size: .74rem; color: #a99d80; }
 .pe__slug { margin-top: .35rem; font-size: .84rem; }
-.pe__slug a { color: #2f7d46; text-decoration: none; font-weight: 500; }
+.pe__slug a { color: #74c98c; text-decoration: none; font-weight: 500; }
 .pe__slug a:hover { text-decoration: underline; }
-.pe__foot { padding: 1rem 1.5rem 1.3rem; border-top: 1px solid #ece3d2; background: #fcf9f2; display: flex; align-items: center; gap: 1rem; }
-.pe__pub { flex: 1; background: #2f7d46; color: #fff; border: none; border-radius: 11px; padding: .8rem 1rem; font-family: 'Jost', sans-serif; font-size: .92rem; cursor: pointer; transition: background-color .2s; }
-.pe__pub:hover:not(:disabled) { background: #276b3b; }
+.pe__foot { padding: 1rem 1.5rem 1.3rem; border-top: 1px solid rgba(201, 162, 75, .16); background: #14100b; display: flex; align-items: center; gap: 1rem; }
+.pe__pub { flex: 1; background: linear-gradient(180deg, #34925230, #2f7d46); background: #2f8a4d; color: #fff; border: none; border-radius: 11px; padding: .8rem 1rem; font-family: 'Jost', sans-serif; font-weight: 500; font-size: .92rem; cursor: pointer; transition: background-color .2s; }
+.pe__pub:hover:not(:disabled) { background: #37a05a; }
 .pe__pub:disabled { opacity: .6; }
-.pe__live { color: #2f7d46; font-family: 'Jost', sans-serif; font-size: .9rem; text-decoration: none; font-weight: 500; }
+.pe__live { color: #74c98c; font-family: 'Jost', sans-serif; font-size: .9rem; text-decoration: none; font-weight: 500; }
 .pe__live:hover { text-decoration: underline; }
-.pe__pubmsg { font-size: .76rem; color: #2f7d46; }
-.pe__unpub { margin-left: auto; background: none; border: 1px solid #e0d5be; border-radius: 9px; padding: .45rem .9rem; color: #8b7e6a; font-family: 'Jost', sans-serif; font-size: .8rem; cursor: pointer; }
+.pe__pubmsg { font-size: .76rem; color: #74c98c; }
+.pe__unpub { margin-left: auto; background: rgba(255, 255, 255, .04); border: 1px solid rgba(201, 162, 75, .3); border-radius: 9px; padding: .45rem .9rem; color: #a99d80; font-family: 'Jost', sans-serif; font-size: .8rem; cursor: pointer; }
 .pe__frame { width: 100%; height: 100%; border: 0; display: block; background: #0b0906; }
-.pe__loading { min-height: 100vh; display: grid; place-items: center; font-family: 'Fraunces', serif; font-style: italic; color: #90836d; background: #f7f3ea; }
+.pe__loading { min-height: 100vh; display: grid; place-items: center; font-family: 'Fraunces', serif; font-style: italic; color: #a99d80; background: #0e0b07; }
 </style>

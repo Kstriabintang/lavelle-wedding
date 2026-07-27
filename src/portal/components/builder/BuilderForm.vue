@@ -6,6 +6,7 @@ import '../../assets/builder.css'
 import SectionMempelai from './sections/SectionMempelai.vue'
 import SectionAcara from './sections/SectionAcara.vue'
 import SectionGaleri from './sections/SectionGaleri.vue'
+import SectionMusik from './sections/SectionMusik.vue'
 import SectionTema from './sections/SectionTema.vue'
 
 defineProps({ invite: { type: Object, required: true }, theme: { type: String, required: true } })
@@ -18,7 +19,8 @@ const SECS = [
   { k: 'mempelai', num: '01', label: 'Mempelai', desc: 'Nama, tanggal, orang tua & foto' },
   { k: 'acara', num: '02', label: 'Acara', desc: 'Akad & resepsi: waktu, tempat, peta' },
   { k: 'galeri', num: '03', label: 'Galeri', desc: 'Foto prewedding (maksimal 12)' },
-  { k: 'tema', num: '04', label: 'Tema Warna', desc: 'Nuansa warna undangan' },
+  { k: 'musik', num: '04', label: 'Musik', desc: 'Lagu latar dari YouTube (auto-play)' },
+  { k: 'tema', num: '05', label: 'Tema Warna', desc: 'Nuansa warna undangan' },
 ]
 </script>
 
@@ -40,6 +42,7 @@ const SECS = [
             <SectionMempelai v-if="s.k === 'mempelai'" :invite="invite" />
             <SectionAcara v-else-if="s.k === 'acara'" :invite="invite" />
             <SectionGaleri v-else-if="s.k === 'galeri'" :invite="invite" />
+            <SectionMusik v-else-if="s.k === 'musik'" :invite="invite" />
             <SectionTema v-else :theme="theme" @update:theme="emit('update:theme', $event)" />
           </div>
         </div>

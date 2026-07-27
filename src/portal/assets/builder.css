@@ -4,20 +4,20 @@
    Semua chrome builder (global; kelas .bshell/.pb/.bf/.f- unik untuk portal).
    ============================================================ */
 .bshell {
-  --pb-canvas: #f7f3ea;
-  --pb-panel: #fcf9f2;
-  --pb-ink: #2a231b;
-  --pb-ink-2: #4d4335;
-  --pb-muted: #90836d;
-  --pb-line: #ece3d2;
-  --pb-line-2: #e0d5be;
-  --pb-gold: #b7893a;
-  --pb-gold-lite: #e2c37c;
-  --pb-stage: #100d0a;
-  --pb-white: #ffffff;
+  --pb-canvas: #0e0b07;
+  --pb-panel: #14100b;
+  --pb-ink: #f1e7cf;
+  --pb-ink-2: #ddd0b4;
+  --pb-muted: #a99d80;
+  --pb-line: rgba(201, 162, 75, .16);
+  --pb-line-2: rgba(201, 162, 75, .3);
+  --pb-gold: #d8b25e;
+  --pb-gold-lite: #ecc987;
+  --pb-stage: #0a0806;
+  --pb-white: rgba(0, 0, 0, .3);
   --pb-serif: 'Fraunces', Georgia, serif;
   --pb-sans: 'Jost', system-ui, sans-serif;
-  --pb-shadow: 0 30px 70px -34px rgba(30, 22, 10, .5);
+  --pb-shadow: 0 30px 70px -34px rgba(0, 0, 0, .6);
   --pb-r: 12px;
 }
 
@@ -36,12 +36,12 @@
 .bshell__scroll {
   flex: 1; overflow-y: auto; overflow-x: hidden;
   scrollbar-width: thin;                          /* Firefox */
-  scrollbar-color: #d3c4a6 transparent;           /* Firefox: thumb tan, track bening */
+  scrollbar-color: rgba(201, 162, 75, .4) transparent;   /* Firefox */
 }
 .bshell__scroll::-webkit-scrollbar { width: 10px; }
 .bshell__scroll::-webkit-scrollbar-track { background: transparent; }
-.bshell__scroll::-webkit-scrollbar-thumb { background: #d3c4a6; border-radius: 10px; border: 3px solid var(--pb-panel); }
-.bshell__scroll::-webkit-scrollbar-thumb:hover { background: #c4b48f; }
+.bshell__scroll::-webkit-scrollbar-thumb { background: rgba(201, 162, 75, .38); border-radius: 10px; border: 3px solid var(--pb-panel); }
+.bshell__scroll::-webkit-scrollbar-thumb:hover { background: rgba(201, 162, 75, .55); }
 
 /* ---------- Panggung pratinjau ---------- */
 .bshell__stage {
@@ -109,13 +109,13 @@
   width: 100%; display: flex; align-items: center; gap: 1rem; text-align: left;
   padding: 1.1rem 1.6rem; background: none; border: none; cursor: pointer; transition: background-color .2s;
 }
-.bf__head:hover { background: #f5efe2; }
+.bf__head:hover { background: rgba(255, 255, 255, .04); }
 .bf__num { font-family: var(--pb-serif); font-weight: 600; font-size: 1.05rem; color: var(--pb-gold); min-width: 1.5rem; font-variant-numeric: tabular-nums; }
 .bf__titles { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .bf__title { display: block; font-family: var(--pb-serif); font-size: 1.12rem; color: var(--pb-ink); line-height: 1.25; }
 .bf__desc { display: block; font-size: .75rem; color: var(--pb-muted); margin-top: .15rem; }
 .bf__chev { color: var(--pb-gold); font-size: .7rem; transition: transform .3s var(--pb-ease, ease); }
-.bf__head.is-open { background: #f4eddd; }
+.bf__head.is-open { background: rgba(201, 162, 75, .1); }
 .bf__head.is-open .bf__chev { transform: rotate(180deg); }
 .bf__head.is-open .bf__num { color: var(--pb-ink); }
 
@@ -132,7 +132,7 @@
   width: 100%; padding: .62rem .75rem; border: 1px solid var(--pb-line-2); border-radius: 10px;
   background: var(--pb-white); color: var(--pb-ink); font-family: inherit; font-size: .92rem; transition: border-color .18s, box-shadow .18s;
 }
-.f-input::placeholder, .f-textarea::placeholder { color: #bcae94; }
+.f-input::placeholder, .f-textarea::placeholder { color: #8a7f66; }
 .f-input:focus, .f-textarea:focus, .f-select:focus { outline: none; border-color: var(--pb-gold); box-shadow: 0 0 0 3px rgba(183, 137, 58, .16); }
 .f-textarea { resize: vertical; min-height: 66px; line-height: 1.5; }
 .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
@@ -146,7 +146,7 @@
 .f-theme { display: flex; align-items: center; gap: .5rem; padding: .6rem .7rem; cursor: pointer; text-align: left; border: 1px solid var(--pb-line-2); border-radius: 12px; background: var(--pb-white); font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
 .f-theme:hover { transform: translateY(-2px); border-color: var(--pb-gold-lite); }
 .f-theme.is-on { border-color: var(--pb-gold); box-shadow: 0 0 0 2px rgba(183, 137, 58, .28); }
-.f-sw { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); flex: none; }
+.f-sw { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); flex: none; }
 .f-sw + .f-sw { margin-left: -8px; }
 .f-theme-text { display: flex; flex-direction: column; line-height: 1.2; margin-left: .3rem; min-width: 0; }
 .f-theme-name { font-size: .82rem; color: var(--pb-ink); font-weight: 500; }
@@ -156,7 +156,7 @@
 .gal-item { display: flex; flex-direction: column; gap: .3rem; }
 .gal-del { align-self: flex-start; background: none; border: none; color: #b06a6a; font-size: .72rem; cursor: pointer; padding: .1rem .2rem; }
 .gal-del:hover { text-decoration: underline; }
-.gal-add { margin-top: 1rem; width: 100%; padding: .7rem 1rem; border: 1px dashed var(--pb-line-2); border-radius: 11px; background: #fbf7ee; color: var(--pb-muted); cursor: pointer; font-family: inherit; font-size: .85rem; transition: border-color .2s, color .2s; }
+.gal-add { margin-top: 1rem; width: 100%; padding: .7rem 1rem; border: 1px dashed var(--pb-line-2); border-radius: 11px; background: rgba(255, 255, 255, .03); color: var(--pb-muted); cursor: pointer; font-family: inherit; font-size: .85rem; transition: border-color .2s, color .2s; }
 .gal-add:hover { border-color: var(--pb-gold); color: var(--pb-ink); }
 
 @media (max-width: 980px) {
