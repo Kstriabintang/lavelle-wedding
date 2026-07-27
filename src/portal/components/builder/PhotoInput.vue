@@ -1,8 +1,9 @@
 <script setup>
 // Input 1 foto: pilih file → kompres di browser → data URL (aman lintas iframe & localStorage).
 // v-model = data URL string. (Di Fase backend, diganti unggah ke storage → URL https.)
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { compressImage } from '../../lib/compressImage.js'
+import { uploadPhoto } from '../../lib/storage.js'
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
@@ -11,6 +12,10 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 const busy = ref(false)
 const inputEl = ref(null)
+
+// Bila di dalam editor Supabase (id disediakan) → unggah ke storage (URL https).
+// Bila tidak (demo lokal) → data URL.
+const inviteId = inject('lavelle-invite-id', null)
 
 function blobToDataURL(blob) {
   return new Promise((res, rej) => {
@@ -26,8 +31,13 @@ async function onPick(e) {
   if (!file) return
   busy.value = true
   try {
-    const blob = await compressImage(file, { maxEdge: 1400, quality: 0.8 })
-    emit('update:modelValue', await blobToDataURL(blob))
+    if (inviteId) {
+      const key = (props.label || 'foto').toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 24) || 'foto'
+      emit('update:modelValue', await uploadPhoto(inviteId, key, file))
+    } else {
+      const blob = await compressImage(file, { maxEdge: 1400, quality: 0.8 })
+      emit('update:modelValue', await blobToDataURL(blob))
+    }
   } catch (err) { /* diabaikan */ }
   finally { busy.value = false; if (inputEl.value) inputEl.value.value = '' }
 }

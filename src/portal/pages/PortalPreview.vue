@@ -5,6 +5,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { sampleInvite } from '../data/sampleInvite.js'
 import { mergeInvite } from '../data/schema.js'
+import { getInvite } from '../lib/invites.js'
 import InviteSinema from '../components/InviteSinema.vue'
 
 const data = ref(structuredClone(sampleInvite))
@@ -17,12 +18,19 @@ function onMsg(e) {
   if (m.theme) theme.value = m.theme
 }
 
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener('message', onMsg)
-  // dibuka standalone (tab baru) → tampilkan draft localStorage terbaru
   try {
-    const saved = JSON.parse(localStorage.getItem('lavelle-portal-draft') || 'null')
-    if (saved && saved.invite) { data.value = mergeInvite(saved.invite); if (saved.theme) theme.value = saved.theme }
+    const qid = new URLSearchParams(location.search).get('id')
+    if (qid) {
+      // dibuka via ?id (tab baru dari editor) → muat undangan itu dari Supabase
+      const inv = await getInvite(qid)
+      data.value = mergeInvite(inv.data || {}); if (inv.theme) theme.value = inv.theme
+    } else {
+      // fallback demo lokal
+      const saved = JSON.parse(localStorage.getItem('lavelle-portal-draft') || 'null')
+      if (saved && saved.invite) { data.value = mergeInvite(saved.invite); if (saved.theme) theme.value = saved.theme }
+    }
   } catch { /* ok */ }
   // di dalam iframe → minta parent kirim state terbaru (menimpa di atas)
   try { if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'lavelle-preview-ready' }, '*') } catch { /* ok */ }
