@@ -3,6 +3,10 @@
 // aktif (IntersectionObserver), muncul setelah melewati hero. Theme-aware.
 import { ref, onMounted, onUnmounted } from 'vue'
 
+// autoHide: sembunyikan saat scroll ke bawah, munculkan saat scroll ke atas.
+// Default false → perilaku lama tak berubah (Fuji/demo aman).
+const props = defineProps({ autoHide: { type: Boolean, default: false } })
+
 const items = [
   { id: 'pembuka', icon: 'fa-champagne-glasses', label: 'Pembuka' },
   { id: 'mempelai', icon: 'fa-user-group', label: 'Mempelai' },
@@ -23,8 +27,19 @@ function go(id) {
   el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
 }
 
+let lastY = 0
 onMounted(() => {
-  onScroll = () => { shown.value = (window.scrollY || 0) > window.innerHeight * 0.7 }
+  onScroll = () => {
+    const y = window.scrollY || 0
+    const past = y > window.innerHeight * 0.7
+    if (!props.autoHide) { shown.value = past; lastY = y; return }
+    const nearBottom = (window.innerHeight + y) >= (document.documentElement.scrollHeight - 90)
+    if (!past) shown.value = false
+    else if (nearBottom) shown.value = true
+    else if (y > lastY + 4) shown.value = false      // scroll ke bawah → sembunyi
+    else if (y < lastY - 4) shown.value = true       // scroll ke atas → muncul
+    lastY = y
+  }
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll()
 
   io = new IntersectionObserver((entries) => {
