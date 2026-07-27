@@ -21,8 +21,9 @@ const lbList = ref([])          // array foto yang sedang aktif di lightbox
 function lockScroll(on) { if (typeof document !== 'undefined') document.body.style.overflow = on ? 'hidden' : '' }
 function openLb(list, i) { lbList.value = list; lb.value = i; lockScroll(true) }
 function closeLb() { lb.value = -1; if (!showAll.value) lockScroll(false) }
-const nextLb = () => { if (lbList.value.length) lb.value = (lb.value + 1) % lbList.value.length }
-const prevLb = () => { if (lbList.value.length) lb.value = (lb.value - 1 + lbList.value.length) % lbList.value.length }
+const lbDir = ref(1)   // arah transisi foto lightbox: 1=berikutnya, -1=sebelumnya
+const nextLb = () => { if (lbList.value.length) { lbDir.value = 1; lb.value = (lb.value + 1) % lbList.value.length } }
+const prevLb = () => { if (lbList.value.length) { lbDir.value = -1; lb.value = (lb.value - 1 + lbList.value.length) % lbList.value.length } }
 function openAll() { showAll.value = true; lockScroll(true) }
 function closeAll() { showAll.value = false; if (lb.value < 0) lockScroll(false) }
 
@@ -93,7 +94,9 @@ onUnmounted(() => { document.removeEventListener('keydown', onKey); lockScroll(f
     <Teleport to="body">
       <transition name="lb">
         <div v-if="lb >= 0 && lbList[lb]" class="gl__lb" @click.self="closeLb" @touchstart.passive="ts" @touchend.passive="te">
-          <img :src="imgSrc(lbList[lb].src)" :alt="`Momen ${lb + 1}`" class="gl__lbimg">
+          <transition :name="lbDir === 1 ? 'gl-nx' : 'gl-pv'" mode="out-in">
+            <img :key="lb" :src="imgSrc(lbList[lb].src)" :alt="`Momen ${lb + 1}`" class="gl__lbimg">
+          </transition>
           <button class="gl__lbbtn gl__close" @click="closeLb" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
           <button class="gl__lbbtn gl__prev" @click.stop="prevLb" aria-label="Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
           <button class="gl__lbbtn gl__next" @click.stop="nextLb" aria-label="Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
@@ -114,6 +117,17 @@ onUnmounted(() => { document.removeEventListener('keydown', onKey); lockScroll(f
 .gl__img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.04); transition: opacity .7s ease, transform .7s ease; }
 .gl__img.is-loaded { opacity: 1; transform: scale(1); }
 .gl__tile:hover .gl__img.is-loaded { transform: scale(1.06); }
+
+/* Transisi foto lightbox — geser+fade berarah (next: masuk dari kanan, prev: dari kiri) */
+.gl-nx-enter-active, .gl-nx-leave-active, .gl-pv-enter-active, .gl-pv-leave-active { transition: opacity .3s ease, transform .34s cubic-bezier(.22, 1, .36, 1); }
+.gl-nx-enter-from { opacity: 0; transform: translateX(46px) scale(.975); }
+.gl-nx-leave-to  { opacity: 0; transform: translateX(-46px) scale(.975); }
+.gl-pv-enter-from { opacity: 0; transform: translateX(-46px) scale(.975); }
+.gl-pv-leave-to  { opacity: 0; transform: translateX(46px) scale(.975); }
+@media (prefers-reduced-motion: reduce) {
+  .gl-nx-enter-active, .gl-nx-leave-active, .gl-pv-enter-active, .gl-pv-leave-active { transition: opacity .2s ease; }
+  .gl-nx-enter-from, .gl-nx-leave-to, .gl-pv-enter-from, .gl-pv-leave-to { transform: none; }
+}
 .gl__zoom { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 1.1rem; background: rgba(0, 0, 0, .28); opacity: 0; transition: opacity .3s; }
 .gl__tile:hover .gl__zoom { opacity: 1; }
 
