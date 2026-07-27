@@ -1,0 +1,163 @@
+/* ============================================================
+   SINEMA TEMPLATE — versi PORTAL yang committable & berbasis TEMA.
+   Digeneralisasi dari client-001 (foundation + sinema) TANPA menyentuhnya.
+   Semua warna berasal dari CSS custom properties yang di-set paket tema
+   (src/portal/data/themes.js) via :style pada .invite-sinema.
+   Root class: .invite-sinema (pengganti .sinema .c001).
+   ============================================================ */
+.invite-sinema {
+  /* Fallback palet (di-override oleh :style themeVars di komponen) */
+  --bg: #161210; --surface: #201914; --ink: #f4ecdd; --ink-soft: #c9bda6;
+  --line: rgba(201, 162, 75, .28); --accent: #c9a24b; --accent-2: #e6c877;
+  --accent-ink: #1a1206; --marun: #5c1020;
+
+  /* Var non-tema (tetap) */
+  --surface-2: var(--surface); --deep: var(--bg);
+  --photo-filter: saturate(1.06) contrast(1.04);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-script: 'Pinyon Script', cursive;
+  --font-sans: 'Jost', system-ui, sans-serif;
+
+  position: relative; background: var(--bg); color: var(--ink);
+  font-family: var(--font-sans); overflow-x: hidden;
+}
+
+/* Hero entrance via CSS (robust: tampil bila JS gagal). Resting = terlihat. */
+html.motion-on .invite-sinema .sn-char {
+  animation: snCharRise .9s cubic-bezier(.16, 1, .3, 1) backwards;
+  animation-delay: calc(.35s + var(--i, 0) * .045s);
+}
+@keyframes snCharRise { from { opacity: 0; transform: translateY(115%); } }
+html.motion-on .invite-sinema .sn-hero__meta {
+  animation: snMetaRise 1s cubic-bezier(.16, 1, .3, 1) 1.05s backwards;
+}
+@keyframes snMetaRise { from { opacity: 0; transform: translateY(22px); } }
+@media (prefers-reduced-motion: reduce) {
+  .invite-sinema .sn-char, .invite-sinema .sn-hero__meta { animation: none !important; }
+}
+
+/* ============================================================
+   HERO — full-bleed + parallax + nama pecah per-huruf
+   ============================================================ */
+.sn-hero { position: relative; min-height: 100svh; overflow: hidden; display: flex; align-items: flex-end; }
+.sn-hero__photo { position: absolute; inset: -10% 0; z-index: 0; background-size: cover; background-position: center 40%; filter: var(--photo-filter); will-change: transform; }
+.sn-hero__scrim { position: absolute; inset: 0; z-index: 1; background: radial-gradient(125% 95% at 50% 40%, transparent 56%, rgba(0, 0, 0, .42) 100%), linear-gradient(180deg, rgba(8, 6, 4, .55) 0%, rgba(8, 6, 4, .12) 24%, rgba(8, 6, 4, .5) 54%, rgba(8, 6, 4, .98) 100%); }
+.sn-hero__inner { position: relative; z-index: 2; width: 100%; padding: 0 7vw 12vh; text-align: center; }
+.sn-hero__kicker { text-transform: uppercase; letter-spacing: .46em; font-size: .66rem; color: var(--accent-2); }
+.sn-hero__names { font-family: var(--font-script); font-size: clamp(3.6rem, 15vw, 9rem); line-height: .92; margin: 1rem 0 .4rem; color: #fff; text-shadow: 0 2px 22px rgba(0, 0, 0, .92), 0 1px 4px rgba(0, 0, 0, .85); }
+.sn-hero__kicker, .sn-hero__date { text-shadow: 0 1px 12px rgba(0, 0, 0, .85); }
+.sn-hero__line { display: block; overflow: hidden; padding-bottom: .08em; }
+.sn-char { display: inline-block; will-change: transform; }
+.sn-hero__amp { display: block; font-family: var(--font-serif); font-style: italic; font-size: .26em; color: var(--accent-2); margin: .05em 0; }
+.sn-hero__date { font-family: var(--font-serif); font-style: italic; font-size: 1.15rem; color: rgba(255, 255, 255, .9); margin-top: .4rem; }
+.sn-hero__cd { display: flex; justify-content: center; gap: clamp(1rem, 5vw, 2.4rem); margin-top: 2.4rem; }
+.sn-hero__cd b { display: block; font-family: var(--font-display); font-weight: 600; font-size: clamp(1.5rem, 4.5vw, 2.2rem); color: var(--accent-2); line-height: 1; font-variant-numeric: tabular-nums; }
+.sn-hero__cd span { display: block; margin-top: .45rem; font-size: .56rem; letter-spacing: .22em; text-transform: uppercase; color: rgba(255, 255, 255, .72); }
+.sn-hero__scroll { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 3; font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: rgba(255, 255, 255, .6); }
+
+/* Backdrop blur — HANYA desktop. Foto portrait tampil UTUH (contain). */
+.sn-hero__bg { display: none; }
+@media (min-width: 1024px) {
+  .sn-hero__bg { display: block; position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; filter: blur(30px) brightness(.45) saturate(1.05); transform: scale(1.12); }
+  .sn-hero__photo { inset: 0; background-size: contain; background-position: center; z-index: 1; }
+  .sn-hero__scrim { z-index: 2; }
+  .sn-hero__inner { z-index: 3; }
+  .sn-hero__scroll { z-index: 4; }
+}
+
+/* ============================================================ QUOTE ============================================================ */
+.sn-quote { padding: clamp(6rem, 16vw, 11rem) 0; text-align: center; }
+.sn-quote__t { font-family: var(--font-serif); font-style: italic; font-size: clamp(1.4rem, 4vw, 2.3rem); line-height: 1.55; color: var(--ink); max-width: 760px; margin: 0 auto; padding: 0 6vw; text-wrap: balance; }
+.sn-quote__r { display: block; margin-top: 1.6rem; letter-spacing: .22em; text-transform: uppercase; font-size: .72rem; color: var(--accent-2); }
+.invite-sinema .sn-quote .sn-quote__orn { margin: 1.4rem auto; }
+
+/* ============================================================ COUPLE ============================================================ */
+.sn-couple { padding: clamp(3rem, 8vw, 6rem) 0 clamp(5rem, 12vw, 8rem); }
+.sn-couple__grid { display: grid; gap: clamp(2rem, 6vw, 4rem); max-width: 980px; margin: 0 auto; padding: 0 6vw; }
+.sn-person { text-align: center; }
+.sn-person__ph { aspect-ratio: 3/4; border-radius: 220px 220px 18px 18px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 70px -34px rgba(0, 0, 0, .85); max-width: 340px; margin: 0 auto 1.4rem; }
+.sn-person__ph img { width: 100%; height: 100%; object-fit: cover; filter: var(--photo-filter); }
+.sn-person__name { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.6rem, 4vw, 2.1rem); }
+.sn-person__role { font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--accent-2); margin: .3rem 0 .5rem; }
+.sn-person__parents { font-family: var(--font-serif); color: var(--ink-soft); font-size: 1.02rem; }
+@media (min-width: 760px) { .sn-couple__grid { grid-template-columns: 1fr 1fr; align-items: start; } }
+
+/* ============================================================
+   STORY — horizontal ter-pin (default vertikal aman; .sn-on = aktif GSAP)
+   ============================================================ */
+.sn-story { position: relative; padding: clamp(4rem, 11vw, 7rem) 0; }
+.sn-story__head { text-align: center; margin-bottom: 2.6rem; z-index: 2; }
+.sn-story__kicker { text-transform: uppercase; letter-spacing: .34em; font-size: .68rem; color: var(--accent-2); }
+.sn-story__title { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.8rem, 5vw, 3rem); margin-top: .4rem; }
+.invite-sinema .sn-story__head .sn-story__orn { margin: .9rem auto 0; }
+.sn-story__track { display: flex; flex-direction: column; align-items: center; gap: 2rem; padding: 0 6vw; }
+.sn-story__panel { width: 100%; max-width: 460px; }
+.sn-story__ph { aspect-ratio: 3/4; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 70px -34px rgba(0, 0, 0, .85); }
+.sn-story__ph img { width: 100%; height: 100%; object-fit: cover; filter: var(--photo-filter); }
+.sn-story__year { font-family: var(--font-display); font-weight: 600; color: var(--accent-2); font-size: 1rem; letter-spacing: .1em; margin-top: 1.2rem; }
+.sn-story__name { font-family: var(--font-display); font-weight: 600; font-size: 1.5rem; margin: .2rem 0 .5rem; }
+.sn-story__desc { font-family: var(--font-serif); color: var(--ink-soft); font-size: 1.04rem; line-height: 1.6; }
+.sn-story__hint { display: none; }
+
+.sn-story.sn-on { height: 100vh; padding: 0; overflow: hidden; position: relative; }
+.sn-story.sn-on .sn-story__head { position: absolute; top: 5vh; left: 0; right: 0; margin: 0; z-index: 3; }
+.sn-story.sn-on .sn-story__track { position: absolute; top: 19vh; bottom: 7vh; left: 0; right: 0; display: flex; flex-direction: row; align-items: stretch; gap: clamp(1.4rem, 4vw, 3rem); padding: 0 max(8vw, calc(50vw - 190px)); will-change: transform; }
+.sn-story.sn-on .sn-story__panel { flex: 0 0 min(76vw, 380px); width: auto; height: 100%; display: flex; flex-direction: column; }
+.sn-story.sn-on .sn-story__ph { flex: 1 1 auto; min-height: 0; aspect-ratio: auto; height: auto; margin: 0 0 .9rem; }
+.sn-story.sn-on .sn-story__ph img { height: 100%; }
+.sn-story.sn-on .sn-story__year { margin-top: 0; }
+.sn-story.sn-on .sn-story__hint { display: block; position: absolute; bottom: 2.5vh; left: 0; right: 0; text-align: center; z-index: 2; font-size: .62rem; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-soft); }
+
+/* ============================================================ CLOSING ============================================================ */
+.sn-closing { position: relative; min-height: 92vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 6rem 6vw; }
+.sn-closing__photo { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; filter: var(--photo-filter) brightness(.5); }
+.sn-closing__scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(8, 6, 4, .75), rgba(8, 6, 4, .9)); }
+.sn-closing__inner { position: relative; z-index: 2; max-width: 640px; }
+.sn-closing__q { font-family: var(--font-serif); font-style: italic; font-size: clamp(1.15rem, 3vw, 1.5rem); line-height: 1.7; color: rgba(255, 255, 255, .92); }
+.sn-closing__r { display: block; margin-top: 1rem; letter-spacing: .2em; text-transform: uppercase; font-size: .7rem; color: var(--accent-2); }
+.sn-closing__sign { font-family: var(--font-script); font-size: clamp(3.4rem, 12vw, 7rem); color: #fff; margin-top: 2rem; line-height: 1; will-change: transform; }
+.sn-closing__thanks { margin-top: 1.4rem; font-family: var(--font-serif); color: rgba(255, 255, 255, .75); font-size: 1.05rem; }
+
+@media (prefers-reduced-motion: reduce) { .sn-hero__photo { transform: none !important; } }
+
+/* ============================================================
+   OVERRIDE KOMPONEN BERSAMA (royale/*) — disalin dari foundation client-001,
+   di-rescope ke .invite-sinema, --c-* diganti var tema, filter peta gelap
+   di-DROP (agar tema terang tidak rusak — bisa ditambah per-tema nanti).
+   ============================================================ */
+.invite-sinema .r-section { position: relative; z-index: 1; }
+.invite-sinema .ev__map { border: 1px solid var(--line); }
+
+/* Gate & caption */
+.invite-sinema .env__btn { box-shadow: 0 8px 20px -14px var(--accent) !important; }
+.invite-sinema .env__note { display: none !important; }
+
+/* Musik: disc bulat ringkas + kanan-bawah agar tak nabrak countdown hero */
+.invite-sinema .mp { left: auto !important; right: 14px !important; }
+.invite-sinema .mp__btn { padding: 4px !important; gap: 0 !important; }
+.invite-sinema .mp__eq { display: none !important; }
+.invite-sinema .mp__disc { width: 44px !important; height: 44px !important; font-size: 1rem; }
+
+/* Detail acara: hapus tombol "Simpan .ics" */
+.invite-sinema .ev__actions button { display: none !important; }
+.invite-sinema .ev__actions { justify-content: center; }
+
+/* Dress code: sembunyikan kode hex (cukup nama warna untuk tamu) */
+.invite-sinema .dc__hex { display: none !important; }
+
+/* Wishes: label sticker picker */
+.invite-sinema .wf__stickers::before {
+  content: "Sisipkan stiker (opsional)"; flex-basis: 100%; margin-bottom: .15rem;
+  font-family: 'Jost', system-ui, sans-serif; font-size: .6rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-soft);
+}
+
+/* Galeri: 3 kolom di HP + tile seragam (kill bento) + sembunyikan filter */
+@media (max-width: 899px) {
+  .invite-sinema .gl__grid { grid-template-columns: repeat(3, 1fr) !important; gap: .4rem !important; }
+}
+.invite-sinema .gl__tile.b0, .invite-sinema .gl__tile.b3, .invite-sinema .gl__tile.b4 {
+  grid-column: auto !important; grid-row: auto !important; aspect-ratio: 1 !important;
+}
+.invite-sinema .gl__filter { display: none !important; }
