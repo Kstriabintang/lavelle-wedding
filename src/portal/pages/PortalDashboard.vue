@@ -214,20 +214,20 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 .db__cancel { background: rgba(255, 255, 255, .03); border: 1px solid var(--pa-bd); border-radius: 10px; padding: .5rem 1rem; color: var(--pa-mut); font-family: inherit; font-size: .85rem; cursor: pointer; }
 .db__form-err { margin-top: .5rem; color: #e0776b; font-size: .8rem; }
 .db__form-hint { margin-top: .5rem; color: var(--pa-mut); font-size: .8rem; }
-.db__templates { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; margin-top: .5rem; }
+.db__templates { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .7rem; margin-top: .5rem; }
 .db__template { position: relative; text-align: left; padding: 0; border: 1.5px solid var(--pa-bd); border-radius: 15px; background: var(--pa-surf); cursor: pointer; font-family: inherit; overflow: hidden; display: flex; flex-direction: column; transition: border-color .2s, box-shadow .2s, transform .2s; }
 .db__template:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(0, 0, 0, .5); }
 .db__template.is-on { border-color: var(--pa-acc); box-shadow: 0 0 0 2px var(--pa-glow), 0 16px 34px rgba(0, 0, 0, .5); }
-.db__tpl-thumb { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--pa-surf2); }
+.db__tpl-thumb { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: var(--pa-surf2); }
 .db__tpl-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
 .db__template:hover .db__tpl-thumb img { transform: scale(1.05); }
 .db__tpl-thumb::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 52%, rgba(10, 7, 4, .55)); pointer-events: none; }
 .db__tpl-tag { position: absolute; top: .5rem; left: .5rem; z-index: 2; font-size: .56rem; text-transform: uppercase; letter-spacing: .1em; color: #f3e6c4; background: rgba(20, 14, 6, .7); border: 1px solid var(--pa-bd2); border-radius: 40px; padding: .2rem .55rem; backdrop-filter: blur(3px); }
 .db__tpl-check { position: absolute; top: .5rem; right: .5rem; z-index: 2; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: .7rem; color: var(--pa-ink); background: var(--pa-acc); opacity: 0; transform: scale(.6); transition: opacity .2s, transform .2s; }
 .db__template.is-on .db__tpl-check { opacity: 1; transform: scale(1); }
-.db__template-body { padding: .7rem .85rem .9rem; }
-.db__template-name { font-family: 'Fraunces', serif; font-size: 1.08rem; color: var(--pa-txt); }
-.db__template-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-top: .3rem; font-size: .73rem; color: var(--pa-mut); line-height: 1.5; }
+.db__template-body { padding: .55rem .7rem .7rem; }
+.db__template-name { font-family: 'Fraunces', serif; font-size: .98rem; color: var(--pa-txt); }
+.db__template-desc { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: .25rem; font-size: .68rem; color: var(--pa-mut); line-height: 1.45; }
 .db__form-label--mt { display: block; margin-top: 1.1rem; }
 .db__suku { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; margin-top: .5rem; }
 .db__suku-btn { text-align: left; padding: .6rem .75rem; border: 1.5px solid var(--pa-bd); border-radius: 10px; background: var(--pa-surf2); cursor: pointer; font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
@@ -235,7 +235,7 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 .db__suku-btn.is-on { border-color: var(--pa-acc); box-shadow: 0 0 0 2px var(--pa-glow); }
 .db__suku-name { display: block; font-family: 'Fraunces', serif; font-size: .95rem; color: var(--pa-txt); }
 .db__suku-accent { display: block; margin-top: .15rem; font-size: .66rem; color: var(--pa-mut); letter-spacing: .02em; }
-@media (max-width: 560px) { .db__templates { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .db__templates { grid-template-columns: 1fr 1fr; } }
 .db-form-enter-active, .db-form-leave-active { transition: opacity .3s, transform .3s; }
 .db-form-enter-from, .db-form-leave-to { opacity: 0; transform: translateY(-8px); }
 
