@@ -6,7 +6,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { wireReveal } from '../../composables/useReveal'
 import { useSinemaTemplate } from '../composables/useSinemaTemplate'
-import { mergeInvite } from '../data/schema'
+import { mergeInvite, fillPhotos } from '../data/schema'
 import { themeVars, THEME_IDS } from '../data/themes'
 import '../../assets/royale.css'
 import '../assets/sinema-template.css'
@@ -33,7 +33,7 @@ const props = defineProps({
 })
 
 const root = ref(null)
-const r = computed(() => mergeInvite(props.data))
+const r = computed(() => fillPhotos(mergeInvite(props.data)))
 const style = computed(() => ({ ...themeVars(props.theme), ...props.accentOv }))
 const skipGate = computed(() => props.preview)
 const initials = computed(() => `${r.value.hero.bride[0] || '?'} & ${r.value.hero.groom[0] || '?'}`)
@@ -76,7 +76,7 @@ onUnmounted(() => { clearInterval(timer); stopSinema() })
     <EnvelopeGate v-if="!skipGate" :bride="r.hero.bride" :groom="r.hero.groom" :date-text="r.hero.dateText"
                   :guest="'Tamu Undangan'" :initials="initials" @opened="onOpened" />
     <ScrollProgress />
-    <MusicPlayer v-if="r.music.src" ref="musicRef" :src="r.music.src" :start="r.music.start" />
+    <MusicPlayer v-if="r.music.src && !r.music.link" ref="musicRef" :src="r.music.src" :start="r.music.start" />
 
     <!-- HERO sinematik -->
     <section class="sn-hero" id="atas">

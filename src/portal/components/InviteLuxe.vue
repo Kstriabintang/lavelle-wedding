@@ -4,7 +4,7 @@
 // Base ivory-romantis TETAP (identitas Luxe); aksen (rose/gold) ikut paket tema.
 // Data dari skema portal, foto = URL. preview=true → lewati sampul.
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
-import { mergeInvite } from '../data/schema.js'
+import { mergeInvite, fillPhotos } from '../data/schema.js'
 import { themeVars, THEME_IDS } from '../data/themes.js'
 
 const props = defineProps({
@@ -15,7 +15,7 @@ const props = defineProps({
   hide: { type: Object, default: () => ({}) },
 })
 
-const r = computed(() => mergeInvite(props.data))
+const r = computed(() => fillPhotos(mergeInvite(props.data)))
 const accentVars = computed(() => {
   const tv = themeVars(props.theme)
   // Warna utama Luxe (--rose) ikut --marun tiap tema (navy/burgundy/hijau/rosé) → jelas beda

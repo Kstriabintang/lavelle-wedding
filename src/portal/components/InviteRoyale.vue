@@ -4,7 +4,7 @@
 // 100% komponen royale/* (klasik elegan multi-seksi). Foto = URL penuh.
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { wireReveal } from '../../composables/useReveal'
-import { mergeInvite } from '../data/schema.js'
+import { mergeInvite, fillPhotos } from '../data/schema.js'
 import { themeVars, THEME_IDS } from '../data/themes.js'
 import '../../assets/royale.css'
 
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const root = ref(null)
-const r = computed(() => mergeInvite(props.data))
+const r = computed(() => fillPhotos(mergeInvite(props.data)))
 const style = computed(() => ({ ...themeVars(props.theme), ...props.accentOv }))
 const skipGate = computed(() => props.preview)
 const initials = computed(() => `${r.value.hero.bride[0] || '?'} & ${r.value.hero.groom[0] || '?'}`)

@@ -4,8 +4,11 @@
 import { ref } from 'vue'
 import '../../assets/builder.css'
 import SectionMempelai from './sections/SectionMempelai.vue'
+import SectionKisah from './sections/SectionKisah.vue'
 import SectionAcara from './sections/SectionAcara.vue'
 import SectionGaleri from './sections/SectionGaleri.vue'
+import SectionKeluarga from './sections/SectionKeluarga.vue'
+import SectionHadiah from './sections/SectionHadiah.vue'
 import SectionMusik from './sections/SectionMusik.vue'
 import SectionTema from './sections/SectionTema.vue'
 import SectionGaya from './sections/SectionGaya.vue'
@@ -18,11 +21,14 @@ function toggle(k) { open.value = open.value === k ? '' : k }
 
 const SECS = [
   { k: 'mempelai', num: '01', label: 'Mempelai', desc: 'Nama, tanggal, orang tua & foto' },
-  { k: 'acara', num: '02', label: 'Acara', desc: 'Akad & resepsi: waktu, tempat, peta' },
-  { k: 'galeri', num: '03', label: 'Galeri', desc: 'Foto prewedding (maksimal 12)' },
-  { k: 'musik', num: '04', label: 'Musik', desc: 'Lagu latar dari YouTube (auto-play)' },
-  { k: 'tema', num: '05', label: 'Tema Warna', desc: 'Nuansa warna undangan' },
-  { k: 'gaya', num: '06', label: 'Kustomisasi', desc: 'Font, ukuran teks, warna aksen, sembunyikan seksi' },
+  { k: 'kisah', num: '02', label: 'Kisah Cinta', desc: 'Bab perjalanan cinta + foto' },
+  { k: 'acara', num: '03', label: 'Acara', desc: 'Akad & resepsi: waktu, tempat, peta' },
+  { k: 'galeri', num: '04', label: 'Galeri', desc: 'Foto prewedding (maksimal 12)' },
+  { k: 'keluarga', num: '05', label: 'Keluarga', desc: 'Orang tua & turut mengundang' },
+  { k: 'hadiah', num: '06', label: 'Amplop Digital', desc: 'Rekening / e-wallet / QRIS' },
+  { k: 'musik', num: '07', label: 'Musik', desc: 'Lagu latar dari YouTube (auto-play)' },
+  { k: 'tema', num: '08', label: 'Tema Warna', desc: 'Nuansa warna undangan' },
+  { k: 'gaya', num: '09', label: 'Kustomisasi', desc: 'Font, ukuran teks, warna aksen, sembunyikan seksi' },
 ]
 </script>
 
@@ -42,8 +48,11 @@ const SECS = [
         <div class="bf__inner">
           <div class="bf__body">
             <SectionMempelai v-if="s.k === 'mempelai'" :invite="invite" />
+            <SectionKisah v-else-if="s.k === 'kisah'" :invite="invite" />
             <SectionAcara v-else-if="s.k === 'acara'" :invite="invite" />
             <SectionGaleri v-else-if="s.k === 'galeri'" :invite="invite" />
+            <SectionKeluarga v-else-if="s.k === 'keluarga'" :invite="invite" />
+            <SectionHadiah v-else-if="s.k === 'hadiah'" :invite="invite" />
             <SectionMusik v-else-if="s.k === 'musik'" :invite="invite" />
             <SectionGaya v-else-if="s.k === 'gaya'" :invite="invite" />
             <SectionTema v-else :theme="theme" @update:theme="emit('update:theme', $event)" />

@@ -41,3 +41,18 @@ function deepMerge(base, over) {
   return out
 }
 export function mergeInvite(partial) { return deepMerge(defaultInvite(), partial || {}) }
+
+// Isi foto yang kosong dengan foto utama (cover) → tak ada gambar rusak / seksi hitam.
+export function fillPhotos(inv) {
+  const cover = inv.hero.photo
+    || (inv.gallery && inv.gallery[0] && inv.gallery[0].src)
+    || (inv.galleryFull && inv.galleryFull[0] && inv.galleryFull[0].src)
+    || ''
+  if (!cover) return inv
+  if (!inv.opening.photo) inv.opening.photo = cover
+  if (!inv.bride.photo) inv.bride.photo = cover
+  if (!inv.groom.photo) inv.groom.photo = cover
+  if (!inv.closing.photo) inv.closing.photo = cover
+  ;(inv.story || []).forEach((s) => { if (!s.photo) s.photo = cover })
+  return inv
+}
