@@ -6,6 +6,7 @@ import { signOut } from '../lib/auth.js'
 import { listInvites, createInvite, deleteInvite, slugTaken } from '../lib/invites.js'
 import { slugify, validateSlug } from '../lib/slug.js'
 import { defaultInvite } from '../data/schema.js'
+import LavelleLogo from '../components/LavelleLogo.vue'
 
 const router = useRouter()
 const invites = ref([])
@@ -55,7 +56,7 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 <template>
   <div class="db">
     <header class="db__top">
-      <div class="db__brand"><span class="db__logo">Lavelle</span><span class="db__eyebrow">Studio Undangan</span></div>
+      <div class="db__brand"><LavelleLogo wordmark class="db__logo" /><span class="db__eyebrow">Studio Undangan</span></div>
       <div class="db__user">
         <span class="db__who">{{ profile?.name || '…' }}<em v-if="profile?.role === 'admin'"> · admin</em></span>
         <button class="db__logout" type="button" @click="logout">Keluar</button>
@@ -109,8 +110,9 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 <style scoped>
 .db { min-height: 100vh; min-height: 100svh; background: linear-gradient(180deg, #f7f3ea, #f2ebdc); font-family: 'Jost', system-ui, sans-serif; color: #2a231b; }
 .db__top { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.8rem; background: #fffdf9; border-bottom: 1px solid #ece3d2; position: sticky; top: 0; z-index: 5; }
-.db__brand { display: flex; align-items: baseline; gap: .55rem; }
-.db__logo { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.35rem; }
+.db__brand { display: flex; align-items: center; gap: .7rem; }
+.db__logo { color: #2a231b; font-size: 1.3rem; }
+.db__brand :deep(.llg__mark) { color: #b7893a; }
 .db__eyebrow { font-size: .62rem; text-transform: uppercase; letter-spacing: .22em; color: #b7893a; }
 .db__user { display: flex; align-items: center; gap: 1rem; }
 .db__who { font-size: .84rem; color: #6d6152; }

@@ -5,6 +5,7 @@ import { reactive, ref, watch, onMounted, onUnmounted, provide, computed } from 
 import { useRoute, useRouter } from 'vue-router'
 import { session, initSession } from '../lib/session.js'
 import { getInvite, saveInvite } from '../lib/invites.js'
+import { activateDomain } from '../lib/publishDomain.js'
 import { mergeInvite } from '../data/schema.js'
 import BuilderShell from '../components/builder/BuilderShell.vue'
 import BuilderForm from '../components/builder/BuilderForm.vue'
@@ -20,6 +21,7 @@ const slug = ref('')
 const loaded = ref(false)
 const saveState = ref('saved')     // saved|saving
 const publishing = ref(false)
+const pubMsg = ref('')
 const previewFrame = ref(null)
 
 onMounted(async () => {
@@ -55,9 +57,14 @@ watch([invite, theme], () => {
 
 async function publish() {
   if (publishing.value) return
-  publishing.value = true
+  publishing.value = true; pubMsg.value = 'Menyimpan…'
   await doSave()
-  try { await saveInvite(id, { status: 'published' }); status.value = 'published' } catch { /* */ }
+  try {
+    await saveInvite(id, { status: 'published' }); status.value = 'published'
+    pubMsg.value = 'Mengaktifkan subdomain…'
+    const res = await activateDomain(slug.value)
+    pubMsg.value = res && res.ok ? '✓ Subdomain aktif (SSL ±1 menit)' : 'Terbit ✓ (subdomain menyusul)'
+  } catch { pubMsg.value = 'Terbit ✓' }
   publishing.value = false
 }
 async function unpublish() {
@@ -88,10 +95,11 @@ const liveUrl = computed(() => `https://${slug.value}.lavelle.my.id`)
       <footer class="pe__foot">
         <template v-if="status === 'published'">
           <a class="pe__live" :href="liveUrl" target="_blank" rel="noopener">Lihat Live ↗</a>
+          <span v-if="pubMsg" class="pe__pubmsg">{{ pubMsg }}</span>
           <button class="pe__unpub" type="button" @click="unpublish">Jadikan Draft</button>
         </template>
         <button v-else class="pe__pub" type="button" :disabled="publishing" @click="publish">
-          {{ publishing ? 'Menerbitkan…' : '🌐 Terbitkan Undangan' }}
+          {{ publishing ? (pubMsg || 'Menerbitkan…') : '🌐 Terbitkan Undangan' }}
         </button>
       </footer>
     </template>
@@ -125,6 +133,7 @@ const liveUrl = computed(() => `https://${slug.value}.lavelle.my.id`)
 .pe__pub:disabled { opacity: .6; }
 .pe__live { color: #2f7d46; font-family: 'Jost', sans-serif; font-size: .9rem; text-decoration: none; font-weight: 500; }
 .pe__live:hover { text-decoration: underline; }
+.pe__pubmsg { font-size: .76rem; color: #2f7d46; }
 .pe__unpub { margin-left: auto; background: none; border: 1px solid #e0d5be; border-radius: 9px; padding: .45rem .9rem; color: #8b7e6a; font-family: 'Jost', sans-serif; font-size: .8rem; cursor: pointer; }
 .pe__frame { width: 100%; height: 100%; border: 0; display: block; background: #0b0906; }
 .pe__loading { min-height: 100vh; display: grid; place-items: center; font-family: 'Fraunces', serif; font-style: italic; color: #90836d; background: #f7f3ea; }
