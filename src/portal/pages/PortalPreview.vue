@@ -33,3 +33,9 @@ onUnmounted(() => window.removeEventListener('message', onMsg))
 <template>
   <InviteSinema :data="data" :theme="theme" preview />
 </template>
+
+<style>
+/* Pratinjau meniru HP: sembunyikan scrollbar dokumen (tak ada garis nyembul) */
+html, body { scrollbar-width: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; height: 0; }
+</style>
