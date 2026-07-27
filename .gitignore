@@ -9,3 +9,18 @@ dist-ssr
 # Material mentah & pesanan klien — jangan di-commit
 drive-download-*/
 client-001/
+
+# Preview undangan client-001 (PII + foto asli) — LOCAL ONLY, jangan di-commit/push
+public/img/mentahan/cl1-*.jpeg
+public/demo/sinema/audio/cl1-*.mp3
+src/data/client001.js
+src/pages/DemoClient001*.vue
+src/pages/ClientLuxeBase.vue
+src/components/luxe/
+src/composables/useSinema.js
+src/assets/client001-*.css
+docs/superpowers/specs/*client-001*
+
+# Kredensial deploy Cloudflare — LOCAL ONLY, jangan commit
+.cf-deploy
+SUPABASE.txt
