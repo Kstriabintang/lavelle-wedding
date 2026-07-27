@@ -51,17 +51,20 @@ function clear() { emit('update:modelValue', '') }
 </template>
 
 <style scoped>
-.pin { display: flex; flex-direction: column; gap: .3rem; }
+.pin { display: flex; flex-direction: column; gap: .35rem; }
 .pin__thumb {
-  position: relative; width: 100%; aspect-ratio: 3/4; border-radius: 10px; overflow: hidden;
-  border: 1px solid #e2d8c4; background: #f4efe4; cursor: pointer; padding: 0; display: grid; place-items: center;
+  position: relative; width: 100%; aspect-ratio: 3/4; border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--pb-line-2, #e0d5be); background: #f4efe4; cursor: pointer; padding: 0;
+  display: grid; place-items: center; transition: border-color .2s, box-shadow .2s;
 }
 .pin__thumb.is-empty { border-style: dashed; }
+.pin__thumb:hover { border-color: var(--pb-gold, #b7893a); box-shadow: 0 0 0 3px rgba(183, 137, 58, .14); }
 .pin__thumb img { width: 100%; height: 100%; object-fit: cover; }
-.pin__plus { font-size: 1.6rem; color: #c3b393; }
-.pin__busy { position: absolute; inset: auto 0 0 0; background: rgba(0, 0, 0, .55); color: #fff; font-size: .68rem; padding: .2rem; text-align: center; }
+.pin__plus { font-size: 1.7rem; color: #c3b393; font-weight: 300; }
+.pin__busy { position: absolute; inset: auto 0 0 0; background: rgba(0, 0, 0, .58); color: #fff; font-size: .68rem; padding: .25rem; text-align: center; letter-spacing: .04em; }
 .pin__bar { display: flex; align-items: center; justify-content: space-between; gap: .4rem; }
-.pin__label { font-size: .68rem; color: #9a8b6f; }
+.pin__label { font-size: .68rem; color: var(--pb-muted, #90836d); }
 .pin__del { background: none; border: none; color: #b06a6a; font-size: .68rem; cursor: pointer; }
+.pin__del:hover { text-decoration: underline; }
 .pin__file { display: none; }
 </style>

@@ -5,6 +5,7 @@
 import { reactive, ref, watch, onMounted, onUnmounted } from 'vue'
 import { sampleInvite } from '../data/sampleInvite.js'
 import { mergeInvite } from '../data/schema.js'
+import '../assets/builder.css'
 import BuilderShell from '../components/builder/BuilderShell.vue'
 import BuilderForm from '../components/builder/BuilderForm.vue'
 
@@ -18,6 +19,7 @@ function pushPreview() {
   if (w) w.postMessage({ type: 'lavelle-preview', invite: JSON.parse(JSON.stringify(invite)), theme: theme.value }, '*')
 }
 function onReady(e) { if (e.data && e.data.type === 'lavelle-preview-ready') pushPreview() }
+function openFull() { if (typeof window !== 'undefined') window.open('/portal/preview/', '_blank') }
 
 function stripPhotos(inv) {
   inv.hero.photo = ''; inv.bride.photo = ''; inv.groom.photo = ''; inv.closing.photo = ''
@@ -28,11 +30,8 @@ function stripPhotos(inv) {
 function saveDraft() {
   try { localStorage.setItem(DRAFT, JSON.stringify({ invite, theme: theme.value })) }
   catch {
-    // kuota penuh (foto data URL besar) → simpan teks saja agar tak hilang
-    try {
-      const lite = JSON.parse(JSON.stringify(invite)); stripPhotos(lite)
-      localStorage.setItem(DRAFT, JSON.stringify({ invite: lite, theme: theme.value }))
-    } catch { /* menyerah diam-diam */ }
+    try { const lite = JSON.parse(JSON.stringify(invite)); stripPhotos(lite); localStorage.setItem(DRAFT, JSON.stringify({ invite: lite, theme: theme.value })) }
+    catch { /* menyerah diam-diam */ }
   }
 }
 function resetSample() {
@@ -57,14 +56,27 @@ onUnmounted(() => window.removeEventListener('message', onReady))
 <template>
   <BuilderShell>
     <template #form>
-      <div class="pb">
-        <header class="pb__brand">
-          <span class="pb__logo">Lavelle</span>
-          <span class="pb__sub">Portal Undangan</span>
-          <button class="pb__reset" type="button" @click="resetSample" title="Kembalikan ke data contoh">Reset</button>
-        </header>
+      <header class="pb__brand">
+        <span class="pb__wordmark">Lavelle</span>
+        <span class="pb__eyebrow">Studio Undangan</span>
+        <button class="pb__reset" type="button" @click="resetSample" title="Kembalikan ke data contoh">Reset</button>
+      </header>
+
+      <div class="bshell__scroll">
+        <div class="pb__intro">
+          <p class="pb__intro-title">Undangan <b>{{ invite.hero.bride || '—' }} &amp; {{ invite.hero.groom || '—' }}</b></p>
+          <p class="pb__intro-sub">Isi tiap bagian di bawah — pratinjau di sebelah kanan berubah seketika.</p>
+        </div>
         <BuilderForm :invite="invite" :theme="theme" @update:theme="theme = $event" />
       </div>
+
+      <footer class="pb__foot">
+        <p class="pb__foot-note">Tersimpan otomatis di perangkat ini. <b>Terbitkan ke subdomain</b> aktif setelah masuk akun (segera).</p>
+      </footer>
+    </template>
+
+    <template #toolbar>
+      <button class="bshell__tool-link" type="button" @click="openFull">Buka di tab baru ↗</button>
     </template>
 
     <template #preview>
@@ -74,11 +86,5 @@ onUnmounted(() => window.removeEventListener('message', onReady))
 </template>
 
 <style scoped>
-.pb { min-height: 100%; }
-.pb__brand { display: flex; align-items: baseline; gap: .6rem; padding: 1.3rem 1.5rem; border-bottom: 1px solid #ece4d5; }
-.pb__logo { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.3rem; color: #221d16; }
-.pb__sub { font-size: .68rem; text-transform: uppercase; letter-spacing: .2em; color: #a08e6f; }
-.pb__reset { margin-left: auto; background: none; border: 1px solid #e4dac7; border-radius: 8px; padding: .3rem .7rem; font-size: .72rem; color: #8a7c62; cursor: pointer; font-family: inherit; }
-.pb__reset:hover { border-color: #c9a24b; color: #3d3428; }
 .pb__frame { width: 100%; height: 100%; border: 0; display: block; background: #0b0906; }
 </style>

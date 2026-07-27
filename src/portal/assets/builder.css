@@ -1,35 +1,169 @@
-/* Kontrol form builder (global, dipakai seksi-seksi). Warna chrome netral-elegan. */
-.f-field { display: flex; flex-direction: column; gap: .35rem; margin-bottom: .9rem; }
-.f-field > label { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: #9a8b6f; font-weight: 500; }
-.f-input, .f-textarea, .f-select {
-  width: 100%; padding: .6rem .7rem; border: 1px solid #e2d8c4; border-radius: 9px;
-  background: #fff; color: #2a2419; font-family: inherit; font-size: .9rem;
+/* ============================================================
+   PORTAL BUILDER — sistem desain "atelier undangan" Lavelle.
+   Kanvas ivory hangat + emas, Fraunces (display) × Jost (kontrol).
+   Semua chrome builder (global; kelas .bshell/.pb/.bf/.f- unik untuk portal).
+   ============================================================ */
+.bshell {
+  --pb-canvas: #f7f3ea;
+  --pb-panel: #fcf9f2;
+  --pb-ink: #2a231b;
+  --pb-ink-2: #4d4335;
+  --pb-muted: #90836d;
+  --pb-line: #ece3d2;
+  --pb-line-2: #e0d5be;
+  --pb-gold: #b7893a;
+  --pb-gold-lite: #e2c37c;
+  --pb-stage: #100d0a;
+  --pb-white: #ffffff;
+  --pb-serif: 'Fraunces', Georgia, serif;
+  --pb-sans: 'Jost', system-ui, sans-serif;
+  --pb-shadow: 0 30px 70px -34px rgba(30, 22, 10, .5);
+  --pb-r: 12px;
 }
-.f-input:focus, .f-textarea:focus, .f-select:focus { outline: 2px solid #c9a24b; outline-offset: 1px; }
-.f-textarea { resize: vertical; min-height: 64px; }
-.f-row { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
-.f-photos { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-top: .4rem; }
-.f-sub { font-family: 'Fraunces', serif; font-size: 1rem; color: #3d3428; margin: 1.2rem 0 .6rem; }
-.f-hint { font-size: .76rem; color: #a89a80; margin-bottom: .8rem; line-height: 1.5; }
 
-/* Accordion */
-.bf__sec { border-bottom: 1px solid #ece4d5; }
-.bf__head { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: none; border: none; cursor: pointer; font-family: 'Fraunces', serif; font-size: 1.05rem; color: #2a2419; }
-.bf__head .bf__chev { color: #c9a24b; transition: transform .2s; font-size: .8rem; }
+/* ---------- Kerangka dua panel ---------- */
+.bshell {
+  display: grid; grid-template-columns: 452px 1fr;
+  height: 100vh; height: 100svh; overflow: hidden;
+  font-family: var(--pb-sans); color: var(--pb-ink);
+  background: var(--pb-stage);
+}
+.bshell__panel {
+  display: flex; flex-direction: column; min-height: 0;
+  background: var(--pb-panel);
+  border-right: 1px solid var(--pb-line-2);
+}
+.bshell__scroll { flex: 1; overflow-y: auto; overflow-x: hidden; }
+.bshell__scroll::-webkit-scrollbar { width: 9px; }
+.bshell__scroll::-webkit-scrollbar-thumb { background: #ddd0b6; border-radius: 9px; border: 2px solid var(--pb-panel); }
+
+/* ---------- Panggung pratinjau ---------- */
+.bshell__stage {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  padding: 20px; overflow: hidden;
+  background:
+    radial-gradient(130% 90% at 50% -20%, #2b2113 0%, transparent 55%),
+    linear-gradient(180deg, #16110b, #0b0a08);
+}
+.bshell__toolbar {
+  width: 100%; max-width: 440px; display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: .2rem .3rem 1rem; color: #cbb98f;
+}
+.bshell__live { display: inline-flex; align-items: center; gap: .5rem; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+.bshell__live::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #6fcf80; box-shadow: 0 0 0 0 rgba(111, 207, 128, .6); animation: pbPulse 2s infinite; }
+@keyframes pbPulse { 0% { box-shadow: 0 0 0 0 rgba(111, 207, 128, .5); } 70% { box-shadow: 0 0 0 7px rgba(111, 207, 128, 0); } 100% { box-shadow: 0 0 0 0 rgba(111, 207, 128, 0); } }
+.bshell__tool-link { display: inline-flex; align-items: center; gap: .4rem; background: none; border: none; color: #cbb98f; font-family: var(--pb-sans); font-size: .74rem; cursor: pointer; letter-spacing: .04em; }
+.bshell__tool-link:hover { color: #f0e2c2; }
+
+.bshell__device {
+  position: relative; width: min(392px, 96%); height: min(830px, calc(100svh - 96px));
+  border-radius: 46px; padding: 13px;
+  background: linear-gradient(155deg, #34343a, #121214 60%);
+  box-shadow: 0 50px 100px -34px rgba(0, 0, 0, .85), inset 0 1px 0 rgba(255, 255, 255, .08);
+  border: 1px solid #3a3a41;
+}
+.bshell__notch { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 3; width: 42%; height: 8px; border-radius: 8px; background: #0a0a0c; }
+.bshell__screen {
+  width: 100%; height: 100%; border-radius: 33px; overflow: hidden auto;
+  background: #0b0906; transform: translateZ(0); -webkit-overflow-scrolling: touch;
+}
+.bshell__screen::-webkit-scrollbar { width: 0; height: 0; }
+
+/* ---------- Tombol mengambang (mobile) ---------- */
+.bshell__fab {
+  display: none; position: fixed; z-index: 50; left: 50%; bottom: 18px; transform: translateX(-50%);
+  padding: .75rem 1.5rem; border: none; border-radius: 40px; cursor: pointer;
+  background: var(--pb-ink); color: #f2e8d6; font-family: var(--pb-sans); font-size: .85rem; letter-spacing: .03em;
+  box-shadow: 0 16px 34px -12px rgba(0, 0, 0, .7);
+}
+
+/* ============================================================ HEADER PANEL ============================================================ */
+.pb__brand {
+  position: sticky; top: 0; z-index: 4; display: flex; align-items: center; gap: .8rem;
+  padding: 1.25rem 1.6rem; background: var(--pb-panel); border-bottom: 1px solid var(--pb-line);
+}
+.pb__wordmark { font-family: var(--pb-serif); font-weight: 600; font-size: 1.42rem; color: var(--pb-ink); line-height: 1; }
+.pb__eyebrow { font-size: .62rem; text-transform: uppercase; letter-spacing: .26em; color: var(--pb-gold); padding-top: .28rem; }
+.pb__reset { margin-left: auto; background: none; border: 1px solid var(--pb-line-2); border-radius: 8px; padding: .4rem .8rem; font-size: .72rem; color: var(--pb-muted); cursor: pointer; font-family: inherit; transition: border-color .2s, color .2s; }
+.pb__reset:hover { border-color: var(--pb-gold); color: var(--pb-ink); }
+
+.pb__intro { padding: 1.4rem 1.6rem .4rem; }
+.pb__intro-title { font-family: var(--pb-serif); font-size: 1.5rem; color: var(--pb-ink); line-height: 1.15; }
+.pb__intro-title b { font-style: italic; font-weight: 600; }
+.pb__intro-sub { margin-top: .45rem; color: var(--pb-muted); font-size: .9rem; line-height: 1.55; }
+
+/* ---------- Footer panel ---------- */
+.pb__foot { padding: 1rem 1.6rem 1.4rem; border-top: 1px solid var(--pb-line); background: var(--pb-panel); }
+.pb__foot-note { font-size: .76rem; color: var(--pb-muted); line-height: 1.5; }
+.pb__foot-note b { color: var(--pb-gold); font-weight: 600; }
+
+/* ============================================================ ACCORDION SEKSI ============================================================ */
+.bf__sec { border-bottom: 1px solid var(--pb-line); }
+.bf__head {
+  width: 100%; display: flex; align-items: center; gap: 1rem; text-align: left;
+  padding: 1.1rem 1.6rem; background: none; border: none; cursor: pointer; transition: background-color .2s;
+}
+.bf__head:hover { background: #f5efe2; }
+.bf__num { font-family: var(--pb-serif); font-weight: 600; font-size: 1.05rem; color: var(--pb-gold); min-width: 1.5rem; font-variant-numeric: tabular-nums; }
+.bf__titles { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.bf__title { display: block; font-family: var(--pb-serif); font-size: 1.12rem; color: var(--pb-ink); line-height: 1.25; }
+.bf__desc { display: block; font-size: .75rem; color: var(--pb-muted); margin-top: .15rem; }
+.bf__chev { color: var(--pb-gold); font-size: .7rem; transition: transform .3s var(--pb-ease, ease); }
+.bf__head.is-open { background: #f4eddd; }
 .bf__head.is-open .bf__chev { transform: rotate(180deg); }
-.bf__body { padding: .2rem 1.5rem 1.4rem; }
+.bf__head.is-open .bf__num { color: var(--pb-ink); }
 
-/* Tema swatches */
+/* Expand halus via grid-rows */
+.bf__wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .34s cubic-bezier(.4, 0, .2, 1); }
+.bf__wrap.is-open { grid-template-rows: 1fr; }
+.bf__inner { overflow: hidden; }
+.bf__body { padding: .4rem 1.6rem 1.5rem; }
+
+/* ============================================================ KONTROL FORM ============================================================ */
+.f-field { display: flex; flex-direction: column; gap: .35rem; margin-bottom: .95rem; }
+.f-field > label { font-size: .66rem; text-transform: uppercase; letter-spacing: .12em; color: var(--pb-muted); font-weight: 500; }
+.f-input, .f-textarea, .f-select {
+  width: 100%; padding: .62rem .75rem; border: 1px solid var(--pb-line-2); border-radius: 10px;
+  background: var(--pb-white); color: var(--pb-ink); font-family: inherit; font-size: .92rem; transition: border-color .18s, box-shadow .18s;
+}
+.f-input::placeholder, .f-textarea::placeholder { color: #bcae94; }
+.f-input:focus, .f-textarea:focus, .f-select:focus { outline: none; border-color: var(--pb-gold); box-shadow: 0 0 0 3px rgba(183, 137, 58, .16); }
+.f-textarea { resize: vertical; min-height: 66px; line-height: 1.5; }
+.f-row { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+.f-photos { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; margin-top: .5rem; }
+.f-sub { font-family: var(--pb-serif); font-size: 1rem; color: var(--pb-ink-2); margin: 1.3rem 0 .65rem; display: flex; align-items: center; gap: .5rem; }
+.f-sub::before { content: ''; width: 14px; height: 1px; background: var(--pb-gold); }
+.f-hint { font-size: .78rem; color: var(--pb-muted); margin-bottom: .9rem; line-height: 1.55; }
+
+/* ---------- Tema swatches ---------- */
 .f-themes { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
-.f-theme { display: flex; align-items: center; gap: .3rem; padding: .6rem .7rem; cursor: pointer; border: 1px solid #e4dac7; border-radius: 12px; background: #fff; font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
-.f-theme:hover { transform: translateY(-1px); }
-.f-theme.is-on { border-color: #c9a24b; box-shadow: 0 0 0 2px rgba(201, 162, 75, .28); }
-.f-sw { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1); }
+.f-theme { display: flex; align-items: center; gap: .3rem; padding: .65rem .75rem; cursor: pointer; border: 1px solid var(--pb-line-2); border-radius: 12px; background: var(--pb-white); font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.f-theme:hover { transform: translateY(-2px); border-color: var(--pb-gold-lite); }
+.f-theme.is-on { border-color: var(--pb-gold); box-shadow: 0 0 0 2px rgba(183, 137, 58, .28); }
+.f-sw { width: 17px; height: 17px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); }
 .f-sw + .f-sw { margin-left: -9px; }
-.f-theme-label { margin-left: .45rem; font-size: .82rem; color: #3d3428; }
+.f-theme-label { margin-left: .5rem; font-size: .84rem; color: var(--pb-ink-2); }
 
-/* Galeri form */
+/* ---------- Galeri form ---------- */
 .gal-item { display: flex; flex-direction: column; gap: .3rem; }
 .gal-del { align-self: flex-start; background: none; border: none; color: #b06a6a; font-size: .72rem; cursor: pointer; padding: .1rem .2rem; }
-.gal-add { margin-top: 1rem; padding: .6rem 1rem; border: 1px dashed #cdbf9f; border-radius: 10px; background: #fbf8f1; color: #6d6152; cursor: pointer; font-family: inherit; font-size: .85rem; }
-.gal-add:hover { border-color: #c9a24b; color: #3d3428; }
+.gal-del:hover { text-decoration: underline; }
+.gal-add { margin-top: 1rem; width: 100%; padding: .7rem 1rem; border: 1px dashed var(--pb-line-2); border-radius: 11px; background: #fbf7ee; color: var(--pb-muted); cursor: pointer; font-family: inherit; font-size: .85rem; transition: border-color .2s, color .2s; }
+.gal-add:hover { border-color: var(--pb-gold); color: var(--pb-ink); }
+
+@media (max-width: 980px) {
+  .bshell { grid-template-columns: 1fr; }
+  .bshell__stage { display: none; }
+  .bshell__fab { display: block; }
+  .bshell.is-preview .bshell__panel { display: none; }
+  .bshell.is-preview .bshell__stage { display: flex; padding: 0; }
+  .bshell.is-preview .bshell__toolbar { display: none; }
+  .bshell.is-preview .bshell__device { width: 100%; height: 100svh; border-radius: 0; padding: 0; border: none; }
+  .bshell.is-preview .bshell__notch { display: none; }
+  .bshell.is-preview .bshell__screen { border-radius: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bshell__live::before { animation: none; }
+  .bf__wrap { transition: none; }
+  .bf__chev { transition: none; }
+}

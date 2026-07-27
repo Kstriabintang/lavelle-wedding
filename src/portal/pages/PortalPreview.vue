@@ -19,7 +19,12 @@ function onMsg(e) {
 
 onMounted(() => {
   window.addEventListener('message', onMsg)
-  // beri tahu parent: preview siap → parent kirim state terbaru
+  // dibuka standalone (tab baru) → tampilkan draft localStorage terbaru
+  try {
+    const saved = JSON.parse(localStorage.getItem('lavelle-portal-draft') || 'null')
+    if (saved && saved.invite) { data.value = mergeInvite(saved.invite); if (saved.theme) theme.value = saved.theme }
+  } catch { /* ok */ }
+  // di dalam iframe → minta parent kirim state terbaru (menimpa di atas)
   try { if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'lavelle-preview-ready' }, '*') } catch { /* ok */ }
 })
 onUnmounted(() => window.removeEventListener('message', onMsg))

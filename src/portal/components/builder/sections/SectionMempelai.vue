@@ -5,6 +5,7 @@ defineProps({ invite: { type: Object, required: true } })
 
 <template>
   <div>
+    <p class="f-hint">Nama panggilan tampil besar di sampul. Nama lengkap & orang tua muncul di bagian profil.</p>
     <div class="f-row">
       <div class="f-field"><label>Panggilan Wanita</label><input class="f-input" v-model="invite.hero.bride"></div>
       <div class="f-field"><label>Panggilan Pria</label><input class="f-input" v-model="invite.hero.groom"></div>

@@ -4,6 +4,7 @@ defineProps({ invite: { type: Object, required: true } })
 
 <template>
   <div>
+    <p class="f-hint">Detail akad & resepsi. Lokasi peta bisa nama gedung atau koordinat (mis. -0.12, 100.54).</p>
     <div v-for="(ev, i) in invite.events" :key="i">
       <p class="f-sub">{{ ev.tag || ('Acara ' + (i + 1)) }}</p>
       <div class="f-field"><label>Nama Acara</label><input class="f-input" v-model="ev.tag"></div>
