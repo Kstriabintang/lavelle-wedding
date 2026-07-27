@@ -14,10 +14,10 @@
   /* Var non-tema (tetap) */
   --surface-2: var(--surface); --deep: var(--bg);
   --photo-filter: saturate(1.06) contrast(1.04);
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-serif: 'Cormorant Garamond', Georgia, serif;
-  --font-script: 'Pinyon Script', cursive;
-  --font-sans: 'Jost', system-ui, sans-serif;
+  --font-display: var(--inv-serif, 'Fraunces'), Georgia, serif;
+  --font-serif: var(--inv-body, 'Cormorant Garamond'), Georgia, serif;
+  --font-script: var(--inv-script, 'Pinyon Script'), cursive;
+  --font-sans: var(--inv-sans, 'Jost'), system-ui, sans-serif;
 
   position: relative; background: var(--bg); color: var(--ink);
   font-family: var(--font-sans); overflow-x: hidden;
@@ -149,7 +149,7 @@ html.motion-on .invite-sinema .sn-hero__meta {
 /* Wishes: label sticker picker */
 .invite-sinema .wf__stickers::before {
   content: "Sisipkan stiker (opsional)"; flex-basis: 100%; margin-bottom: .15rem;
-  font-family: 'Jost', system-ui, sans-serif; font-size: .6rem; letter-spacing: .16em;
+  font-family: var(--inv-sans, 'Jost'), system-ui, sans-serif; font-size: .6rem; letter-spacing: .16em;
   text-transform: uppercase; color: var(--ink-soft);
 }
 

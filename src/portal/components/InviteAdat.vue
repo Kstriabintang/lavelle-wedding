@@ -14,6 +14,8 @@ const props = defineProps({
   data: { type: Object, default: () => ({}) },
   theme: { type: String, default: 'marun-emas' }, // Adat pakai palet suku; tema warna diabaikan
   preview: { type: Boolean, default: false },
+  accentOv: { type: Object, default: () => ({}) },
+  hide: { type: Object, default: () => ({}) },
 })
 
 const r = computed(() => mergeInvite(props.data))
@@ -319,7 +321,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="adat" :style="paletteVars" :data-motif="cfg.motif">
+  <div class="adat" :style="[paletteVars, accentOv]" :data-motif="cfg.motif">
     <!-- ==== DEFS: motif pattern + ornamen (sekali, direferensikan <use>) ==== -->
     <svg class="a-defs" aria-hidden="true" width="0" height="0">
       <defs>
@@ -570,7 +572,7 @@ onUnmounted(() => {
       </section>
 
       <!-- Kisah Cinta / Love Story -->
-      <section v-if="cfg.loveStory" class="a-sec a-sec--paper">
+      <section v-if="cfg.loveStory && !hide.story" class="a-sec a-sec--paper">
         <div class="a-wrap a-center">
           <p class="a-kicker a-reveal">Perjalanan Kami</p>
           <h2 class="a-title a-reveal">Kisah Cinta</h2>
@@ -683,7 +685,7 @@ onUnmounted(() => {
       </section>
 
       <!-- Galeri -->
-      <section class="a-sec">
+      <section v-if="!hide.gallery" class="a-sec">
         <div class="a-wrap a-center">
           <p class="a-kicker a-reveal">Momen Kami</p>
           <h2 class="a-title a-reveal">Galeri</h2>
@@ -721,7 +723,7 @@ onUnmounted(() => {
       </section>
 
       <!-- Amplop -->
-      <section class="a-sec a-sec--deep">
+      <section v-if="!hide.gifts" class="a-sec a-sec--deep">
         <svg class="a-motif" aria-hidden="true"><rect width="100%" height="100%" fill="url(#adatMotif)" /></svg>
         <div class="a-wrap a-center">
           <p class="a-kicker a-kicker--light a-reveal">Tanda Kasih</p>
@@ -833,10 +835,10 @@ onUnmounted(() => {
 
 <style scoped>
 .adat {
-  --serif: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
-  --serif2: 'Cormorant Garamond', Georgia, serif;
-  --script: 'Pinyon Script', cursive;
-  --sans: 'Jost', system-ui, sans-serif;
+  --serif: var(--inv-serif, 'Fraunces'), var(--inv-body, 'Cormorant Garamond'), Georgia, serif;
+  --serif2: var(--inv-body, 'Cormorant Garamond'), Georgia, serif;
+  --script: var(--inv-script, 'Pinyon Script'), cursive;
+  --sans: var(--inv-sans, 'Jost'), system-ui, sans-serif;
   position: relative; min-height: 100vh; font-family: var(--sans);
   color: var(--ink); background: var(--paper); overflow-x: hidden;
 }

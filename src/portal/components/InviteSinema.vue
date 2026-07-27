@@ -28,11 +28,13 @@ const props = defineProps({
   data: { type: Object, default: () => ({}) },
   theme: { type: String, default: THEME_IDS[0] },
   preview: { type: Boolean, default: false },
+  accentOv: { type: Object, default: () => ({}) },
+  hide: { type: Object, default: () => ({}) },
 })
 
 const root = ref(null)
 const r = computed(() => mergeInvite(props.data))
-const style = computed(() => themeVars(props.theme))
+const style = computed(() => ({ ...themeVars(props.theme), ...props.accentOv }))
 const skipGate = computed(() => props.preview)
 const initials = computed(() => `${r.value.hero.bride[0] || '?'} & ${r.value.hero.groom[0] || '?'}`)
 const coupleTitle = computed(() => `Pernikahan ${r.value.hero.bride} & ${r.value.hero.groom}`)
@@ -125,7 +127,7 @@ onUnmounted(() => { clearInterval(timer); stopSinema() })
     </section>
 
     <!-- STORY horizontal ter-pin -->
-    <section class="sn-story" id="cerita">
+    <section v-if="!hide.story" class="sn-story" id="cerita">
       <div class="sn-story__head">
         <p class="sn-story__kicker">Perjalanan Kami</p>
         <h2 class="sn-story__title">Kisah Cinta</h2>
@@ -144,9 +146,9 @@ onUnmounted(() => { clearInterval(timer); stopSinema() })
 
     <!-- Section fungsional (royale) -->
     <EventDetails :events="r.events" :maps-query="r.mapsQuery" :date="r.hero.date" :couple-title="coupleTitle" />
-    <DressCode :dress="r.dressCode" />
-    <GallerySection :items="r.gallery" :cats="r.galleryCats" :all-items="(r.galleryFull && r.galleryFull.length) ? r.galleryFull : r.gallery" />
-    <DigitalEnvelope :gifts="r.gifts" :qris="r.qris" :wa-confirm="r.giftConfirmWa" :couple-names="coupleNames" />
+    <DressCode v-if="!hide.dress" :dress="r.dressCode" />
+    <GallerySection v-if="!hide.gallery" :items="r.gallery" :cats="r.galleryCats" :all-items="(r.galleryFull && r.galleryFull.length) ? r.galleryFull : r.gallery" />
+    <DigitalEnvelope v-if="!hide.gifts" :gifts="r.gifts" :qris="r.qris" :wa-confirm="r.giftConfirmWa" :couple-names="coupleNames" />
     <RsvpForm :api="''" />
     <WishesFeed :seed="[]" :api="''" />
     <FamilySection :family="r.family" />

@@ -8,6 +8,7 @@ import SectionAcara from './sections/SectionAcara.vue'
 import SectionGaleri from './sections/SectionGaleri.vue'
 import SectionMusik from './sections/SectionMusik.vue'
 import SectionTema from './sections/SectionTema.vue'
+import SectionGaya from './sections/SectionGaya.vue'
 
 defineProps({ invite: { type: Object, required: true }, theme: { type: String, required: true } })
 const emit = defineEmits(['update:theme'])
@@ -21,6 +22,7 @@ const SECS = [
   { k: 'galeri', num: '03', label: 'Galeri', desc: 'Foto prewedding (maksimal 12)' },
   { k: 'musik', num: '04', label: 'Musik', desc: 'Lagu latar dari YouTube (auto-play)' },
   { k: 'tema', num: '05', label: 'Tema Warna', desc: 'Nuansa warna undangan' },
+  { k: 'gaya', num: '06', label: 'Kustomisasi', desc: 'Font, ukuran teks, warna aksen, sembunyikan seksi' },
 ]
 </script>
 
@@ -43,6 +45,7 @@ const SECS = [
             <SectionAcara v-else-if="s.k === 'acara'" :invite="invite" />
             <SectionGaleri v-else-if="s.k === 'galeri'" :invite="invite" />
             <SectionMusik v-else-if="s.k === 'musik'" :invite="invite" />
+            <SectionGaya v-else-if="s.k === 'gaya'" :invite="invite" />
             <SectionTema v-else :theme="theme" @update:theme="emit('update:theme', $event)" />
           </div>
         </div>

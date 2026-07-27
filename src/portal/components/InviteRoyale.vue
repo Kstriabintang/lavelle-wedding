@@ -29,11 +29,13 @@ const props = defineProps({
   data: { type: Object, default: () => ({}) },
   theme: { type: String, default: THEME_IDS[0] },
   preview: { type: Boolean, default: false },
+  accentOv: { type: Object, default: () => ({}) },
+  hide: { type: Object, default: () => ({}) },
 })
 
 const root = ref(null)
 const r = computed(() => mergeInvite(props.data))
-const style = computed(() => themeVars(props.theme))
+const style = computed(() => ({ ...themeVars(props.theme), ...props.accentOv }))
 const skipGate = computed(() => props.preview)
 const initials = computed(() => `${r.value.hero.bride[0] || '?'} & ${r.value.hero.groom[0] || '?'}`)
 const coupleTitle = computed(() => `Pernikahan ${r.value.hero.bride} & ${r.value.hero.groom}`)
@@ -57,11 +59,11 @@ onMounted(() => { nextTick(() => wireReveal(root.value || document)) })
     <HeroCover v-bind="r.hero" />
     <OpeningSection :date="r.hero.date" :quote="r.quote" :photo="r.opening.photo" />
     <CoupleProfile :bride="r.bride" :groom="r.groom" />
-    <LoveStory :story="r.story" />
+    <LoveStory v-if="!hide.story" :story="r.story" />
     <EventDetails :events="r.events" :maps-query="r.mapsQuery" :date="r.hero.date" :couple-title="coupleTitle" />
-    <DressCode :dress="r.dressCode" />
-    <GallerySection :items="r.gallery" :cats="r.galleryCats" :all-items="(r.galleryFull && r.galleryFull.length) ? r.galleryFull : r.gallery" />
-    <DigitalEnvelope :gifts="r.gifts" :qris="r.qris" :wa-confirm="r.giftConfirmWa" :couple-names="coupleNames" />
+    <DressCode v-if="!hide.dress" :dress="r.dressCode" />
+    <GallerySection v-if="!hide.gallery" :items="r.gallery" :cats="r.galleryCats" :all-items="(r.galleryFull && r.galleryFull.length) ? r.galleryFull : r.gallery" />
+    <DigitalEnvelope v-if="!hide.gifts" :gifts="r.gifts" :qris="r.qris" :wa-confirm="r.giftConfirmWa" :couple-names="coupleNames" />
     <RsvpForm :api="''" />
     <WishesFeed :seed="[]" :api="''" />
     <FamilySection :family="r.family" />
@@ -73,8 +75,8 @@ onMounted(() => { nextTick(() => wireReveal(root.value || document)) })
 
 <style scoped>
 .royale {
-  --font-display: 'Fraunces', serif; --font-serif: 'Cormorant Garamond', serif;
-  --font-script: 'Pinyon Script', cursive; --font-sans: 'Jost', sans-serif;
+  --font-display: var(--inv-serif, 'Fraunces'), serif; --font-serif: var(--inv-body, 'Cormorant Garamond'), serif;
+  --font-script: var(--inv-script, 'Pinyon Script'), cursive; --font-sans: var(--inv-sans, 'Jost'), sans-serif;
   position: relative; min-height: 100vh; background: var(--bg); color: var(--ink);
   font-family: var(--font-sans); overflow-x: hidden;
 }
