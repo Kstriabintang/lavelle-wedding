@@ -62,8 +62,9 @@ async function savePw() {
       <h1 class="pf__h1">Pengaturan</h1>
       <p class="pf__lead">Kelola profil, tema favorit, & keamanan akunmu.</p>
 
+      <div class="pf__grid">
       <!-- PROFIL -->
-      <section class="pf__card">
+      <section class="pf__card pf__card--profil">
         <h2 class="pf__card-title">Profil</h2>
         <div class="pf__avatarrow">
           <span class="pf__avatar">
@@ -84,6 +85,7 @@ async function savePw() {
         <div class="pf__field"><label>Peran</label><input :value="profile?.role === 'admin' ? 'Admin (lihat semua)' : 'Karyawan'" class="pf__input" disabled></div>
       </section>
 
+      <div class="pf__side">
       <!-- TEMA DEFAULT -->
       <section class="pf__card">
         <h2 class="pf__card-title">Tema Undangan Favorit</h2>
@@ -115,6 +117,8 @@ async function savePw() {
           <span v-if="pwMsg" class="pf__msg">{{ pwMsg }}</span>
         </div>
       </section>
+      </div><!-- /pf__side -->
+      </div><!-- /pf__grid -->
     </main>
   </div>
 </template>
@@ -127,11 +131,14 @@ async function savePw() {
 .pf__back:hover { border-color: #d3ad55; color: #f4ecd9; background: rgba(201, 162, 75, .12); }
 
 .pf__loading { position: relative; z-index: 1; display: grid; place-items: center; min-height: 60vh; font-family: 'Fraunces', serif; font-style: italic; color: #b1a688; }
-.pf__main { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; padding: 2.4rem 1.6rem 4rem; }
-.pf__h1 { font-family: 'Fraunces', serif; font-size: 2.2rem; line-height: 1; color: #f6edd9; }
-.pf__lead { margin-top: .55rem; color: #b1a688; font-size: .94rem; }
+.pf__main { position: relative; z-index: 1; max-width: 1060px; margin: 0 auto; padding: 2.6rem 2rem 4.5rem; }
+.pf__h1 { font-family: 'Fraunces', serif; font-size: 2.4rem; line-height: 1; color: #f6edd9; }
+.pf__lead { margin-top: .55rem; color: #b1a688; font-size: .96rem; }
 
-.pf__card { position: relative; background: rgba(22, 17, 10, .7); border: 1px solid rgba(201, 162, 75, .18); border-radius: 18px; padding: 1.5rem 1.6rem; margin-top: 1.4rem; box-shadow: 0 20px 44px rgba(0, 0, 0, .45); backdrop-filter: blur(8px); }
+.pf__grid { display: grid; grid-template-columns: 1.08fr 1fr; gap: 1.4rem; align-items: start; margin-top: 1.8rem; }
+.pf__side { display: flex; flex-direction: column; gap: 1.4rem; }
+.pf__card { position: relative; background: rgba(22, 17, 10, .7); border: 1px solid rgba(201, 162, 75, .18); border-radius: 18px; padding: 1.6rem 1.7rem; box-shadow: 0 20px 44px rgba(0, 0, 0, .45); backdrop-filter: blur(8px); }
+@media (max-width: 820px) { .pf__grid { grid-template-columns: 1fr; } .pf__main { padding: 2rem 1.3rem 3.5rem; } }
 .pf__card-title { font-family: 'Fraunces', serif; font-size: 1.2rem; margin-bottom: 1rem; color: #f4ecd9; }
 .pf__avatarrow { display: flex; align-items: center; gap: 1.1rem; margin-bottom: 1.2rem; }
 .pf__avatar { width: 74px; height: 74px; border-radius: 50%; overflow: hidden; flex: none; background: #1a150d; display: grid; place-items: center; border: 1px solid rgba(201, 162, 75, .3); }
@@ -159,7 +166,8 @@ async function savePw() {
 .pf__theme-name { font-size: .84rem; color: #f4ecd9; font-weight: 500; }
 .pf__theme-desc { font-size: .68rem; color: #a99d80; margin-top: .12rem; }
 
-.pf__saverow { display: flex; align-items: center; gap: 1rem; margin-top: 1.3rem; }
+.pf__saverow { display: flex; align-items: center; gap: 1rem; margin-top: 1.3rem; flex-wrap: wrap; }
+.pf__side > .pf__saverow { margin-top: 0; }
 .pf__save { background: linear-gradient(180deg, #dcb75f, #c49a3f); color: #201907; border: none; border-radius: 11px; padding: .75rem 1.3rem; font-family: inherit; font-weight: 500; font-size: .9rem; cursor: pointer; transition: filter .2s, transform .15s; }
 .pf__save:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
 .pf__save:disabled { opacity: .55; }
