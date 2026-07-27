@@ -1,27 +1,37 @@
 <script setup>
-// 3.6 — Galeri: bento (desktop) / grid 2 kolom (mobile), filter kategori,
-// lightbox (keyboard + swipe), lazy fade-in.
+// 3.6 — Galeri: grid + filter kategori, lightbox (keyboard + swipe), lazy fade-in.
+// "Lihat Semua Foto" membuka OVERLAY di halaman yang sama (tanpa pindah route) →
+// musik & posisi scroll tetap. Overlay & lightbox di-Teleport ke <body> agar
+// position:fixed tak "patah" oleh ancestor ber-transform (GSAP). Prop `allItems` aditif.
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   items: { type: Array, default: () => [] },
   cats: { type: Array, default: () => ['Semua'] },
+  moreTo: { type: String, default: '' },          // (deprecated)
+  allItems: { type: Array, default: () => [] },    // galeri lengkap → overlay in-page
 })
 
 const activeCat = ref('Semua')
 const filtered = computed(() => activeCat.value === 'Semua' ? props.items : props.items.filter((g) => g.cat === activeCat.value))
 
+const showAll = ref(false)
 const lb = ref(-1)
-const openLb = (i) => { lb.value = i }
-const closeLb = () => { lb.value = -1 }
-const nextLb = () => { lb.value = (lb.value + 1) % filtered.value.length }
-const prevLb = () => { lb.value = (lb.value - 1 + filtered.value.length) % filtered.value.length }
+const lbList = ref([])          // array foto yang sedang aktif di lightbox
+function lockScroll(on) { if (typeof document !== 'undefined') document.body.style.overflow = on ? 'hidden' : '' }
+function openLb(list, i) { lbList.value = list; lb.value = i; lockScroll(true) }
+function closeLb() { lb.value = -1; if (!showAll.value) lockScroll(false) }
+const nextLb = () => { if (lbList.value.length) lb.value = (lb.value + 1) % lbList.value.length }
+const prevLb = () => { if (lbList.value.length) lb.value = (lb.value - 1 + lbList.value.length) % lbList.value.length }
+function openAll() { showAll.value = true; lockScroll(true) }
+function closeAll() { showAll.value = false; if (lb.value < 0) lockScroll(false) }
 
 function onKey(e) {
-  if (lb.value < 0) return
-  if (e.key === 'Escape') closeLb()
-  else if (e.key === 'ArrowRight') nextLb()
-  else if (e.key === 'ArrowLeft') prevLb()
+  if (lb.value >= 0) {
+    if (e.key === 'Escape') closeLb()
+    else if (e.key === 'ArrowRight') nextLb()
+    else if (e.key === 'ArrowLeft') prevLb()
+  } else if (showAll.value && e.key === 'Escape') closeAll()
 }
 let tsx = 0
 function ts(e) { tsx = e.changedTouches[0].clientX }
@@ -31,9 +41,11 @@ function te(e) {
 }
 function setCat(c) { activeCat.value = c; if (lb.value >= 0) closeLb() }
 function onLoad(e) { e.target.classList.add('is-loaded') }
+// Foto: nama-file (cl1-g09 → /img/mentahan/…jpeg) ATAU URL penuh (http/data/blob) → apa adanya.
+function imgSrc(s) { return /^(https?:|data:|blob:)/.test(s || '') ? s : `/img/mentahan/${s}.jpeg` }
 
 onMounted(() => document.addEventListener('keydown', onKey))
-onUnmounted(() => document.removeEventListener('keydown', onKey))
+onUnmounted(() => { document.removeEventListener('keydown', onKey); lockScroll(false) })
 </script>
 
 <template>
@@ -48,22 +60,47 @@ onUnmounted(() => document.removeEventListener('keydown', onKey))
       </div>
 
       <div class="gl__grid r-reveal">
-        <button v-for="(g, i) in filtered" :key="g.src + i" class="gl__tile" :class="`b${i % 6}`" @click="openLb(i)" aria-label="Perbesar foto">
-          <img :src="`/img/mentahan/${g.src}.jpeg`" :alt="`${g.cat} ${i + 1}`" class="r-photo gl__img" loading="lazy" @load="onLoad">
+        <button v-for="(g, i) in filtered" :key="g.src + i" class="gl__tile" :class="`b${i % 6}`" @click="openLb(filtered, i)" aria-label="Perbesar foto">
+          <img :src="imgSrc(g.src)" :alt="`${g.cat} ${i + 1}`" class="r-photo gl__img" loading="lazy" @load="onLoad">
           <span class="gl__zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
         </button>
       </div>
+
+      <button v-if="allItems.length" class="gl__more r-reveal" type="button" @click="openAll">
+        <i class="fa-regular fa-images"></i> <span>Lihat Semua Foto</span> <i class="fa-solid fa-arrow-right"></i>
+      </button>
     </div>
 
-    <transition name="lb">
-      <div v-if="lb >= 0" class="gl__lb" @click.self="closeLb" @touchstart.passive="ts" @touchend.passive="te">
-        <img :src="`/img/mentahan/${filtered[lb].src}.jpeg`" :alt="`Momen ${lb + 1}`" class="r-photo">
-        <button class="gl__lbbtn gl__close" @click="closeLb" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
-        <button class="gl__lbbtn gl__prev" @click.stop="prevLb" aria-label="Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
-        <button class="gl__lbbtn gl__next" @click.stop="nextLb" aria-label="Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
-        <span class="gl__count">{{ lb + 1 }} / {{ filtered.length }}</span>
-      </div>
-    </transition>
+    <!-- OVERLAY galeri lengkap — Teleport ke body (tak pindah route; musik tetap jalan) -->
+    <Teleport to="body">
+      <transition name="lb">
+        <div v-if="showAll" class="gl__all">
+          <div class="gl__all-head">
+            <span class="gl__all-title">Semua Momen</span>
+            <button class="gl__all-close" type="button" @click="closeAll" aria-label="Tutup galeri"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="gl__all-grid">
+            <button v-for="(g, i) in allItems" :key="g.src + i" class="gl__tile" @click="openLb(allItems, i)" aria-label="Perbesar foto">
+              <img :src="imgSrc(g.src)" :alt="`Momen ${i + 1}`" class="r-photo gl__img is-loaded" loading="lazy">
+              <span class="gl__zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
+            </button>
+          </div>
+        </div>
+      </transition>
+    </Teleport>
+
+    <!-- Lightbox — Teleport ke body, di atas overlay -->
+    <Teleport to="body">
+      <transition name="lb">
+        <div v-if="lb >= 0 && lbList[lb]" class="gl__lb" @click.self="closeLb" @touchstart.passive="ts" @touchend.passive="te">
+          <img :src="imgSrc(lbList[lb].src)" :alt="`Momen ${lb + 1}`" class="gl__lbimg">
+          <button class="gl__lbbtn gl__close" @click="closeLb" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+          <button class="gl__lbbtn gl__prev" @click.stop="prevLb" aria-label="Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="gl__lbbtn gl__next" @click.stop="nextLb" aria-label="Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+          <span class="gl__count">{{ lb + 1 }} / {{ lbList.length }}</span>
+        </div>
+      </transition>
+    </Teleport>
   </section>
 </template>
 
@@ -73,12 +110,19 @@ onUnmounted(() => document.removeEventListener('keydown', onKey))
 .gl__filter button.is-on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 
 .gl__grid { display: grid; gap: .6rem; grid-template-columns: repeat(2, 1fr); }
-.gl__tile { position: relative; border: none; padding: 0; margin: 0; overflow: hidden; border-radius: 12px; cursor: zoom-in; aspect-ratio: 1; background: var(--surface-2); }
+.gl__tile { position: relative; border: none; padding: 0; margin: 0; overflow: hidden; border-radius: 12px; cursor: zoom-in; aspect-ratio: 1; background: rgba(30, 23, 13, .5); }
 .gl__img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.04); transition: opacity .7s ease, transform .7s ease; }
 .gl__img.is-loaded { opacity: 1; transform: scale(1); }
 .gl__tile:hover .gl__img.is-loaded { transform: scale(1.06); }
 .gl__zoom { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 1.1rem; background: rgba(0, 0, 0, .28); opacity: 0; transition: opacity .3s; }
 .gl__tile:hover .gl__zoom { opacity: 1; }
+
+/* Tombol "Lihat Semua Foto" */
+.gl__more { display: flex; width: fit-content; align-items: center; gap: .6em; margin: 1.9rem auto 0; padding: .9em 1.9em; border-radius: 50px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-family: var(--font-sans); font-size: .76rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; transition: background-color .3s, color .3s, transform .3s; }
+.gl__more:hover { background: var(--accent); color: var(--accent-ink); transform: translateY(-3px); }
+.gl__more i:last-child { transition: transform .3s; }
+.gl__more:hover i:last-child { transform: translateX(4px); }
+@media (prefers-reduced-motion: reduce) { .gl__more, .gl__more i:last-child { transition: none; } }
 
 /* DESKTOP: bento — beberapa tile membesar */
 @media (min-width: 900px) {
@@ -89,9 +133,18 @@ onUnmounted(() => document.removeEventListener('keydown', onKey))
   .gl__tile.b4 { grid-column: span 2; aspect-ratio: auto; }
 }
 
-/* Lightbox */
-.gl__lb { position: fixed; inset: 0; z-index: 95; background: rgba(0, 0, 0, .93); display: grid; place-items: center; padding: 5vh 4vw; backdrop-filter: blur(6px); }
-.gl__lb img { max-width: min(94vw, 900px); max-height: 84vh; border-radius: 10px; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .8); }
+/* Overlay galeri lengkap (Teleport ke body — warna hardcode agar tak bergantung var yg di-inherit) */
+.gl__all { position: fixed; inset: 0; z-index: 120; background: #0b0906; color: #f1e7d3; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6vh; }
+.gl__all-head { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: max(.9rem, env(safe-area-inset-top)) clamp(1rem, 4vw, 2rem) .9rem; background: linear-gradient(180deg, #0b0906 62%, rgba(11, 9, 6, 0)); }
+.gl__all-title { font-family: 'Fraunces', Georgia, serif; font-size: 1.25rem; color: #ecca7f; letter-spacing: .05em; }
+.gl__all-close { flex: none; position: static; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(236, 202, 127, .45); background: rgba(255, 255, 255, .1); color: #ecca7f; cursor: pointer; display: grid; place-items: center; font-size: 1.05rem; transition: background .3s; }
+.gl__all-close:hover { background: rgba(236, 202, 127, .22); }
+.gl__all-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; padding: .5rem clamp(1rem, 4vw, 2rem) 0; max-width: 1120px; margin: 0 auto; }
+@media (min-width: 720px) { .gl__all-grid { grid-template-columns: repeat(4, 1fr); gap: .7rem; } }
+
+/* Lightbox (Teleport ke body) */
+.gl__lb { position: fixed; inset: 0; z-index: 130; background: rgba(0, 0, 0, .94); display: grid; place-items: center; padding: 5vh 4vw; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.gl__lbimg { max-width: min(94vw, 900px); max-height: 84vh; border-radius: 10px; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .8); }
 .gl__lbbtn { position: absolute; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .28); background: rgba(255, 255, 255, .12); color: #fff; cursor: pointer; display: grid; place-items: center; font-size: 1.05rem; transition: background .3s; }
 .gl__lbbtn:hover { background: rgba(255, 255, 255, .24); }
 .gl__close { top: 4vh; right: 4vw; }
