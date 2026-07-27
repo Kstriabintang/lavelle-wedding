@@ -1,0 +1,35 @@
+/* Kontrol form builder (global, dipakai seksi-seksi). Warna chrome netral-elegan. */
+.f-field { display: flex; flex-direction: column; gap: .35rem; margin-bottom: .9rem; }
+.f-field > label { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: #9a8b6f; font-weight: 500; }
+.f-input, .f-textarea, .f-select {
+  width: 100%; padding: .6rem .7rem; border: 1px solid #e2d8c4; border-radius: 9px;
+  background: #fff; color: #2a2419; font-family: inherit; font-size: .9rem;
+}
+.f-input:focus, .f-textarea:focus, .f-select:focus { outline: 2px solid #c9a24b; outline-offset: 1px; }
+.f-textarea { resize: vertical; min-height: 64px; }
+.f-row { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+.f-photos { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-top: .4rem; }
+.f-sub { font-family: 'Fraunces', serif; font-size: 1rem; color: #3d3428; margin: 1.2rem 0 .6rem; }
+.f-hint { font-size: .76rem; color: #a89a80; margin-bottom: .8rem; line-height: 1.5; }
+
+/* Accordion */
+.bf__sec { border-bottom: 1px solid #ece4d5; }
+.bf__head { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: none; border: none; cursor: pointer; font-family: 'Fraunces', serif; font-size: 1.05rem; color: #2a2419; }
+.bf__head .bf__chev { color: #c9a24b; transition: transform .2s; font-size: .8rem; }
+.bf__head.is-open .bf__chev { transform: rotate(180deg); }
+.bf__body { padding: .2rem 1.5rem 1.4rem; }
+
+/* Tema swatches */
+.f-themes { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.f-theme { display: flex; align-items: center; gap: .3rem; padding: .6rem .7rem; cursor: pointer; border: 1px solid #e4dac7; border-radius: 12px; background: #fff; font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.f-theme:hover { transform: translateY(-1px); }
+.f-theme.is-on { border-color: #c9a24b; box-shadow: 0 0 0 2px rgba(201, 162, 75, .28); }
+.f-sw { width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1); }
+.f-sw + .f-sw { margin-left: -9px; }
+.f-theme-label { margin-left: .45rem; font-size: .82rem; color: #3d3428; }
+
+/* Galeri form */
+.gal-item { display: flex; flex-direction: column; gap: .3rem; }
+.gal-del { align-self: flex-start; background: none; border: none; color: #b06a6a; font-size: .72rem; cursor: pointer; padding: .1rem .2rem; }
+.gal-add { margin-top: 1rem; padding: .6rem 1rem; border: 1px dashed #cdbf9f; border-radius: 10px; background: #fbf8f1; color: #6d6152; cursor: pointer; font-family: inherit; font-size: .85rem; }
+.gal-add:hover { border-color: #c9a24b; color: #3d3428; }

@@ -145,7 +145,7 @@ onUnmounted(() => { clearInterval(timer); stopSinema() })
     <!-- Section fungsional (royale) -->
     <EventDetails :events="r.events" :maps-query="r.mapsQuery" :date="r.hero.date" :couple-title="coupleTitle" />
     <DressCode :dress="r.dressCode" />
-    <GallerySection :items="r.gallery" :cats="r.galleryCats" :all-items="r.galleryFull" />
+    <GallerySection :items="r.gallery" :cats="r.galleryCats" :all-items="(r.galleryFull && r.galleryFull.length) ? r.galleryFull : r.gallery" />
     <DigitalEnvelope :gifts="r.gifts" :qris="r.qris" :wa-confirm="r.giftConfirmWa" :couple-names="coupleNames" />
     <RsvpForm :api="''" />
     <WishesFeed :seed="[]" :api="''" />
