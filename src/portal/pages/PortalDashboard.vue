@@ -35,7 +35,7 @@ async function create() {
   creating.value = true
   try {
     if (await slugTaken(newSlug.value)) { newErr.value = 'Slug sudah dipakai, pilih yang lain.'; creating.value = false; return }
-    const inv = await createInvite(newSlug.value, profile.value.id, defaultInvite())
+    const inv = await createInvite(newSlug.value, profile.value.id, defaultInvite(), profile.value && profile.value.themePref)
     router.push(`/portal/edit/${inv.id}`)
   } catch { newErr.value = 'Gagal membuat undangan. Coba lagi.'; creating.value = false }
 }
@@ -58,7 +58,10 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
     <header class="db__top">
       <div class="db__brand"><LavelleLogo wordmark class="db__logo" /><span class="db__eyebrow">Studio Undangan</span></div>
       <div class="db__user">
-        <span class="db__who">{{ profile?.name || '…' }}<em v-if="profile?.role === 'admin'"> · admin</em></span>
+        <button class="db__profile" type="button" @click="router.push('/portal/profile/')" title="Pengaturan profil">
+          <span class="db__avatar"><img v-if="profile?.avatar" :src="profile.avatar" alt=""><span v-else>{{ (profile?.name || '?').charAt(0).toUpperCase() }}</span></span>
+          <span class="db__who">{{ profile?.name || '…' }}<em v-if="profile?.role === 'admin'"> · admin</em></span>
+        </button>
         <button class="db__logout" type="button" @click="logout">Keluar</button>
       </div>
     </header>
@@ -114,7 +117,11 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 .db__logo { color: #2a231b; font-size: 1.3rem; }
 .db__brand :deep(.llg__mark) { color: #b7893a; }
 .db__eyebrow { font-size: .62rem; text-transform: uppercase; letter-spacing: .22em; color: #b7893a; }
-.db__user { display: flex; align-items: center; gap: 1rem; }
+.db__user { display: flex; align-items: center; gap: .8rem; }
+.db__profile { display: flex; align-items: center; gap: .55rem; background: none; border: none; cursor: pointer; padding: .25rem .4rem; border-radius: 40px; font-family: inherit; transition: background-color .2s; }
+.db__profile:hover { background: #f2ebdc; }
+.db__avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; flex: none; background: linear-gradient(135deg, #c9a24b, #e6c877); display: grid; place-items: center; color: #2a231b; font-family: 'Fraunces', serif; font-size: .92rem; }
+.db__avatar img { width: 100%; height: 100%; object-fit: cover; }
 .db__who { font-size: .84rem; color: #6d6152; }
 .db__who em { color: #b7893a; font-style: normal; }
 .db__logout { background: none; border: 1px solid #e0d5be; border-radius: 8px; padding: .35rem .8rem; font-size: .78rem; color: #8b7e6a; cursor: pointer; font-family: inherit; }

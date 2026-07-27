@@ -8,9 +8,21 @@ export const profile = ref(null)
 async function loadProfile() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) { profile.value = null; return }
-  const { data } = await supabase.from('profiles').select('id,email,name,role').eq('id', user.id).maybeSingle()
-  profile.value = data || { id: user.id, email: user.email, name: (user.email || '').split('@')[0], role: 'staff' }
+  const { data: row } = await supabase.from('profiles').select('id,email,name,role').eq('id', user.id).maybeSingle()
+  const m = user.user_metadata || {}
+  profile.value = {
+    id: user.id,
+    email: user.email,
+    role: (row && row.role) || 'staff',
+    name: m.name || (row && row.name) || (user.email || '').split('@')[0],
+    contact: m.contact || '',
+    avatar: m.avatar || '',
+    themePref: m.theme_pref || 'marun-emas',
+  }
 }
+
+// Muat ulang profil (dipanggil setelah simpan pengaturan)
+export async function refreshProfile() { await loadProfile() }
 
 let started = false
 export async function initSession() {

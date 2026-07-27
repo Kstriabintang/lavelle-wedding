@@ -30,9 +30,9 @@ export async function slugTaken(slug, excludeId) {
   return (data || []).some((r) => r.id !== excludeId)
 }
 
-export async function createInvite(slug, ownerId, initial) {
+export async function createInvite(slug, ownerId, initial, theme) {
   const { data, error } = await supabase.from('invites')
-    .insert({ slug, owner_id: ownerId, theme: 'marun-emas', data: initial || {} })
+    .insert({ slug, owner_id: ownerId, theme: theme || 'marun-emas', data: initial || {} })
     .select().single()
   if (error) throw error
   return data
