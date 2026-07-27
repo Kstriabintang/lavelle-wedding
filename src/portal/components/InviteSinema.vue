@@ -63,7 +63,7 @@ onMounted(() => {
   tick(); timer = setInterval(tick, 1000)
   nextTick(() => {
     wireReveal(root.value || document)
-    if (!props.preview) stopSinema = useSinemaTemplate(root.value)   // motion penuh hanya di render nyata
+    stopSinema = useSinemaTemplate(root.value)   // motion penuh (di iframe preview pun aman: punya scroll sendiri)
   })
 })
 onUnmounted(() => { clearInterval(timer); stopSinema() })
