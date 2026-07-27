@@ -22,5 +22,5 @@ const musicStart = computed(() => (props.data && props.data.music && props.data.
 
 <template>
   <component :is="comp" :data="data" :theme="theme" :preview="preview" />
-  <PortalMusic v-if="!preview && musicLink" :link="musicLink" :start="musicStart" />
+  <PortalMusic v-if="musicLink" :link="musicLink" :start="musicStart" :preview="preview" />
 </template>

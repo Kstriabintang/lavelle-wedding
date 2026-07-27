@@ -8,6 +8,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 const props = defineProps({
   link: { type: String, default: '' },
   start: { type: Number, default: 0 },
+  preview: { type: Boolean, default: false }, // di editor: tombol saja (tak auto dari gesture acak)
 })
 
 function ytId(url) {
@@ -59,6 +60,7 @@ function onFirstGesture() {
 onMounted(async () => {
   if (typeof window === 'undefined' || !id.value) return
   await setup()
+  if (props.preview) return // pratinjau editor: mulai lewat tombol saja (biar tak bunyi sendiri saat edit)
   document.addEventListener('pointerdown', onFirstGesture, { passive: true })
   document.addEventListener('touchend', onFirstGesture, { passive: true })
 })
