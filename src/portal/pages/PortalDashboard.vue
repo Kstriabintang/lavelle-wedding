@@ -101,8 +101,15 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
           <label class="db__form-label">Pilih Template</label>
           <div class="db__templates">
             <button v-for="tid in TEMPLATE_IDS" :key="tid" type="button" class="db__template" :class="{ 'is-on': newTemplate === tid }" @click="newTemplate = tid">
-              <span class="db__template-head"><span class="db__template-name">{{ TEMPLATES[tid].name }}</span><span class="db__template-tag">{{ TEMPLATES[tid].tag }}</span></span>
-              <span class="db__template-desc">{{ TEMPLATES[tid].desc }}</span>
+              <span class="db__tpl-thumb">
+                <img :src="TEMPLATES[tid].thumb" :alt="`Contoh template ${TEMPLATES[tid].name}`" loading="lazy">
+                <span class="db__tpl-tag">{{ TEMPLATES[tid].tag }}</span>
+                <span class="db__tpl-check" aria-hidden="true">✓</span>
+              </span>
+              <span class="db__template-body">
+                <span class="db__template-name">{{ TEMPLATES[tid].name }}</span>
+                <span class="db__template-desc">{{ TEMPLATES[tid].desc }}</span>
+              </span>
             </button>
           </div>
 
@@ -160,7 +167,7 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 </template>
 
 <style scoped>
-.db { position: relative; min-height: 100vh; min-height: 100svh; font-family: 'Jost', system-ui, sans-serif; color: #2a231b; background: #ece1cb; overflow-x: hidden; }
+.db { position: relative; min-height: 100vh; min-height: 100svh; font-family: 'Jost', system-ui, sans-serif; color: #2a231b; background: #f6f0e6; overflow-x: hidden; }
 
 /* ---------- Header ---------- */
 .db__top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.8rem; background: rgba(255, 253, 249, .82); backdrop-filter: blur(10px); border-bottom: 1px solid #ece3d2; }
@@ -202,14 +209,20 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 .db__cancel { background: none; border: 1px solid #e0d5be; border-radius: 10px; padding: .5rem 1rem; color: #8b7e6a; font-family: inherit; font-size: .85rem; cursor: pointer; }
 .db__form-err { margin-top: .5rem; color: #b0483f; font-size: .8rem; }
 .db__form-hint { margin-top: .5rem; color: #a89a80; font-size: .8rem; }
-.db__templates { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin-top: .5rem; }
-.db__template { text-align: left; padding: .8rem .9rem; border: 1.5px solid #e0d5be; border-radius: 12px; background: #fff; cursor: pointer; font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }
-.db__template:hover { transform: translateY(-2px); }
-.db__template.is-on { border-color: #b7893a; box-shadow: 0 0 0 2px rgba(183, 137, 58, .25); }
-.db__template-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
-.db__template-name { font-family: 'Fraunces', serif; font-size: 1.05rem; color: #2a231b; }
-.db__template-tag { font-size: .58rem; text-transform: uppercase; letter-spacing: .08em; color: #b7893a; border: 1px solid #e6d7b3; border-radius: 40px; padding: .12rem .5rem; white-space: nowrap; }
-.db__template-desc { display: block; margin-top: .4rem; font-size: .73rem; color: #90836d; line-height: 1.45; }
+.db__templates { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; margin-top: .5rem; }
+.db__template { position: relative; text-align: left; padding: 0; border: 1.5px solid #e0d5be; border-radius: 15px; background: #fff; cursor: pointer; font-family: inherit; overflow: hidden; display: flex; flex-direction: column; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.db__template:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(84, 62, 24, .12); }
+.db__template.is-on { border-color: #b7893a; box-shadow: 0 0 0 2px rgba(183, 137, 58, .3), 0 14px 30px rgba(84, 62, 24, .12); }
+.db__tpl-thumb { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: #efe7d6; }
+.db__tpl-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
+.db__template:hover .db__tpl-thumb img { transform: scale(1.05); }
+.db__tpl-thumb::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(30, 22, 12, .28)); pointer-events: none; }
+.db__tpl-tag { position: absolute; top: .5rem; left: .5rem; z-index: 2; font-size: .56rem; text-transform: uppercase; letter-spacing: .1em; color: #4a3a1c; background: rgba(255, 251, 242, .9); border-radius: 40px; padding: .2rem .55rem; backdrop-filter: blur(3px); }
+.db__tpl-check { position: absolute; top: .5rem; right: .5rem; z-index: 2; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: .7rem; color: #fff; background: #b7893a; opacity: 0; transform: scale(.6); transition: opacity .2s, transform .2s; }
+.db__template.is-on .db__tpl-check { opacity: 1; transform: scale(1); }
+.db__template-body { padding: .7rem .85rem .9rem; }
+.db__template-name { font-family: 'Fraunces', serif; font-size: 1.08rem; color: #2a231b; }
+.db__template-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-top: .3rem; font-size: .73rem; color: #7d7159; line-height: 1.5; }
 .db__form-label--mt { display: block; margin-top: 1.1rem; }
 .db__suku { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; margin-top: .5rem; }
 .db__suku-btn { text-align: left; padding: .6rem .75rem; border: 1.5px solid #e0d5be; border-radius: 10px; background: #fff; cursor: pointer; font-family: inherit; transition: border-color .2s, box-shadow .2s, transform .2s; }

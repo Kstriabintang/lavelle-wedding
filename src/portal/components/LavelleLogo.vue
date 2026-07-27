@@ -1,24 +1,25 @@
 <script setup>
-// Logo Lavelle — monogram cincin "L" + sprig (line-art elegan). Warna = currentColor
-// (emas di latar gelap, gelap di latar terang). Opsi wordmark untuk header.
+// Logo Lavelle RESMI (logo web: "L" serif + sprig botani) dalam badge bundar putih —
+// tampil bersih di latar terang maupun gelap. Opsi wordmark untuk header.
 defineProps({ wordmark: { type: Boolean, default: false } })
 </script>
 
 <template>
   <span class="llg">
-    <svg class="llg__mark" viewBox="0 0 100 100" aria-hidden="true" fill="none">
-      <circle cx="50" cy="50" r="47" stroke="currentColor" stroke-width="1.1" />
-      <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="0.5" opacity="0.55" />
-      <text x="50" y="66" text-anchor="middle" font-family="'Fraunces', Georgia, serif" font-weight="600" font-size="46" fill="currentColor">L</text>
-      <path d="M37 77 q13 7 26 0" stroke="currentColor" stroke-width="0.9" />
-      <circle cx="50" cy="80" r="1.3" fill="currentColor" />
-    </svg>
+    <span class="llg__mark">
+      <img src="/img/lavelle-logo-badge.png" alt="Lavelle" loading="eager" decoding="async" />
+    </span>
     <span v-if="wordmark" class="llg__word">Lavelle</span>
   </span>
 </template>
 
 <style scoped>
-.llg { display: inline-flex; align-items: center; gap: .65rem; color: inherit; line-height: 1; }
-.llg__mark { width: 1.9em; height: 1.9em; display: block; flex: none; }
+.llg { display: inline-flex; align-items: center; gap: .7rem; color: inherit; line-height: 1; }
+.llg__mark {
+  width: 2.2em; height: 2.2em; flex: none; border-radius: 50%; overflow: hidden;
+  background: #fff; display: grid; place-items: center;
+  box-shadow: 0 0 0 1px rgba(183, 137, 58, .38), 0 3px 10px rgba(60, 45, 20, .12);
+}
+.llg__mark img { width: 84%; height: 84%; object-fit: contain; display: block; }
 .llg__word { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.5rem; letter-spacing: .01em; }
 </style>
