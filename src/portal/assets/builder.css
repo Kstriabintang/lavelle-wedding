@@ -75,6 +75,22 @@
 }
 .bshell__screen::-webkit-scrollbar { width: 0; height: 0; }
 
+/* Segmen toggle ukuran pratinjau (HP / Desktop) */
+.bshell__seg { display: inline-flex; border: 1px solid rgba(201, 162, 75, .3); border-radius: 40px; overflow: hidden; }
+.bshell__seg button { min-height: 34px; padding: .3rem .8rem; border: none; background: transparent; color: #a99d80; font-family: var(--pb-sans); font-size: .76rem; cursor: pointer; transition: background-color .2s, color .2s; }
+.bshell__seg button.is-on { background: rgba(201, 162, 75, .18); color: #f1e7cf; }
+.bshell__seg button:focus-visible { outline: 2px solid #e9c97e; outline-offset: -2px; }
+
+/* Mode desktop: pratinjau lebar penuh tanpa bingkai HP */
+.bshell.dev-desktop .bshell__toolbar { max-width: 100%; }
+.bshell.dev-desktop .bshell__device {
+  width: 100%; max-width: 1100px; height: min(830px, calc(100svh - 96px));
+  border-radius: 14px; padding: 0; border: 1px solid #3a3a41;
+  background: #0b0906;
+}
+.bshell.dev-desktop .bshell__notch { display: none; }
+.bshell.dev-desktop .bshell__screen { border-radius: 13px; }
+
 /* ---------- Tombol mengambang (mobile) ---------- */
 .bshell__fab {
   display: none; position: fixed; z-index: 50; left: 50%; bottom: 18px; transform: translateX(-50%);
