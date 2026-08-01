@@ -11,6 +11,12 @@ import { portalAccentVars } from '../data/portalBackgrounds.js'
 import { adat, adatOrder } from '../../data/adat'
 import LavelleLogo from '../components/LavelleLogo.vue'
 import PortalBackground from '../components/PortalBackground.vue'
+import ConfirmModal from '../components/portal/ConfirmModal.vue'
+import ToastHost from '../components/portal/ToastHost.vue'
+import { useToast } from '../composables/useToast.js'
+
+const toast = useToast()
+const pendingDelete = ref(null)
 
 const router = useRouter()
 const accentVars = computed(() => portalAccentVars(portalBg.value))
@@ -68,15 +74,18 @@ async function create() {
     router.push(`/portal/edit/${inv.id}`)
   } catch { newErr.value = 'Gagal membuat undangan. Coba lagi.'; creating.value = false }
 }
-async function removeInvite(inv) {
-  if (!confirm(`Hapus undangan "${inv.slug}"? Tindakan ini tak bisa dibatalkan.`)) return
-  try { await deleteInvite(inv.id); await refresh() } catch { alert('Gagal menghapus.') }
+function askDelete(inv) { pendingDelete.value = inv }
+async function confirmDelete() {
+  const inv = pendingDelete.value; pendingDelete.value = null
+  if (!inv) return
+  try { await deleteInvite(inv.id); await refresh(); toast.success('Undangan dihapus') }
+  catch { toast.error('Gagal menghapus undangan') }
 }
 async function duplicate(inv) {
   if (duplicating.value) return
   duplicating.value = inv.id
-  try { await duplicateInvite(inv.id, profile.value.id); await refresh() }
-  catch { alert('Gagal menduplikat undangan.') }   // diganti toast di Task 3.4
+  try { await duplicateInvite(inv.id, profile.value.id); await refresh(); toast.success('Undangan diduplikat ✓') }
+  catch { toast.error('Gagal menduplikat undangan') }
   finally { duplicating.value = null }
 }
 async function logout() { await signOut(); router.replace('/portal/login') }
@@ -192,7 +201,7 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
               <button class="db__edit" type="button" @click="router.push(`/portal/edit/${inv.id}`)">Edit</button>
               <a v-if="inv.status === 'published'" class="db__live" :href="liveUrl(inv)" target="_blank" rel="noopener">Lihat ↗</a>
               <button class="db__dup" type="button" :disabled="duplicating === inv.id" @click="duplicate(inv)">{{ duplicating === inv.id ? 'Menyalin…' : 'Duplikat' }}</button>
-              <button class="db__del" type="button" @click="removeInvite(inv)" aria-label="Hapus">Hapus</button>
+              <button class="db__del" type="button" @click="askDelete(inv)" aria-label="Hapus">Hapus</button>
             </div>
           </div>
         </article>
@@ -202,6 +211,11 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
         Tak ada undangan cocok — coba kata kunci lain.
       </p>
     </main>
+
+    <ConfirmModal :open="!!pendingDelete" title="Hapus undangan?"
+      :message="pendingDelete ? `“${pendingDelete.slug}.lavelle.my.id” akan dihapus permanen.` : ''"
+      confirm-label="Hapus" danger @confirm="confirmDelete" @cancel="pendingDelete = null" />
+    <ToastHost />
   </div>
 </template>
 

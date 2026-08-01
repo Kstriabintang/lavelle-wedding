@@ -10,6 +10,10 @@ import { activateDomain } from '../lib/publishDomain.js'
 import { mergeInvite } from '../data/schema.js'
 import BuilderShell from '../components/builder/BuilderShell.vue'
 import BuilderForm from '../components/builder/BuilderForm.vue'
+import ToastHost from '../components/portal/ToastHost.vue'
+import { useToast } from '../composables/useToast.js'
+
+const toast = useToast()
 
 const route = useRoute(); const router = useRouter()
 const id = route.params.id
@@ -52,7 +56,7 @@ let t = null
 async function doSave() {
   saveState.value = 'saving'
   try { await saveInvite(id, { data: JSON.parse(JSON.stringify(invite)), theme: theme.value }); saveState.value = 'saved' }
-  catch { saveState.value = 'error' }
+  catch { saveState.value = 'error'; toast.error('Gagal menyimpan', { retry: doSave }) }
 }
 watch([invite, theme], () => {
   if (!loaded.value) return
@@ -82,6 +86,7 @@ async function publish() {
   await doSave()
   try {
     await saveInvite(id, { status: 'published' }); status.value = 'published'
+    toast.success('Undangan terbit ✓')
     pubMsg.value = 'Mengaktifkan subdomain…'
     const res = await activateDomain(slug.value)
     pubMsg.value = res && res.ok ? '✓ Subdomain aktif (SSL ±1 menit)' : 'Terbit ✓ (subdomain menyusul)'
@@ -144,6 +149,7 @@ const liveUrl = computed(() => `https://${slug.value}.lavelle.my.id`)
     </template>
   </BuilderShell>
   <div v-else class="pe__loading">Memuat undangan…</div>
+  <ToastHost />
 </template>
 
 <style scoped>
