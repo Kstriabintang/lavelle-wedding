@@ -13,10 +13,12 @@ import LavelleLogo from '../components/LavelleLogo.vue'
 import PortalBackground from '../components/PortalBackground.vue'
 import ConfirmModal from '../components/portal/ConfirmModal.vue'
 import ToastHost from '../components/portal/ToastHost.vue'
+import WelcomeModal from '../components/portal/WelcomeModal.vue'
 import { useToast } from '../composables/useToast.js'
 
 const toast = useToast()
 const pendingDelete = ref(null)
+const showWelcome = ref(false)
 
 const router = useRouter()
 const accentVars = computed(() => portalAccentVars(portalBg.value))
@@ -51,7 +53,16 @@ onMounted(async () => {
   await initSession()
   if (!session.value) { router.replace('/portal/login'); return }
   await refresh()
+  // Panduan sekali-tampil untuk karyawan (flag per-user di localStorage)
+  try {
+    const key = 'lavelle_tour_v1_' + (profile.value && profile.value.id)
+    if (typeof localStorage !== 'undefined' && profile.value && !localStorage.getItem(key)) showWelcome.value = true
+  } catch { /* localStorage tak tersedia → lewati */ }
 })
+function closeWelcome() {
+  showWelcome.value = false
+  try { localStorage.setItem('lavelle_tour_v1_' + profile.value.id, '1') } catch { /* */ }
+}
 
 async function refresh() {
   loading.value = true
@@ -215,6 +226,7 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
     <ConfirmModal :open="!!pendingDelete" title="Hapus undangan?"
       :message="pendingDelete ? `“${pendingDelete.slug}.lavelle.my.id” akan dihapus permanen.` : ''"
       confirm-label="Hapus" danger @confirm="confirmDelete" @cancel="pendingDelete = null" />
+    <WelcomeModal :open="showWelcome" :name="profile?.name || ''" @close="closeWelcome" />
     <ToastHost />
   </div>
 </template>
