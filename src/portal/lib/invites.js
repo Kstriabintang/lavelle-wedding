@@ -52,3 +52,18 @@ export async function deleteInvite(id) {
   const { error } = await supabase.from('invites').delete().eq('id', id)
   if (error) throw error
 }
+
+// Duplikat undangan: salin data + tema ke undangan BARU (slug otomatis, status draft).
+// Foto memakai URL storage yang sama (aman; hapus asal tak merusak duplikat).
+function genDupSlug() {
+  return `undangan-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`
+}
+export async function duplicateInvite(sourceId, ownerId) {
+  const src = await getInvite(sourceId)
+  let slug = genDupSlug()
+  if (await slugTaken(slug)) slug = genDupSlug() + Math.random().toString(36).slice(2, 4)
+  const data = typeof structuredClone === 'function'
+    ? structuredClone(src.data || {})
+    : JSON.parse(JSON.stringify(src.data || {}))
+  return createInvite(slug, ownerId, data, src.theme)   // createInvite default status draft
+}
