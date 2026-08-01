@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { session, profile, portalBg, initSession } from '../lib/session.js'
 import { signOut } from '../lib/auth.js'
-import { listInvites, createInvite, deleteInvite, slugTaken } from '../lib/invites.js'
+import { listInvites, createInvite, deleteInvite, duplicateInvite, slugTaken } from '../lib/invites.js'
 import { slugify, validateSlug } from '../lib/slug.js'
 import { defaultInvite } from '../data/schema.js'
 import { TEMPLATES, TEMPLATE_IDS, DEFAULT_TEMPLATE } from '../data/templates.js'
@@ -26,6 +26,20 @@ const creating = ref(false)
 
 const published = computed(() => invites.value.filter((i) => i.status === 'published').length)
 const drafts = computed(() => invites.value.filter((i) => i.status !== 'published').length)
+
+// Pencarian + filter status (sisi-klien, instan)
+const query = ref('')
+const statusFilter = ref('all')   // all | published | draft
+const duplicating = ref(null)     // id yang sedang diduplikat
+const filtered = computed(() => {
+  const q = query.value.trim().toLowerCase()
+  return invites.value.filter((inv) => {
+    if (statusFilter.value === 'published' && inv.status !== 'published') return false
+    if (statusFilter.value === 'draft' && inv.status === 'published') return false
+    if (!q) return true
+    return coupleName(inv).toLowerCase().includes(q) || (inv.slug || '').toLowerCase().includes(q)
+  })
+})
 
 onMounted(async () => {
   await initSession()
@@ -57,6 +71,13 @@ async function create() {
 async function removeInvite(inv) {
   if (!confirm(`Hapus undangan "${inv.slug}"? Tindakan ini tak bisa dibatalkan.`)) return
   try { await deleteInvite(inv.id); await refresh() } catch { alert('Gagal menghapus.') }
+}
+async function duplicate(inv) {
+  if (duplicating.value) return
+  duplicating.value = inv.id
+  try { await duplicateInvite(inv.id, profile.value.id); await refresh() }
+  catch { alert('Gagal menduplikat undangan.') }   // diganti toast di Task 3.4
+  finally { duplicating.value = null }
 }
 async function logout() { await signOut(); router.replace('/portal/login') }
 
@@ -137,6 +158,18 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
         </div>
       </transition>
 
+      <div v-if="!loading && invites.length > 0" class="db__toolbar">
+        <label class="db__search">
+          <span class="db__search-ic" aria-hidden="true">⌕</span>
+          <input v-model="query" type="search" autocomplete="off" placeholder="Cari nama mempelai / alamat…" aria-label="Cari undangan">
+        </label>
+        <div class="db__filters" role="group" aria-label="Filter status">
+          <button type="button" class="db__filter" :class="{ 'is-on': statusFilter === 'all' }" @click="statusFilter = 'all'">Semua</button>
+          <button type="button" class="db__filter" :class="{ 'is-on': statusFilter === 'published' }" @click="statusFilter = 'published'">Terbit</button>
+          <button type="button" class="db__filter" :class="{ 'is-on': statusFilter === 'draft' }" @click="statusFilter = 'draft'">Draft</button>
+        </div>
+      </div>
+
       <p v-if="loading" class="db__loading">Memuat…</p>
 
       <div v-else class="db__grid">
@@ -145,7 +178,7 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
           <span class="db__addtext">Buat Undangan Baru</span>
         </button>
 
-        <article v-for="inv in invites" :key="inv.id" class="db__card">
+        <article v-for="inv in filtered" :key="inv.id" class="db__card">
           <button class="db__thumb" type="button" @click="router.push(`/portal/edit/${inv.id}`)">
             <img v-if="heroPhoto(inv)" :src="heroPhoto(inv)" alt="">
             <span v-else class="db__thumb-ph"><LavelleLogo /></span>
@@ -158,11 +191,16 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
             <div class="db__actions">
               <button class="db__edit" type="button" @click="router.push(`/portal/edit/${inv.id}`)">Edit</button>
               <a v-if="inv.status === 'published'" class="db__live" :href="liveUrl(inv)" target="_blank" rel="noopener">Lihat ↗</a>
+              <button class="db__dup" type="button" :disabled="duplicating === inv.id" @click="duplicate(inv)">{{ duplicating === inv.id ? 'Menyalin…' : 'Duplikat' }}</button>
               <button class="db__del" type="button" @click="removeInvite(inv)" aria-label="Hapus">Hapus</button>
             </div>
           </div>
         </article>
       </div>
+
+      <p v-if="!loading && filtered.length === 0 && invites.length > 0" class="db__empty">
+        Tak ada undangan cocok — coba kata kunci lain.
+      </p>
     </main>
   </div>
 </template>
@@ -265,8 +303,25 @@ function liveUrl(inv) { return `https://${inv.slug}.lavelle.my.id` }
 .db__edit:hover { filter: brightness(1.1); }
 .db__live { font-size: .8rem; color: var(--pa-acc); text-decoration: none; font-weight: 500; }
 .db__live:hover { text-decoration: underline; }
+.db__dup { background: rgba(255, 255, 255, .05); border: 1px solid var(--pa-bd2); border-radius: 8px; padding: .42rem .8rem; color: var(--pa-txt); font-family: inherit; font-size: .8rem; cursor: pointer; transition: border-color .2s, background-color .2s; }
+.db__dup:hover:not(:disabled) { border-color: var(--pa-acc); background: rgba(255, 255, 255, .09); }
+.db__dup:disabled { opacity: .5; cursor: default; }
 .db__del { margin-left: auto; background: none; border: none; color: #c98a84; font-size: .76rem; cursor: pointer; }
 .db__del:hover { color: #e0776b; text-decoration: underline; }
+
+/* Toolbar cari + filter */
+.db__toolbar { display: flex; align-items: center; gap: .8rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.db__search { display: flex; align-items: center; gap: .5rem; flex: 1; min-width: 220px; border: 1px solid var(--pa-bd2); border-radius: 40px; background: var(--pa-surf2); padding: .1rem .9rem; }
+.db__search-ic { color: var(--pa-mut); font-size: 1rem; }
+.db__search input { flex: 1; min-width: 0; border: none; background: transparent; padding: .55rem 0; color: var(--pa-txt); font-family: inherit; font-size: .88rem; }
+.db__search input:focus { outline: none; }
+.db__search input::placeholder { color: var(--pa-mut); opacity: .7; }
+.db__filters { display: flex; gap: .35rem; }
+.db__filter { min-height: 38px; padding: .4rem .9rem; border: 1px solid var(--pa-bd); border-radius: 40px; background: var(--pa-surf2); color: var(--pa-mut); font-family: inherit; font-size: .8rem; cursor: pointer; transition: border-color .2s, color .2s, background-color .2s; }
+.db__filter:hover { color: var(--pa-txt); border-color: var(--pa-bd2); }
+.db__filter.is-on { border-color: var(--pa-acc); color: var(--pa-ink); background: var(--pa-acc); }
+.db__filter:focus-visible { outline: 2px solid var(--pa-acc2); outline-offset: 2px; }
+.db__empty { text-align: center; color: var(--pa-mut); padding: 2rem 1rem; }
 
 @media (max-width: 640px) {
   .db__hero { flex-direction: column; align-items: flex-start; }
