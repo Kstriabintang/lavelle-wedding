@@ -1,4 +1,5 @@
 <script setup>
+import Hint from '../../portal/Hint.vue'
 defineProps({ invite: { type: Object, required: true } })
 </script>
 
@@ -9,13 +10,13 @@ defineProps({ invite: { type: Object, required: true } })
       <p class="f-sub">{{ ev.tag || ('Acara ' + (i + 1)) }}</p>
       <div class="f-field"><label>Nama Acara</label><input class="f-input" v-model="ev.tag"></div>
       <div class="f-row">
-        <div class="f-field"><label>Tanggal</label><input class="f-input" v-model="ev.date" placeholder="Sabtu, 19 Des 2026"></div>
+        <div class="f-field"><label>Tanggal <Hint text="Tulis bebas seperti tampil di undangan, mis. “Sabtu, 19 Des 2026”." /></label><input class="f-input" v-model="ev.date" placeholder="Sabtu, 19 Des 2026"></div>
         <div class="f-field"><label>Waktu</label><input class="f-input" v-model="ev.time" placeholder="08.00 WIB"></div>
       </div>
       <div class="f-field"><label>Tempat</label><input class="f-input" v-model="ev.place"></div>
     </div>
     <div class="f-field">
-      <label>Lokasi Peta (alamat atau koordinat)</label>
+      <label>Lokasi Peta (alamat atau koordinat) <Hint text="Bisa nama gedung, alamat, atau koordinat (mis. -0.12, 100.54). Dipakai untuk tombol “Lihat Peta” di undangan." /></label>
       <input class="f-input" v-model="invite.mapsQuery" placeholder="-0.12, 100.54  atau  nama gedung">
     </div>
   </div>

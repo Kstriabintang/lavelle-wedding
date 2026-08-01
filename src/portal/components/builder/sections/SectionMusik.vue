@@ -1,5 +1,6 @@
 <script setup>
 // Seksi Musik — link YouTube untuk lagu latar (auto-play saat undangan dibuka).
+import Hint from '../../portal/Hint.vue'
 defineProps({ invite: { type: Object, required: true } })
 </script>
 
@@ -8,7 +9,7 @@ defineProps({ invite: { type: Object, required: true } })
     <p class="f-hint">Tempel link <b>YouTube</b> lagu favoritmu — otomatis diputar saat undangan dibuka.
       Lagu dari TikTok? Cari judul lagunya di YouTube, lalu tempel link-nya di sini.</p>
     <div class="f-field">
-      <label>Link YouTube</label>
+      <label>Link YouTube <Hint text="Buka video di YouTube → tombol Bagikan → Salin. Tempel di sini (mis. https://youtu.be/xxxx). Lagu diputar otomatis sebagai latar." /></label>
       <input class="f-input" v-model="invite.music.link" inputmode="url"
              placeholder="https://youtu.be/xxxxxxxxxxx">
     </div>

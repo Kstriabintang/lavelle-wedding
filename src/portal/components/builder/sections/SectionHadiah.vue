@@ -1,6 +1,7 @@
 <script setup>
 // Seksi Amplop Digital — rekening bank/e-wallet + QRIS opsional + WA konfirmasi.
 import PhotoInput from '../PhotoInput.vue'
+import Hint from '../../portal/Hint.vue'
 const props = defineProps({ invite: { type: Object, required: true } })
 function add() {
   props.invite.gifts.push({ label: '', kind: 'bank', no: '', raw: '', an: '', brand: 'fa-building-columns' })
@@ -14,7 +15,7 @@ function syncRaw(g) { g.raw = (g.no || '').replace(/\s+/g, '') }
     <p class="f-hint">Rekening/e-wallet untuk tamu yang ingin memberi tanda kasih. Kosongkan bila seksi ini tak dipakai (bisa juga disembunyikan di Kustomisasi).</p>
     <div v-for="(g, i) in invite.gifts" :key="i" class="hadiah">
       <div class="f-row">
-        <div class="f-field"><label>Bank / E-wallet</label><input class="f-input" v-model="g.label" placeholder="BCA / Dana / OVO"></div>
+        <div class="f-field"><label>Bank / E-wallet <Hint text="Isi nama bank atau e-wallet, nomor, dan atas nama. Tombol salin muncul otomatis di undangan." /></label><input class="f-input" v-model="g.label" placeholder="BCA / Dana / OVO"></div>
         <div class="f-field"><label>Nomor</label><input class="f-input" v-model="g.no" @input="syncRaw(g)" placeholder="1234 5678 90"></div>
       </div>
       <div class="f-field"><label>Atas Nama</label><input class="f-input" v-model="g.an" placeholder="Nama pemilik rekening"></div>
@@ -22,7 +23,7 @@ function syncRaw(g) { g.raw = (g.no || '').replace(/\s+/g, '') }
     </div>
     <button type="button" class="gal-add" @click="add">+ Tambah Rekening</button>
 
-    <div class="f-sub">QRIS (opsional)</div>
+    <div class="f-sub">QRIS (opsional) <Hint text="Unggah gambar QRIS statis dari m-banking / dashboard merchant. Tamu tinggal scan untuk transfer." /></div>
     <div class="hadiah__qris"><PhotoInput v-model="invite.qris" label="Unggah QRIS" /></div>
 
     <div class="f-field" style="margin-top:1rem">
