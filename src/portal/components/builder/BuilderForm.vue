@@ -1,8 +1,10 @@
 <script setup>
-// Form ber-seksi bernomor (alur terpandu). Accordion halus (grid-rows). Semua seksi
-// mengedit objek `invite` reaktif → pratinjau live.
-import { ref } from 'vue'
+// Form ber-seksi bernomor (alur terpandu) + navigasi lompat & bar progres (SectionNav).
+// Accordion halus (grid-rows). Semua seksi mengedit objek `invite` reaktif → pratinjau live.
+import { ref, nextTick } from 'vue'
 import '../../assets/builder.css'
+import SectionNav from './SectionNav.vue'
+import { useInviteProgress } from '../../composables/useInviteProgress.js'
 import SectionMempelai from './sections/SectionMempelai.vue'
 import SectionKisah from './sections/SectionKisah.vue'
 import SectionAcara from './sections/SectionAcara.vue'
@@ -13,11 +15,24 @@ import SectionMusik from './sections/SectionMusik.vue'
 import SectionTema from './sections/SectionTema.vue'
 import SectionGaya from './sections/SectionGaya.vue'
 
-defineProps({ invite: { type: Object, required: true }, theme: { type: String, required: true } })
+const props = defineProps({ invite: { type: Object, required: true }, theme: { type: String, required: true } })
 const emit = defineEmits(['update:theme'])
 
+const progress = useInviteProgress(() => props.invite)
 const open = ref('mempelai')
+const secEls = ref({})   // k → elemen .bf__sec (untuk scroll saat lompat)
+function setEl(k, el) { if (el) secEls.value[k] = el }
 function toggle(k) { open.value = open.value === k ? '' : k }
+
+async function goTo(k) {
+  open.value = k
+  await nextTick()
+  const el = secEls.value[k]
+  if (el && el.scrollIntoView) {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    el.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' })
+  }
+}
 
 const SECS = [
   { k: 'mempelai', num: '01', label: 'Mempelai', desc: 'Nama, tanggal, orang tua & foto' },
@@ -34,7 +49,8 @@ const SECS = [
 
 <template>
   <div class="bf">
-    <div v-for="s in SECS" :key="s.k" class="bf__sec">
+    <SectionNav :progress="progress" :active="open" @jump="goTo" />
+    <div v-for="s in SECS" :key="s.k" class="bf__sec" :ref="(el) => setEl(s.k, el)">
       <button class="bf__head" :class="{ 'is-open': open === s.k }" @click="toggle(s.k)"
               :aria-expanded="open === s.k">
         <span class="bf__num">{{ s.num }}</span>
