@@ -2,15 +2,36 @@
 // 3.10 — Musik latar. Toggle mengambang + equalizer saat playing.
 // play() dipanggil parent saat envelope dibuka (gesture user → diizinkan).
 // Fallback anggun bila autoplay diblokir.
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
-defineProps({ src: { type: String, default: '' } })
+const props = defineProps({
+  src: { type: String, default: '' },
+  start: { type: Number, default: 0 },   // detik mulai saat PERTAMA diputar (0 = dari awal)
+})
 const audioEl = ref(null)
 const playing = ref(false)
+let seeded = false   // sudah diposisikan ke `start`? (loop berikutnya biarkan dari 0)
+
+// Media Fragment (#t=23): mayoritas browser — termasuk iOS Safari — memulai audio TEPAT
+// di detik itu tanpa "blip". `seedStart` di bawah = jaring pengaman bila diabaikan.
+const playSrc = computed(() => (props.start > 0 && props.src ? `${props.src}#t=${props.start}` : props.src))
+
+// Dipanggil dari BANYAK event (loadedmetadata/canplay/timeupdate) agar tak terlewat.
+// timeupdate menyala berulang SAAT MAIN → menjamin iOS ikut meloncat ke `start`.
+function seedStart() {
+  const a = audioEl.value
+  if (seeded || !a || props.start <= 0) return
+  if (!isFinite(a.duration) || props.start >= a.duration) return    // metadata belum siap → tunggu event berikutnya
+  if (a.currentTime < props.start - 0.5) {
+    try { a.currentTime = props.start } catch { return }            // gagal → coba lagi di event berikutnya
+  }
+  seeded = true                                                     // sudah di/menuju start; loop selanjutnya bebas dari 0
+}
 
 async function play() {
   const a = audioEl.value
   if (!a) return
+  seedStart()
   try { await a.play(); playing.value = true } catch { playing.value = false }
 }
 function toggle() {
@@ -24,7 +45,9 @@ defineExpose({ play })
 
 <template>
   <div class="mp">
-    <audio ref="audioEl" :src="src" loop preload="none" @play="playing = true" @pause="playing = false"></audio>
+    <audio ref="audioEl" :src="playSrc" loop preload="auto"
+           @loadedmetadata="seedStart" @canplay="seedStart" @timeupdate="seedStart"
+           @play="playing = true" @pause="playing = false"></audio>
     <button class="mp__btn" :class="{ 'is-on': playing }" type="button" @click="toggle"
             :aria-label="playing ? 'Jeda musik' : 'Putar musik'">
       <span class="mp__disc"><i :class="playing ? 'fa-solid fa-music' : 'fa-solid fa-play'"></i></span>

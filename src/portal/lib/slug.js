@@ -1,6 +1,6 @@
 // Slug undangan = subdomain klien (nama-klien.lavelle.my.id). Harus url-safe & unik.
 // Daftar RESERVED = subdomain milik sistem yang tak boleh dipakai sebagai slug.
-export const RESERVED = ['portal', 'www', 'api', 'admin', 'mail', 'app', 'assets', 'cdn', 'fuji-ryan']
+export const RESERVED = ['portal', 'www', 'api', 'admin', 'mail', 'app', 'assets', 'cdn', 'fuji-ryan', 'ryan-fuji', 'tamu']
 
 export function slugify(input) {
   return String(input || '')

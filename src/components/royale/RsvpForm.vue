@@ -1,26 +1,43 @@
 <script setup>
-// FASE B — RSVP: nama, kehadiran (segmented), jumlah tamu (stepper), pesan.
-// Persist ke localStorage → bisa Edit RSVP. Emit entri ke Ucapan.
+// FASE B — RSVP: nama (wajib), kehadiran (segmented), jumlah tamu (stepper).
+// Konfirmasi LANGSUNG ke Google Sheet (backend Apps Script, tab "RSVP") — tanpa WhatsApp.
+// Batas 1 RSVP/orang (token device) + bisa di-Edit. Fallback lokal bila `api` kosong.
 import { ref, reactive, onMounted } from 'vue'
 
-const emit = defineEmits(['submitted'])
-const STORE = 'lavelle-royale-rsvp'
+const props = defineProps({
+  api: { type: String, default: '' },     // URL web-app Apps Script (…/exec)
+})
+
+const STORE = 'lavelle-rsvp-own'
+const IDKEY = 'lavelle-guest-id'
 const OPTS = ['Hadir', 'Masih Ragu', 'Tidak Hadir']
 
-const form = reactive({ nama: '', jumlah: 1, hadir: 'Hadir', pesan: '' })
+const form = reactive({ nama: '', jumlah: 1, hadir: 'Hadir' })
 const errors = reactive({ nama: '' })
 const done = ref(false)
+const sending = ref(false)
 
-function validate() {
-  errors.nama = form.nama.trim() ? '' : 'Nama wajib diisi.'
-  return !errors.nama
+function guestId() {
+  try {
+    let id = localStorage.getItem(IDKEY)
+    if (!id) { id = 'g' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); localStorage.setItem(IDKEY, id) }
+    return id
+  } catch { return 'g' + Date.now().toString(36) }
 }
+function validate() { errors.nama = form.nama.trim() ? '' : 'Nama wajib diisi.'; return !errors.nama }
 function step(n) { form.jumlah = Math.min(10, Math.max(1, form.jumlah + n)) }
-function submit() {
-  if (!validate()) return
-  try { localStorage.setItem(STORE, JSON.stringify({ ...form })) } catch { /* diabaikan */ }
-  emit('submitted', { name: form.nama.trim(), hadir: form.hadir, msg: form.pesan.trim() || '—' })
-  done.value = true
+
+async function submit() {
+  if (!validate() || sending.value) return
+  const payload = { type: 'rsvp', id: guestId(), name: form.nama.trim(), hadir: form.hadir, jumlah: form.hadir === 'Tidak Hadir' ? 0 : form.jumlah }
+  sending.value = true
+  try {
+    if (props.api) {
+      fetch(props.api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload), redirect: 'follow' }).catch(() => {})
+    }
+    try { localStorage.setItem(STORE, JSON.stringify({ ...form })) } catch { /* ok */ }
+    done.value = true
+  } finally { sending.value = false }
 }
 function edit() { done.value = false }
 
@@ -28,7 +45,7 @@ onMounted(() => {
   try {
     const saved = JSON.parse(localStorage.getItem(STORE) || 'null')
     if (saved && saved.nama) { Object.assign(form, saved); done.value = true }
-  } catch { /* diabaikan */ }
+  } catch { /* ok */ }
 })
 </script>
 
@@ -40,7 +57,7 @@ onMounted(() => {
       <div class="r-divider r-reveal"><span></span><i class="fa-regular fa-envelope"></i><span></span></div>
 
       <transition name="rsvp-swap" mode="out-in">
-        <form v-if="!done" key="form" class="rsvp__form r-card r-reveal" novalidate @submit.prevent="submit">
+        <form v-if="!done" key="form" class="rsvp__form r-card" novalidate @submit.prevent="submit">
           <label class="rsvp__field">
             <span>Nama Lengkap</span>
             <input v-model="form.nama" type="text" placeholder="Nama Anda" :class="{ 'is-err': errors.nama }">
@@ -64,21 +81,18 @@ onMounted(() => {
             </div>
           </div>
 
-          <label class="rsvp__field">
-            <span>Ucapan &amp; Doa</span>
-            <textarea v-model="form.pesan" rows="3" placeholder="Tulis ucapan & doa untuk mempelai"></textarea>
-          </label>
-
-          <button class="r-btn r-btn--solid" type="submit"><i class="fa-solid fa-paper-plane"></i> Kirim Konfirmasi</button>
+          <button class="r-btn r-btn--solid" type="submit" :disabled="sending">
+            <i class="fa-solid fa-paper-plane"></i> {{ sending ? 'Mengirim…' : 'Kirim Konfirmasi' }}
+          </button>
         </form>
 
-        <div v-else key="done" class="rsvp__done r-card r-reveal">
+        <div v-else key="done" class="rsvp__done r-card">
           <span class="rsvp__check"><i class="fa-solid fa-check"></i></span>
           <h3>Terima kasih, {{ form.nama.split(' ')[0] }}!</h3>
           <p>Konfirmasi Anda telah kami terima
             <strong>({{ form.hadir }}<template v-if="form.hadir !== 'Tidak Hadir'">, {{ form.jumlah }} tamu</template>)</strong>.
             Sampai jumpa di hari bahagia kami.</p>
-          <button class="r-btn r-btn--ghost r-btn--sm" type="button" @click="edit"><i class="fa-solid fa-pen"></i> Edit RSVP</button>
+          <button class="r-btn r-btn--ghost r-btn--sm" type="button" @click="edit"><i class="fa-solid fa-pen"></i> Ubah Konfirmasi</button>
         </div>
       </transition>
     </div>
@@ -89,20 +103,18 @@ onMounted(() => {
 .rsvp__form { padding: clamp(1.6rem, 5vw, 2.6rem); display: flex; flex-direction: column; gap: 1.3rem; }
 .rsvp__field { display: flex; flex-direction: column; gap: .5rem; }
 .rsvp__field > span { font-family: var(--font-sans); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
-.rsvp__field input, .rsvp__field textarea {
+.rsvp__field input {
   width: 100%; padding: .9em 1em; border: 1px solid var(--line); border-radius: 10px;
   background: var(--bg); color: var(--ink); font-family: var(--font-sans); font-size: .95rem;
 }
-.rsvp__field input:focus, .rsvp__field textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rsvp__field input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .rsvp__field .is-err { border-color: #d16a6a; }
 .rsvp__field em { color: #d16a6a; font-size: .74rem; font-style: normal; }
 
-/* Segmented attendance */
 .rsvp__seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem; }
 .rsvp__seg-btn { padding: .8em .5em; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink-soft); font-family: var(--font-sans); font-size: .82rem; cursor: pointer; transition: background-color .3s, color .3s, border-color .3s; }
 .rsvp__seg-btn.is-on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 
-/* Guest stepper */
 .rsvp__step { display: inline-flex; align-items: center; gap: 1rem; }
 .rsvp__step button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; font-size: .85rem; transition: background-color .3s, color .3s; }
 .rsvp__step button:hover { background: var(--accent); color: var(--accent-ink); }

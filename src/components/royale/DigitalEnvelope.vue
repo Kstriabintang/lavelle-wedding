@@ -8,11 +8,12 @@ const props = defineProps({
   gifts: { type: Array, default: () => [] },
   qris: { type: Object, default: null },
   waConfirm: { type: String, default: '' },
+  coupleNames: { type: String, default: 'Anindya & Rizky' },   // nama pasangan utk teks WA (data-driven)
 })
 const { copied, copyText } = useInviteActions()
 const waUrl = computed(() =>
   props.waConfirm
-    ? `https://wa.me/${props.waConfirm}?text=${encodeURIComponent('Halo, saya sudah mengirimkan tanda kasih untuk pernikahan Anindya & Rizky. Berikut bukti transfernya:')}`
+    ? `https://wa.me/${props.waConfirm}?text=${encodeURIComponent(`Halo, saya sudah mengirimkan tanda kasih untuk pernikahan ${props.coupleNames}. Berikut bukti transfernya:`)}`
     : '')
 </script>
 

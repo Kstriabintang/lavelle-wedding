@@ -24,3 +24,5 @@ docs/superpowers/specs/*client-001*
 # Kredensial deploy Cloudflare — LOCAL ONLY, jangan commit
 .cf-deploy
 SUPABASE.txt
+tamu-tool/
+Music/
